@@ -1,5 +1,6 @@
 import React, { ReactNode } from 'react';
-import Link from 'next/link';
+// import Link from 'next/link';
+import Link from './Link';
 import Head from 'next/head';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -20,18 +21,9 @@ const Layout = ({ children, title = 'This is the default title' }: Props) => (
     </Head>
     <AppBar color="default" position="static" elevation={false}>
       <Toolbar>
-        <Link href="/">
-          <a>Home</a>
-        </Link>{' '}
-        |{' '}
-        <Link href="/about">
-          <a>About</a>
-        </Link>{' '}
-        |{' '}
-        <Link href="/users">
-          <a>Users List</a>
-        </Link>{' '}
-        | <a href="/api/users">Users API</a>
+        <Link href="/">Home</Link> | <Link href="/about">About</Link> |{' '}
+        <Link href="/users">Users List</Link> |{' '}
+        <a href="/api/users">Users API</a>
       </Toolbar>
     </AppBar>
     {children}
