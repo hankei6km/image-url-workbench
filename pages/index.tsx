@@ -43,9 +43,11 @@ const IndexPage = () => {
       // setImgStat(inputText === '' ? 'none' : 'loading');
       const q = new URLSearchParams('');
       state.forEach(([k, v]) => q.append(k, v));
-      setImgUrl(`${urlText}?${q.toString()}`);
+      const s = q.toString();
+      const paramsString = urlText && s ? `?${s}` : '';
+      setImgUrl(`${urlText}${paramsString}`);
       done = true;
-    }, 500);
+    }, 1000);
     return () => {
       if (!done) {
         clearTimeout(id);
