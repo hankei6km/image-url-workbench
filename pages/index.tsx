@@ -35,8 +35,7 @@ const IndexPage = () => {
             id="preview-url"
             label="Preview URL"
             fullWidth
-            readOnly
-            value={urlText}
+            value={imgUrl}
           />
         </Box>
         <Box p={1}>
