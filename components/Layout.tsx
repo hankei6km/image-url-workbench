@@ -69,7 +69,7 @@ const Layout = ({ children, title = 'This is the default title' }: Props) => {
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <AppBar color="default" position="static" elevation={0}>
-        <Toolbar>
+        <Toolbar variant="dense">
           {[
             { label: 'Home', href: '/' },
             { label: 'About', href: '/about' },
