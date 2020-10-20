@@ -41,6 +41,16 @@ function TabButton({
   );
 }
 
+const useStyles = makeStyles(() => ({
+  root: {
+    '& > header > div , & > footer > div, & > div': {
+      maxWidth: '36rem',
+      padding: '0 1rem',
+      margin: '0rem auto 0rem'
+    }
+  }
+}));
+
 type Props = {
   children?: ReactNode;
   title?: string;
@@ -48,10 +58,11 @@ type Props = {
 
 const Layout = ({ children, title = 'This is the default title' }: Props) => {
   const router = useRouter();
+  const classes = useStyles();
 
   useEffect(() => {}, [router]);
   return (
-    <div>
+    <div className={classes.root}>
       <Head>
         <title>{title}</title>
         <meta charSet="utf-8" />
@@ -72,10 +83,12 @@ const Layout = ({ children, title = 'This is the default title' }: Props) => {
           ))}
         </Toolbar>
       </AppBar>
-      {children}
+      <div>{children}</div>
       <footer>
         <hr />
-        <span>I'm here to stay (Footer)</span>
+        <div>
+          <span>I'm here to stay (Footer)</span>
+        </div>
       </footer>
     </div>
   );
