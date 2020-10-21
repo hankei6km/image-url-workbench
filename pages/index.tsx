@@ -28,7 +28,10 @@ type actType = {
   type: 'setParam' | 'setImgUrl';
   payload: [string, string];
 };
-function reducer(state: previewUrlState, action: actType): previewUrlState {
+function previewUrlReducer(
+  state: previewUrlState,
+  action: actType
+): previewUrlState {
   const newState: previewUrlState = { ...state };
   switch (action.type) {
     case 'setParam':
@@ -62,7 +65,7 @@ function reducer(state: previewUrlState, action: actType): previewUrlState {
 }
 
 const IndexPage = () => {
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [state, dispatch] = useReducer(previewUrlReducer, initialState);
   const [previewUrl, setPreviewUrl] = useState('');
 
   const debImgUrl = (t: actType['type'], k = '') => {
