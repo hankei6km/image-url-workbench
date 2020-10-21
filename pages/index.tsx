@@ -28,10 +28,7 @@ type actType = {
   type: 'setParam' | 'setImgUrl';
   payload: [string, string];
 };
-function previewUrlReducer(
-  state: previewUrlState,
-  action: actType
-): previewUrlState {
+function reducer(state: previewUrlState, action: actType): previewUrlState {
   const newState: previewUrlState = { ...state };
   switch (action.type) {
     case 'setParam':
@@ -65,10 +62,10 @@ function previewUrlReducer(
 }
 
 const IndexPage = () => {
-  const [state, dispatch] = useReducer(previewUrlReducer, initialState);
+  const [state, dispatch] = useReducer(reducer, initialState);
   const [previewUrl, setPreviewUrl] = useState('');
 
-  const debImgUrl = (t: actType['type'], k = '') => {
+  const debounceInputText = (t: actType['type'], k = '') => {
     let id: any = 0;
     return ({
       target
@@ -112,7 +109,7 @@ const IndexPage = () => {
             label="Image URL"
             defaultValue={''}
             fullWidth
-            onChange={debImgUrl('setImgUrl')}
+            onChange={debounceInputText('setImgUrl')}
           />
         </Box>
         <Box p={1}>
@@ -121,7 +118,7 @@ const IndexPage = () => {
             label="text"
             defaultValue={''}
             fullWidth
-            onChange={debImgUrl('setParam', 'txt')}
+            onChange={debounceInputText('setParam', 'txt')}
           />
         </Box>
       </Container>
