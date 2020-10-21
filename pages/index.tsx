@@ -125,7 +125,7 @@ const IndexPage = () => {
             paramsKey: 'txt64',
             label: 'text',
             defaultValue: '',
-            transfomer: (v) => {
+            transfomer: (v: string | number) => {
               // https://docs.imgix.com/apis/rendering#base64-variants
               // https://developer.mozilla.org/ja/docs/Web/API/WindowBase64/Base64_encoding_and_decoding
               // https://stackoverflow.com/questions/24523532/how-do-i-convert-an-image-to-a-base64-encoded-data-url-in-sails-js-or-generally
