@@ -69,8 +69,8 @@ const IndexPage = () => {
   const [previewUrl, setPreviewUrl] = useState('');
 
   const debounceInputText = (
-    t: actType['type'],
-    k = '',
+    act: actType['type'],
+    paramKey = '',
     transformer = (v: string | number): string => `${v}`
   ) => {
     let id: any = 0;
@@ -82,12 +82,12 @@ const IndexPage = () => {
       }
       const value = transformer(target.value);
       id = setTimeout(
-        (v: [string, string]) => {
-          dispatch({ type: t, payload: v });
+        (payload: [string, string]) => {
+          dispatch({ type: act, payload: payload });
           id = 0;
         },
         1000,
-        k ? [k, value] : [value, ''] // '' が無駄だよねぇ
+        paramKey ? [paramKey, value] : [value, ''] // '' が無駄だよねぇ
       );
     };
   };
