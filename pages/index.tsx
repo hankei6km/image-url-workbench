@@ -9,7 +9,10 @@ import TextField from '@material-ui/core/TextField';
 type previewUrlState = {
   previewUrl: string;
   imgUrl: string;
-  params: [string, string][];
+  params: {
+    key: string;
+    value: string;
+  }[];
 };
 
 const initialState: previewUrlState = {
@@ -35,15 +38,18 @@ function reducer(state: previewUrlState, action: actType): previewUrlState {
     case 'setParam':
       const ak = action.payload[0];
       let replaced = false;
-      const r: [string, string][] = state.params.map(([k, v]) => {
-        if (k === ak) {
+      const r = state.params.map(({ key, value }) => {
+        if (key === ak) {
           replaced = true;
-          return [k, action.payload[1]];
+          return {
+            key,
+            value: action.payload[1]
+          };
         }
-        return [k, v];
+        return { key, value };
       });
       if (!replaced) {
-        r.push(action.payload);
+        r.push({ key: action.payload[0], value: action.payload[1] });
       }
       newState.params = r;
       break;
@@ -55,7 +61,7 @@ function reducer(state: previewUrlState, action: actType): previewUrlState {
   }
 
   const q = new URLSearchParams('');
-  newState.params.forEach(([k, v]) => q.append(k, v));
+  newState.params.forEach(({ key, value }) => q.append(key, value));
   const s = q.toString();
   const paramsString = newState.imgUrl && s ? `?${s}` : '';
   newState.previewUrl = `${newState.imgUrl}${paramsString}`;
