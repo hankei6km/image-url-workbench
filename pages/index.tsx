@@ -10,6 +10,7 @@ type previewUrlState = {
   previewUrl: string;
   imgUrl: string;
   params: {
+    enabled: boolean;
     key: string;
     value: string;
   }[];
@@ -38,18 +39,23 @@ function reducer(state: previewUrlState, action: actType): previewUrlState {
     case 'setParam':
       const ak = action.payload[0];
       let replaced = false;
-      const r = state.params.map(({ key, value }) => {
+      const r = state.params.map(({ enabled, key, value }) => {
         if (key === ak) {
           replaced = true;
           return {
+            enabled,
             key,
             value: action.payload[1]
           };
         }
-        return { key, value };
+        return { enabled, key, value };
       });
       if (!replaced) {
-        r.push({ key: action.payload[0], value: action.payload[1] });
+        r.push({
+          enabled: true,
+          key: action.payload[0],
+          value: action.payload[1]
+        });
       }
       newState.params = r;
       break;
@@ -61,7 +67,9 @@ function reducer(state: previewUrlState, action: actType): previewUrlState {
   }
 
   const q = new URLSearchParams('');
-  newState.params.forEach(({ key, value }) => q.append(key, value));
+  newState.params
+    .filter(({ enabled }) => enabled)
+    .forEach(({ key, value }) => q.append(key, value));
   const s = q.toString();
   const paramsString = newState.imgUrl && s ? `?${s}` : '';
   newState.previewUrl = `${newState.imgUrl}${paramsString}`;
@@ -159,23 +167,26 @@ const IndexPage = () => {
             defaultValue: 'bottom,right'
           }
         ].map(
-          (v: {
+          ({
+            enabled = true,
+            paramsKey,
+            label,
+            defaultValue,
+            transfomer
+          }: {
+            enabled?: boolean;
             paramsKey: string;
             label: string;
             defaultValue: string;
             transfomer?: (v: string | number) => string;
           }) => (
-            <Box p={1} key={v.paramsKey}>
+            <Box p={1} key={paramsKey}>
               <TextField
-                id={v.paramsKey}
-                label={v.label}
-                defaultValue={v.defaultValue}
+                id={paramsKey}
+                label={label}
+                defaultValue={defaultValue}
                 fullWidth
-                onChange={debounceInputText(
-                  'setParam',
-                  v.paramsKey,
-                  v.transfomer
-                )}
+                onChange={debounceInputText('setParam', paramsKey, transfomer)}
               />
             </Box>
           )
