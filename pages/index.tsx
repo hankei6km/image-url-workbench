@@ -91,7 +91,7 @@ const IndexPage = () => {
   const [previewUrl, setPreviewUrl] = useState('');
 
   const debounceInputText = (
-    act: actType['type'],
+    act: actTypeInput['type'],
     paramKey = '',
     transformer = (v: string | number): string => `${v}`
   ) => {
