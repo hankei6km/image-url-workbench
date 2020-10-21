@@ -6,13 +6,17 @@ import Box from '@material-ui/core/Box';
 import Card from '@material-ui/core/Card';
 import TextField from '@material-ui/core/TextField';
 
-type paramsState = {
+type previewUrlState = {
   previewUrl: string;
   imgUrl: string;
   params: [string, string][];
 };
 
-const initialState: paramsState = { previewUrl: '', imgUrl: '', params: [] };
+const initialState: previewUrlState = {
+  previewUrl: '',
+  imgUrl: '',
+  params: []
+};
 // function initState(s: paramsState): paramsState {
 //   return { ...s };
 // }
@@ -24,8 +28,8 @@ type actType = {
   type: 'setParam' | 'setImgUrl';
   payload: [string, string];
 };
-function reducer(state: paramsState, action: actType): paramsState {
-  const newState: paramsState = { ...state };
+function reducer(state: previewUrlState, action: actType): previewUrlState {
+  const newState: previewUrlState = { ...state };
   switch (action.type) {
     case 'setParam':
       const ak = action.payload[0];
