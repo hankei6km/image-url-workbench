@@ -61,11 +61,18 @@ function reducer(state: previewUrlState, action: actType): previewUrlState {
   return newState;
 }
 
+const regExpPlus = /\+/g;
+const regExpSlash = /\//g;
+
 const IndexPage = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [previewUrl, setPreviewUrl] = useState('');
 
-  const debounceInputText = (t: actType['type'], k = '') => {
+  const debounceInputText = (
+    t: actType['type'],
+    k = '',
+    transformer = (v: string | number): string => `${v}`
+  ) => {
     let id: any = 0;
     return ({
       target
@@ -73,13 +80,14 @@ const IndexPage = () => {
       if (id !== 0) {
         clearTimeout(id);
       }
+      const value = transformer(target.value);
       id = setTimeout(
         (v: [string, string]) => {
           dispatch({ type: t, payload: v });
           id = 0;
         },
         1000,
-        k ? [k, target.value] : [target.value, ''] // '' が無駄だよねぇ
+        k ? [k, value] : [value, ''] // '' が無駄だよねぇ
       );
     };
   };
@@ -118,7 +126,16 @@ const IndexPage = () => {
             label="text"
             defaultValue={''}
             fullWidth
-            onChange={debounceInputText('setParam', 'txt')}
+            onChange={debounceInputText('setParam', 'txt64', (v) => {
+              // https://docs.imgix.com/apis/rendering#base64-variants
+              // https://developer.mozilla.org/ja/docs/Web/API/WindowBase64/Base64_encoding_and_decoding
+              // https://stackoverflow.com/questions/24523532/how-do-i-convert-an-image-to-a-base64-encoded-data-url-in-sails-js-or-generally
+              // https://qiita.com/awakia/items/049791daca69120d7035
+              return Buffer.from(v as string, 'utf-8')
+                .toString('base64')
+                .replace(regExpSlash, '_')
+                .replace(regExpPlus, '-');
+            })}
           />
         </Box>
       </Container>
