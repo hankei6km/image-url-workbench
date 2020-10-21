@@ -24,10 +24,11 @@ const initialState: previewUrlState = {
 // debouce する関数をまとめるのが難しいので今回は見送り
 // type actSetParam = { type: 'setParam'; payload: [string, string] };
 // type actSetImgUrl = { type: 'setImgUrl'; payload: string };
-type actType = {
+type actTypeInput = {
   type: 'setParam' | 'setImgUrl';
   payload: [string, string];
 };
+type actType = actTypeInput;
 function reducer(state: previewUrlState, action: actType): previewUrlState {
   const newState: previewUrlState = { ...state };
   switch (action.type) {
