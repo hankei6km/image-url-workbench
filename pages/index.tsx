@@ -120,13 +120,12 @@ const IndexPage = () => {
             onChange={debounceInputText('setImgUrl')}
           />
         </Box>
-        <Box p={1}>
-          <TextField
-            id="txt"
-            label="text"
-            defaultValue={''}
-            fullWidth
-            onChange={debounceInputText('setParam', 'txt64', (v) => {
+        {[
+          {
+            paramsKey: 'txt64',
+            label: 'text',
+            defaultValue: '',
+            transfomer: (v) => {
               // https://docs.imgix.com/apis/rendering#base64-variants
               // https://developer.mozilla.org/ja/docs/Web/API/WindowBase64/Base64_encoding_and_decoding
               // https://stackoverflow.com/questions/24523532/how-do-i-convert-an-image-to-a-base64-encoded-data-url-in-sails-js-or-generally
@@ -135,9 +134,30 @@ const IndexPage = () => {
                 .toString('base64')
                 .replace(regExpSlash, '_')
                 .replace(regExpPlus, '-');
-            })}
-          />
-        </Box>
+            }
+          }
+        ].map(
+          (v: {
+            paramsKey: string;
+            label: string;
+            defaultValue: string;
+            transfomer?: (v: string | number) => string;
+          }) => (
+            <Box p={1} key={v.paramsKey}>
+              <TextField
+                id={v.paramsKey}
+                label={v.label}
+                defaultValue={v.defaultValue}
+                fullWidth
+                onChange={debounceInputText(
+                  'setParam',
+                  v.paramsKey,
+                  v.transfomer
+                )}
+              />
+            </Box>
+          )
+        )}
       </Container>
     </Layout>
   );
