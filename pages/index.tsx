@@ -135,6 +135,21 @@ const IndexPage = () => {
                 .replace(regExpSlash, '_')
                 .replace(regExpPlus, '-');
             }
+          },
+          {
+            paramsKey: 'txt-size',
+            label: 'text font size',
+            defaultValue: '12'
+          },
+          {
+            paramsKey: 'txt-color',
+            label: 'text color(#AARRGGBB)',
+            defaultValue: 'FF000000'
+          },
+          {
+            paramsKey: 'txt-align',
+            label: 'text align',
+            defaultValue: 'bottom,right'
           }
         ].map(
           (v: {
