@@ -42,6 +42,8 @@ type actType = actTypeInput | actTypeEnabled;
 const regExpPlus = /\+/g;
 const regExpSlash = /\//g;
 type paramTransformerFunc = (v: string | number) => string;
+const transformer64Name: paramTransformerFunc = (v: string | number) =>
+  `${v}64`;
 const transformer64Value: paramTransformerFunc = (v: string | number) => {
   // https://docs.imgix.com/apis/rendering#base64-variants
   // https://developer.mozilla.org/ja/docs/Web/API/WindowBase64/Base64_encoding_and_decoding
@@ -63,8 +65,9 @@ function reducer(state: previewUrlState, action: actType): previewUrlState {
   switch (action.type) {
     case 'setEnabled':
     case 'setParam':
-      const transformer: paramTransformerFunc = transformer64Value; // https://github.com/imgix/imgix-url-params disallow_base64
-      const ak = action.payload[0];
+      const transformerName: paramTransformerFunc = transformer64Name; // https://github.com/imgix/imgix-url-params disallow_base64
+      const transformerValue: paramTransformerFunc = transformer64Value;
+      const ak = transformerName(action.payload[0]);
       let replaced = false;
       const r = state.params.map(({ enabled, key, value }) => {
         if (key === ak) {
@@ -74,7 +77,7 @@ function reducer(state: previewUrlState, action: actType): previewUrlState {
             key,
             value:
               action.type === 'setParam'
-                ? transformer(action.payload[1])
+                ? transformerValue(action.payload[1])
                 : value
           };
         }
@@ -83,9 +86,11 @@ function reducer(state: previewUrlState, action: actType): previewUrlState {
       if (!replaced) {
         r.push({
           enabled: action.type === 'setEnabled' ? action.payload[1] : false,
-          key: action.payload[0],
+          key: ak,
           value:
-            action.type === 'setParam' ? transformer(action.payload[1]) : ''
+            action.type === 'setParam'
+              ? transformerValue(action.payload[1])
+              : ''
         });
       }
       newState.params = r;
@@ -142,8 +147,10 @@ const IndexPage = () => {
 
   const paramKeyIsEnabled = useCallback(
     (paramKey: string) => {
+      const transformerName: paramTransformerFunc = transformer64Name; // https://github.com/imgix/imgix-url-params disallow_base64
+      const k = transformerName(paramKey);
       const idx = state.params.findIndex(
-        ({ enabled, key }) => key === paramKey && enabled
+        ({ enabled, key }) => key === k && enabled
       );
       return idx >= 0;
     },
@@ -175,22 +182,22 @@ const IndexPage = () => {
         </Box>
         {[
           {
-            paramsKey: 'txt64',
+            paramsKey: 'txt',
             label: 'text',
             defaultValue: ''
           },
           {
-            paramsKey: 'txt-size64',
+            paramsKey: 'txt-size',
             label: 'text font size',
             defaultValue: '12'
           },
           {
-            paramsKey: 'txt-color64',
+            paramsKey: 'txt-color',
             label: 'text color(#AARRGGBB)',
             defaultValue: 'FF000000'
           },
           {
-            paramsKey: 'txt-align64',
+            paramsKey: 'txt-align',
             label: 'text align',
             defaultValue: 'bottom,right'
           }
