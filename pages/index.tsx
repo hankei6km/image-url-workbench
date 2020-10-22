@@ -39,11 +39,31 @@ type actTypeEnabled = {
 };
 type actType = actTypeInput | actTypeEnabled;
 
+const regExpPlus = /\+/g;
+const regExpSlash = /\//g;
+type paramTransformerFunc = (v: string | number) => string;
+const transformerVariant64: paramTransformerFunc = (v: string | number) => {
+  // https://docs.imgix.com/apis/rendering#base64-variants
+  // https://developer.mozilla.org/ja/docs/Web/API/WindowBase64/Base64_encoding_and_decoding
+  // https://stackoverflow.com/questions/24523532/how-do-i-convert-an-image-to-a-base64-encoded-data-url-in-sails-js-or-generally
+  // https://qiita.com/awakia/items/049791daca69120d7035
+  return Buffer.from(v as string, 'utf-8')
+    .toString('base64')
+    .replace(regExpSlash, '_')
+    .replace(regExpPlus, '-');
+};
+
+//  disallow_base64 判定で使う予定
+// const transformerPassthru: paramTransformerFunc = (
+//   v: string | number
+// ): string => `${v}`;
+
 function reducer(state: previewUrlState, action: actType): previewUrlState {
   const newState: previewUrlState = { ...state };
   switch (action.type) {
     case 'setEnabled':
     case 'setParam':
+      const transformer: paramTransformerFunc = transformerVariant64; // https://github.com/imgix/imgix-url-params disallow_base64
       const ak = action.payload[0];
       let replaced = false;
       const r = state.params.map(({ enabled, key, value }) => {
@@ -52,7 +72,10 @@ function reducer(state: previewUrlState, action: actType): previewUrlState {
           return {
             enabled: action.type === 'setEnabled' ? action.payload[1] : enabled,
             key,
-            value: action.type === 'setParam' ? action.payload[1] : value
+            value:
+              action.type === 'setParam'
+                ? transformer(action.payload[1])
+                : value
           };
         }
         return { enabled, key, value };
@@ -61,7 +84,8 @@ function reducer(state: previewUrlState, action: actType): previewUrlState {
         r.push({
           enabled: action.type === 'setEnabled' ? action.payload[1] : false,
           key: action.payload[0],
-          value: action.type === 'setParam' ? action.payload[1] : ''
+          value:
+            action.type === 'setParam' ? transformer(action.payload[1]) : ''
         });
       }
       newState.params = r;
@@ -83,35 +107,14 @@ function reducer(state: previewUrlState, action: actType): previewUrlState {
   return newState;
 }
 
-const regExpPlus = /\+/g;
-const regExpSlash = /\//g;
-
-type inputValueTransformerFunc = (v: string | number) => string;
-const transformerVariant64: inputValueTransformerFunc = (
-  v: string | number
-) => {
-  // https://docs.imgix.com/apis/rendering#base64-variants
-  // https://developer.mozilla.org/ja/docs/Web/API/WindowBase64/Base64_encoding_and_decoding
-  // https://stackoverflow.com/questions/24523532/how-do-i-convert-an-image-to-a-base64-encoded-data-url-in-sails-js-or-generally
-  // https://qiita.com/awakia/items/049791daca69120d7035
-  return Buffer.from(v as string, 'utf-8')
-    .toString('base64')
-    .replace(regExpSlash, '_')
-    .replace(regExpPlus, '-');
-};
-
-const transformerPassthru: inputValueTransformerFunc = (
-  v: string | number
-): string => `${v}`;
-
 const IndexPage = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [previewUrl, setPreviewUrl] = useState('');
 
   const debounceInputText = (
+    // debounce だけでも無くなってきたような
     act: actTypeInput['type'],
-    paramKey = '',
-    transformer: inputValueTransformerFunc = transformerVariant64
+    paramKey = ''
   ) => {
     let id: any = 0;
     return ({
@@ -120,7 +123,7 @@ const IndexPage = () => {
       if (id !== 0) {
         clearTimeout(id);
       }
-      const value = transformer(target.value);
+      const value = target.value;
       id = setTimeout(
         (payload: [string, string]) => {
           dispatch({ type: act, payload: payload });
@@ -167,7 +170,7 @@ const IndexPage = () => {
             label="Image URL"
             defaultValue={''}
             fullWidth
-            onChange={debounceInputText('setImgUrl', '', transformerPassthru)}
+            onChange={debounceInputText('setImgUrl', '')}
           />
         </Box>
         {[
@@ -195,13 +198,11 @@ const IndexPage = () => {
           ({
             paramsKey,
             label,
-            defaultValue,
-            transfomer
+            defaultValue
           }: {
             paramsKey: string;
             label: string;
             defaultValue: string;
-            transfomer?: inputValueTransformerFunc;
           }) => (
             <Box
               p={1}
@@ -228,7 +229,7 @@ const IndexPage = () => {
                 label={label}
                 defaultValue={defaultValue}
                 fullWidth
-                onChange={debounceInputText('setParam', paramsKey, transfomer)}
+                onChange={debounceInputText('setParam', paramsKey)}
               />
             </Box>
           )
