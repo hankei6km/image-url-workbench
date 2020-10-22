@@ -6,6 +6,7 @@ import Box from '@material-ui/core/Box';
 import Card from '@material-ui/core/Card';
 import Switch from '@material-ui/core/Switch';
 import TextField from '@material-ui/core/TextField';
+import ImgParams, { ImgUrlParamsOnChangeEvent } from '../components/ImgParams';
 
 type previewUrlState = {
   previewUrl: string;
@@ -118,13 +119,11 @@ const IndexPage = () => {
     paramKey = ''
   ) => {
     let id: any = 0;
-    return ({
-      target
-    }: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    return (e: ImgUrlParamsOnChangeEvent) => {
       if (id !== 0) {
         clearTimeout(id);
       }
-      const value = target.value;
+      const value = e.value;
       id = setTimeout(
         (payload: [string, string]) => {
           dispatch({ type: act, payload: payload });
@@ -171,70 +170,50 @@ const IndexPage = () => {
             label="Image URL"
             defaultValue={''}
             fullWidth
-            onChange={debounceInputText('setImgUrl', '')}
+            onChange={(e) =>
+              debounceInputText('setImgUrl', '')({ value: e.target.value })
+            }
           />
         </Box>
         {[
           {
-            paramsKey: 'txt',
-            label: 'text',
-            defaultValue: ''
+            paramsKey: 'txt'
           },
           {
-            paramsKey: 'txt-size',
-            label: 'text font size',
-            defaultValue: '12'
+            paramsKey: 'txt-size'
           },
           {
-            paramsKey: 'txt-color',
-            label: 'text color(#AARRGGBB)',
-            defaultValue: 'FF000000'
+            paramsKey: 'txt-color'
           },
           {
-            paramsKey: 'txt-align',
-            label: 'text align',
-            defaultValue: 'bottom,right'
+            paramsKey: 'txt-align'
           }
-        ].map(
-          ({
-            paramsKey,
-            label,
-            defaultValue
-          }: {
-            paramsKey: string;
-            label: string;
-            defaultValue: string;
-          }) => (
-            <Box
-              p={1}
-              key={paramsKey}
-              display="flex"
-              flexDirection="row"
-              alignItems="center"
-            >
-              <Switch
-                checked={paramKeyIsEnabled(paramsKey)}
-                onChange={(e) => {
-                  dispatch({
-                    type: 'setEnabled',
-                    payload: [paramsKey, e.target.checked]
-                  });
-                }}
-                color="primary"
-                name={label}
-                inputProps={{ 'aria-label': `switch enabled ${label}` }}
-              />
-              <TextField
-                variant="outlined"
-                id={paramsKey}
-                label={label}
-                defaultValue={defaultValue}
-                fullWidth
-                onChange={debounceInputText('setParam', paramsKey)}
-              />
-            </Box>
-          )
-        )}
+        ].map(({ paramsKey }: { paramsKey: string }) => (
+          <Box
+            p={1}
+            key={paramsKey}
+            display="flex"
+            flexDirection="row"
+            alignItems="center"
+          >
+            <Switch
+              checked={paramKeyIsEnabled(paramsKey)}
+              onChange={(e) => {
+                dispatch({
+                  type: 'setEnabled',
+                  payload: [paramsKey, e.target.checked]
+                });
+              }}
+              color="primary"
+              name={paramsKey}
+              inputProps={{ 'aria-label': `switch enabled ${paramsKey}` }}
+            />
+            <ImgParams
+              paramsKey={paramsKey}
+              onChange={debounceInputText('setParam', paramsKey)}
+            />
+          </Box>
+        ))}
       </Container>
     </Layout>
   );
