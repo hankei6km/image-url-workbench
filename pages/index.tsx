@@ -42,7 +42,7 @@ type actType = actTypeInput | actTypeEnabled;
 const regExpPlus = /\+/g;
 const regExpSlash = /\//g;
 type paramTransformerFunc = (v: string | number) => string;
-const transformerVariant64: paramTransformerFunc = (v: string | number) => {
+const transformer64Value: paramTransformerFunc = (v: string | number) => {
   // https://docs.imgix.com/apis/rendering#base64-variants
   // https://developer.mozilla.org/ja/docs/Web/API/WindowBase64/Base64_encoding_and_decoding
   // https://stackoverflow.com/questions/24523532/how-do-i-convert-an-image-to-a-base64-encoded-data-url-in-sails-js-or-generally
@@ -63,7 +63,7 @@ function reducer(state: previewUrlState, action: actType): previewUrlState {
   switch (action.type) {
     case 'setEnabled':
     case 'setParam':
-      const transformer: paramTransformerFunc = transformerVariant64; // https://github.com/imgix/imgix-url-params disallow_base64
+      const transformer: paramTransformerFunc = transformer64Value; // https://github.com/imgix/imgix-url-params disallow_base64
       const ak = action.payload[0];
       let replaced = false;
       const r = state.params.map(({ enabled, key, value }) => {
