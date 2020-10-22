@@ -20,3 +20,16 @@ export function paramsKeyToSpread(
     defaultValue: ''
   };
 }
+export function paramsKeyToRange(
+  paramsKey: string
+): [number, number | undefined] | undefined {
+  const p: any = urlParams.parameters[paramsKey] || {};
+  if (p && p.expects && p.expects[0] && p.expects[0].suggested_range) {
+    const max =
+      p.expects[0].suggested_range.max !== undefined
+        ? p.expects[0].suggested_range.max
+        : 500;
+    return [p.expects[0].suggested_range.min, max];
+  }
+  return;
+}

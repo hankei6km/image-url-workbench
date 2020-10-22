@@ -50,7 +50,7 @@ const transformer64Value: paramTransformerFunc = (v: string | number) => {
   // https://developer.mozilla.org/ja/docs/Web/API/WindowBase64/Base64_encoding_and_decoding
   // https://stackoverflow.com/questions/24523532/how-do-i-convert-an-image-to-a-base64-encoded-data-url-in-sails-js-or-generally
   // https://qiita.com/awakia/items/049791daca69120d7035
-  return Buffer.from(v as string, 'utf-8')
+  return Buffer.from(`${v}`, 'utf-8')
     .toString('base64')
     .replace(regExpSlash, '_')
     .replace(regExpPlus, '-');
@@ -196,22 +196,26 @@ const IndexPage = () => {
             flexDirection="row"
             alignItems="center"
           >
-            <Switch
-              checked={paramKeyIsEnabled(paramsKey)}
-              onChange={(e) => {
-                dispatch({
-                  type: 'setEnabled',
-                  payload: [paramsKey, e.target.checked]
-                });
-              }}
-              color="primary"
-              name={paramsKey}
-              inputProps={{ 'aria-label': `switch enabled ${paramsKey}` }}
-            />
-            <ImgParams
-              paramsKey={paramsKey}
-              onChange={debounceInputText('setParam', paramsKey)}
-            />
+            <Box>
+              <Switch
+                checked={paramKeyIsEnabled(paramsKey)}
+                onChange={(e) => {
+                  dispatch({
+                    type: 'setEnabled',
+                    payload: [paramsKey, e.target.checked]
+                  });
+                }}
+                color="primary"
+                name={paramsKey}
+                inputProps={{ 'aria-label': `switch enabled ${paramsKey}` }}
+              />
+            </Box>
+            <Box flexGrow={1}>
+              <ImgParams
+                paramsKey={paramsKey}
+                onChange={debounceInputText('setParam', paramsKey)}
+              />
+            </Box>
           </Box>
         ))}
       </Container>
