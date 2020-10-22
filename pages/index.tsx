@@ -39,6 +39,27 @@ type actTypeEnabled = {
 };
 type actType = actTypeInput | actTypeEnabled;
 
+const regExpPlus = /\+/g;
+const regExpSlash = /\//g;
+type paramTransformerFunc = (v: string | number) => string;
+const transformer64Name: paramTransformerFunc = (v: string | number) =>
+  `${v}64`;
+const transformer64Value: paramTransformerFunc = (v: string | number) => {
+  // https://docs.imgix.com/apis/rendering#base64-variants
+  // https://developer.mozilla.org/ja/docs/Web/API/WindowBase64/Base64_encoding_and_decoding
+  // https://stackoverflow.com/questions/24523532/how-do-i-convert-an-image-to-a-base64-encoded-data-url-in-sails-js-or-generally
+  // https://qiita.com/awakia/items/049791daca69120d7035
+  return Buffer.from(v as string, 'utf-8')
+    .toString('base64')
+    .replace(regExpSlash, '_')
+    .replace(regExpPlus, '-');
+};
+
+//  disallow_base64 判定で使う予定
+// const transformerPassthru: paramTransformerFunc = (
+//   v: string | number
+// ): string => `${v}`;
+
 function reducer(state: previewUrlState, action: actType): previewUrlState {
   const newState: previewUrlState = { ...state };
   switch (action.type) {
@@ -60,7 +81,7 @@ function reducer(state: previewUrlState, action: actType): previewUrlState {
       if (!replaced) {
         r.push({
           enabled: action.type === 'setEnabled' ? action.payload[1] : false,
-          key: action.payload[0],
+          key: ak,
           value: action.type === 'setParam' ? action.payload[1] : ''
         });
       }
@@ -76,24 +97,25 @@ function reducer(state: previewUrlState, action: actType): previewUrlState {
   const q = new URLSearchParams('');
   newState.params
     .filter(({ enabled }) => enabled)
-    .forEach(({ key, value }) => q.append(key, value));
+    .forEach(({ key, value }) => {
+      const transformerName: paramTransformerFunc = transformer64Name; // https://github.com/imgix/imgix-url-params disallow_base64
+      const transformerValue: paramTransformerFunc = transformer64Value;
+      q.append(transformerName(key), transformerValue(value));
+    });
   const s = q.toString();
   const paramsString = newState.imgUrl && s ? `?${s}` : '';
   newState.previewUrl = `${newState.imgUrl}${paramsString}`;
   return newState;
 }
 
-const regExpPlus = /\+/g;
-const regExpSlash = /\//g;
-
 const IndexPage = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [previewUrl, setPreviewUrl] = useState('');
 
   const debounceInputText = (
+    // debounce だけでも無くなってきたような
     act: actTypeInput['type'],
-    paramKey = '',
-    transformer = (v: string | number): string => `${v}`
+    paramKey = ''
   ) => {
     let id: any = 0;
     return ({
@@ -102,7 +124,7 @@ const IndexPage = () => {
       if (id !== 0) {
         clearTimeout(id);
       }
-      const value = transformer(target.value);
+      const value = target.value;
       id = setTimeout(
         (payload: [string, string]) => {
           dispatch({ type: act, payload: payload });
@@ -115,6 +137,7 @@ const IndexPage = () => {
   };
 
   useEffect(() => {
+    // console.log(state.previewUrl);
     setPreviewUrl(state.previewUrl);
   }, [state.previewUrl]);
 
@@ -148,24 +171,14 @@ const IndexPage = () => {
             label="Image URL"
             defaultValue={''}
             fullWidth
-            onChange={debounceInputText('setImgUrl')}
+            onChange={debounceInputText('setImgUrl', '')}
           />
         </Box>
         {[
           {
-            paramsKey: 'txt64',
+            paramsKey: 'txt',
             label: 'text',
-            defaultValue: '',
-            transfomer: (v: string | number) => {
-              // https://docs.imgix.com/apis/rendering#base64-variants
-              // https://developer.mozilla.org/ja/docs/Web/API/WindowBase64/Base64_encoding_and_decoding
-              // https://stackoverflow.com/questions/24523532/how-do-i-convert-an-image-to-a-base64-encoded-data-url-in-sails-js-or-generally
-              // https://qiita.com/awakia/items/049791daca69120d7035
-              return Buffer.from(v as string, 'utf-8')
-                .toString('base64')
-                .replace(regExpSlash, '_')
-                .replace(regExpPlus, '-');
-            }
+            defaultValue: ''
           },
           {
             paramsKey: 'txt-size',
@@ -186,13 +199,11 @@ const IndexPage = () => {
           ({
             paramsKey,
             label,
-            defaultValue,
-            transfomer
+            defaultValue
           }: {
             paramsKey: string;
             label: string;
             defaultValue: string;
-            transfomer?: (v: string | number) => string;
           }) => (
             <Box
               p={1}
@@ -219,7 +230,7 @@ const IndexPage = () => {
                 label={label}
                 defaultValue={defaultValue}
                 fullWidth
-                onChange={debounceInputText('setParam', paramsKey, transfomer)}
+                onChange={debounceInputText('setParam', paramsKey)}
               />
             </Box>
           )
