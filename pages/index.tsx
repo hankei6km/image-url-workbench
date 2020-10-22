@@ -115,7 +115,6 @@ const IndexPage = () => {
   };
 
   useEffect(() => {
-    console.log(state.previewUrl);
     setPreviewUrl(state.previewUrl);
   }, [state.previewUrl]);
 
