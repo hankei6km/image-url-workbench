@@ -1,15 +1,20 @@
-import React, { useState, useReducer, useEffect } from 'react';
+import React, { useState, useReducer, useEffect, useCallback } from 'react';
 import Layout from '../components/Layout';
 import Container from '@material-ui/core/Container';
 // import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import Card from '@material-ui/core/Card';
+import Switch from '@material-ui/core/Switch';
 import TextField from '@material-ui/core/TextField';
 
 type previewUrlState = {
   previewUrl: string;
   imgUrl: string;
-  params: [string, string][];
+  params: {
+    enabled: boolean;
+    key: string;
+    value: string;
+  }[];
 };
 
 const initialState: previewUrlState = {
@@ -24,25 +29,40 @@ const initialState: previewUrlState = {
 // debouce する関数をまとめるのが難しいので今回は見送り
 // type actSetParam = { type: 'setParam'; payload: [string, string] };
 // type actSetImgUrl = { type: 'setImgUrl'; payload: string };
-type actType = {
+type actTypeInput = {
   type: 'setParam' | 'setImgUrl';
   payload: [string, string];
 };
+type actTypeEnabled = {
+  type: 'setEnabled';
+  payload: [string, boolean];
+};
+type actType = actTypeInput | actTypeEnabled;
+
 function reducer(state: previewUrlState, action: actType): previewUrlState {
   const newState: previewUrlState = { ...state };
   switch (action.type) {
+    case 'setEnabled':
     case 'setParam':
       const ak = action.payload[0];
       let replaced = false;
-      const r: [string, string][] = state.params.map(([k, v]) => {
-        if (k === ak) {
+      const r = state.params.map(({ enabled, key, value }) => {
+        if (key === ak) {
           replaced = true;
-          return [k, action.payload[1]];
+          return {
+            enabled: action.type === 'setEnabled' ? action.payload[1] : enabled,
+            key,
+            value: action.type === 'setParam' ? action.payload[1] : value
+          };
         }
-        return [k, v];
+        return { enabled, key, value };
       });
       if (!replaced) {
-        r.push(action.payload);
+        r.push({
+          enabled: action.type === 'setEnabled' ? action.payload[1] : false,
+          key: action.payload[0],
+          value: action.type === 'setParam' ? action.payload[1] : ''
+        });
       }
       newState.params = r;
       break;
@@ -54,7 +74,9 @@ function reducer(state: previewUrlState, action: actType): previewUrlState {
   }
 
   const q = new URLSearchParams('');
-  newState.params.forEach(([k, v]) => q.append(k, v));
+  newState.params
+    .filter(({ enabled }) => enabled)
+    .forEach(({ key, value }) => q.append(key, value));
   const s = q.toString();
   const paramsString = newState.imgUrl && s ? `?${s}` : '';
   newState.previewUrl = `${newState.imgUrl}${paramsString}`;
@@ -69,7 +91,7 @@ const IndexPage = () => {
   const [previewUrl, setPreviewUrl] = useState('');
 
   const debounceInputText = (
-    act: actType['type'],
+    act: actTypeInput['type'],
     paramKey = '',
     transformer = (v: string | number): string => `${v}`
   ) => {
@@ -93,9 +115,18 @@ const IndexPage = () => {
   };
 
   useEffect(() => {
-    console.log(state.previewUrl);
     setPreviewUrl(state.previewUrl);
   }, [state.previewUrl]);
+
+  const paramKeyIsEnabled = useCallback(
+    (paramKey: string) => {
+      const idx = state.params.findIndex(
+        ({ enabled, key }) => key === paramKey && enabled
+      );
+      return idx >= 0;
+    },
+    [state.params]
+  );
 
   return (
     <Layout title="Home | Next.js + TypeScript Example">
@@ -152,23 +183,43 @@ const IndexPage = () => {
             defaultValue: 'bottom,right'
           }
         ].map(
-          (v: {
+          ({
+            paramsKey,
+            label,
+            defaultValue,
+            transfomer
+          }: {
             paramsKey: string;
             label: string;
             defaultValue: string;
             transfomer?: (v: string | number) => string;
           }) => (
-            <Box p={1} key={v.paramsKey}>
+            <Box
+              p={1}
+              key={paramsKey}
+              display="flex"
+              flexDirection="row"
+              alignItems="center"
+            >
+              <Switch
+                checked={paramKeyIsEnabled(paramsKey)}
+                onChange={(e) => {
+                  dispatch({
+                    type: 'setEnabled',
+                    payload: [paramsKey, e.target.checked]
+                  });
+                }}
+                color="primary"
+                name={label}
+                inputProps={{ 'aria-label': `switch enabled ${label}` }}
+              />
               <TextField
-                id={v.paramsKey}
-                label={v.label}
-                defaultValue={v.defaultValue}
+                variant="outlined"
+                id={paramsKey}
+                label={label}
+                defaultValue={defaultValue}
                 fullWidth
-                onChange={debounceInputText(
-                  'setParam',
-                  v.paramsKey,
-                  v.transfomer
-                )}
+                onChange={debounceInputText('setParam', paramsKey, transfomer)}
               />
             </Box>
           )
