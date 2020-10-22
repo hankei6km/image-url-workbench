@@ -4,7 +4,11 @@ import Box from '@material-ui/core/Box';
 import TextField from '@material-ui/core/TextField';
 import Slider from '@material-ui/core/Slider';
 import Input from '@material-ui/core/Input';
-import { paramsKeyToSpread, paramsKeyToRange } from '../utils/imgParamsUtils';
+import {
+  paramsKeyToSpread,
+  paramsKeyToRange,
+  paramsKeyIsColor
+} from '../utils/imgParamsUtils';
 
 export type ImgUrlParamsOnChangeEvent = { value: string | number };
 
@@ -100,10 +104,16 @@ function ImgParamsRange({
   );
 }
 
+function ImgParamsColor() {
+  return <div />;
+}
+
 export default function ImgParams(props: ImgParamsProps) {
   const suggestRange = paramsKeyToRange(props.paramsKey);
   if (suggestRange) {
     return <ImgParamsRange suggestRange={suggestRange} {...props} />;
+  } else if (paramsKeyIsColor(props.paramsKey)) {
+    return <ImgParamsColor />;
   }
   return <ImgParamsTextField {...props} />;
 }

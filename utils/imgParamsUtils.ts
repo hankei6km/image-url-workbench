@@ -20,6 +20,7 @@ export function paramsKeyToSpread(
     defaultValue: ''
   };
 }
+
 export function paramsKeyToRange(
   paramsKey: string
 ): [number, number | undefined] | undefined {
@@ -32,4 +33,13 @@ export function paramsKeyToRange(
     return [p.expects[0].suggested_range.min, max];
   }
   return;
+}
+
+const colorTypes = ['hex_color', 'color_keyword'];
+export function paramsKeyIsColor(paramsKey: string): boolean {
+  const p: any = urlParams.parameters[paramsKey] || {};
+  if (p && p.expects && p.expects[0]) {
+    return colorTypes.includes(p.expects[0].type);
+  }
+  return false;
 }
