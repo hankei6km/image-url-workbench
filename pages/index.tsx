@@ -65,9 +65,7 @@ function reducer(state: previewUrlState, action: actType): previewUrlState {
   switch (action.type) {
     case 'setEnabled':
     case 'setParam':
-      const transformerName: paramTransformerFunc = transformer64Name; // https://github.com/imgix/imgix-url-params disallow_base64
-      const transformerValue: paramTransformerFunc = transformer64Value;
-      const ak = transformerName(action.payload[0]);
+      const ak = action.payload[0];
       let replaced = false;
       const r = state.params.map(({ enabled, key, value }) => {
         if (key === ak) {
@@ -75,10 +73,7 @@ function reducer(state: previewUrlState, action: actType): previewUrlState {
           return {
             enabled: action.type === 'setEnabled' ? action.payload[1] : enabled,
             key,
-            value:
-              action.type === 'setParam'
-                ? transformerValue(action.payload[1])
-                : value
+            value: action.type === 'setParam' ? action.payload[1] : value
           };
         }
         return { enabled, key, value };
@@ -87,10 +82,7 @@ function reducer(state: previewUrlState, action: actType): previewUrlState {
         r.push({
           enabled: action.type === 'setEnabled' ? action.payload[1] : false,
           key: ak,
-          value:
-            action.type === 'setParam'
-              ? transformerValue(action.payload[1])
-              : ''
+          value: action.type === 'setParam' ? action.payload[1] : ''
         });
       }
       newState.params = r;
@@ -105,7 +97,11 @@ function reducer(state: previewUrlState, action: actType): previewUrlState {
   const q = new URLSearchParams('');
   newState.params
     .filter(({ enabled }) => enabled)
-    .forEach(({ key, value }) => q.append(key, value));
+    .forEach(({ key, value }) => {
+      const transformerName: paramTransformerFunc = transformer64Name; // https://github.com/imgix/imgix-url-params disallow_base64
+      const transformerValue: paramTransformerFunc = transformer64Value;
+      q.append(transformerName(key), transformerValue(value));
+    });
   const s = q.toString();
   const paramsString = newState.imgUrl && s ? `?${s}` : '';
   newState.previewUrl = `${newState.imgUrl}${paramsString}`;
@@ -147,10 +143,8 @@ const IndexPage = () => {
 
   const paramKeyIsEnabled = useCallback(
     (paramKey: string) => {
-      const transformerName: paramTransformerFunc = transformer64Name; // https://github.com/imgix/imgix-url-params disallow_base64
-      const k = transformerName(paramKey);
       const idx = state.params.findIndex(
-        ({ enabled, key }) => key === k && enabled
+        ({ enabled, key }) => key === paramKey && enabled
       );
       return idx >= 0;
     },
