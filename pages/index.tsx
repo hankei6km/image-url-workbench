@@ -42,6 +42,7 @@ type actType = actTypeInput | actTypeEnabled;
 
 const regExpPlus = /\+/g;
 const regExpSlash = /\//g;
+const regExpTrailEq = /=+$/g;
 type paramTransformerFunc = (v: string | number) => string;
 const transformer64Name: paramTransformerFunc = (v: string | number) =>
   `${v}64`;
@@ -53,7 +54,8 @@ const transformer64Value: paramTransformerFunc = (v: string | number) => {
   return Buffer.from(`${v}`, 'utf-8')
     .toString('base64')
     .replace(regExpSlash, '_')
-    .replace(regExpPlus, '-');
+    .replace(regExpPlus, '-')
+    .replace(regExpTrailEq, '');
 };
 
 //  disallow_base64 判定で使う予定
