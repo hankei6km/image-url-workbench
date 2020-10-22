@@ -86,6 +86,24 @@ function reducer(state: previewUrlState, action: actType): previewUrlState {
 const regExpPlus = /\+/g;
 const regExpSlash = /\//g;
 
+type inputValueTransformerFunc = (v: string | number) => string;
+const transformerVariant64: inputValueTransformerFunc = (
+  v: string | number
+) => {
+  // https://docs.imgix.com/apis/rendering#base64-variants
+  // https://developer.mozilla.org/ja/docs/Web/API/WindowBase64/Base64_encoding_and_decoding
+  // https://stackoverflow.com/questions/24523532/how-do-i-convert-an-image-to-a-base64-encoded-data-url-in-sails-js-or-generally
+  // https://qiita.com/awakia/items/049791daca69120d7035
+  return Buffer.from(v as string, 'utf-8')
+    .toString('base64')
+    .replace(regExpSlash, '_')
+    .replace(regExpPlus, '-');
+};
+
+const transformerPassthru: inputValueTransformerFunc = (
+  v: string | number
+): string => `${v}`;
+
 const IndexPage = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [previewUrl, setPreviewUrl] = useState('');
@@ -93,7 +111,7 @@ const IndexPage = () => {
   const debounceInputText = (
     act: actTypeInput['type'],
     paramKey = '',
-    transformer = (v: string | number): string => `${v}`
+    transformer: inputValueTransformerFunc = transformerVariant64
   ) => {
     let id: any = 0;
     return ({
@@ -115,6 +133,7 @@ const IndexPage = () => {
   };
 
   useEffect(() => {
+    console.log(state.previewUrl);
     setPreviewUrl(state.previewUrl);
   }, [state.previewUrl]);
 
@@ -148,37 +167,27 @@ const IndexPage = () => {
             label="Image URL"
             defaultValue={''}
             fullWidth
-            onChange={debounceInputText('setImgUrl')}
+            onChange={debounceInputText('setImgUrl', '', transformerPassthru)}
           />
         </Box>
         {[
           {
             paramsKey: 'txt64',
             label: 'text',
-            defaultValue: '',
-            transfomer: (v: string | number) => {
-              // https://docs.imgix.com/apis/rendering#base64-variants
-              // https://developer.mozilla.org/ja/docs/Web/API/WindowBase64/Base64_encoding_and_decoding
-              // https://stackoverflow.com/questions/24523532/how-do-i-convert-an-image-to-a-base64-encoded-data-url-in-sails-js-or-generally
-              // https://qiita.com/awakia/items/049791daca69120d7035
-              return Buffer.from(v as string, 'utf-8')
-                .toString('base64')
-                .replace(regExpSlash, '_')
-                .replace(regExpPlus, '-');
-            }
+            defaultValue: ''
           },
           {
-            paramsKey: 'txt-size',
+            paramsKey: 'txt-size64',
             label: 'text font size',
             defaultValue: '12'
           },
           {
-            paramsKey: 'txt-color',
+            paramsKey: 'txt-color64',
             label: 'text color(#AARRGGBB)',
             defaultValue: 'FF000000'
           },
           {
-            paramsKey: 'txt-align',
+            paramsKey: 'txt-align64',
             label: 'text align',
             defaultValue: 'bottom,right'
           }
@@ -192,7 +201,7 @@ const IndexPage = () => {
             paramsKey: string;
             label: string;
             defaultValue: string;
-            transfomer?: (v: string | number) => string;
+            transfomer?: inputValueTransformerFunc;
           }) => (
             <Box
               p={1}
