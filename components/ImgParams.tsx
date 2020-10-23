@@ -62,9 +62,9 @@ function ImgParamsRange({
   const [min, max] = suggestRange;
   // const min = suggestRange[0];
   // const max = suggestRange[0];
-  const p = paramsKeyToSpread(paramsKey);
+  const { defaultValue, ...p } = paramsKeyToSpread(paramsKey);
   const [value, setValue] = useState<number | string | Array<number | string>>(
-    p.defaultValue
+    defaultValue
   );
 
   const handleSliderChange = (
