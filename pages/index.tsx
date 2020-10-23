@@ -6,6 +6,7 @@ import Box from '@material-ui/core/Box';
 import Card from '@material-ui/core/Card';
 import Switch from '@material-ui/core/Switch';
 import TextField from '@material-ui/core/TextField';
+import ImgParams, { ImgUrlParamsOnChangeEvent } from '../components/ImgParams';
 
 type previewUrlState = {
   previewUrl: string;
@@ -41,6 +42,7 @@ type actType = actTypeInput | actTypeEnabled;
 
 const regExpPlus = /\+/g;
 const regExpSlash = /\//g;
+const regExpTrailEq = /=+$/g;
 type paramTransformerFunc = (v: string | number) => string;
 const transformer64Name: paramTransformerFunc = (v: string | number) =>
   `${v}64`;
@@ -49,10 +51,11 @@ const transformer64Value: paramTransformerFunc = (v: string | number) => {
   // https://developer.mozilla.org/ja/docs/Web/API/WindowBase64/Base64_encoding_and_decoding
   // https://stackoverflow.com/questions/24523532/how-do-i-convert-an-image-to-a-base64-encoded-data-url-in-sails-js-or-generally
   // https://qiita.com/awakia/items/049791daca69120d7035
-  return Buffer.from(v as string, 'utf-8')
+  return Buffer.from(`${v}`, 'utf-8')
     .toString('base64')
     .replace(regExpSlash, '_')
-    .replace(regExpPlus, '-');
+    .replace(regExpPlus, '-')
+    .replace(regExpTrailEq, '');
 };
 
 //  disallow_base64 判定で使う予定
@@ -118,13 +121,11 @@ const IndexPage = () => {
     paramKey = ''
   ) => {
     let id: any = 0;
-    return ({
-      target
-    }: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    return (e: ImgUrlParamsOnChangeEvent) => {
       if (id !== 0) {
         clearTimeout(id);
       }
-      const value = target.value;
+      const value = e.value;
       id = setTimeout(
         (payload: [string, string]) => {
           dispatch({ type: act, payload: payload });
@@ -171,47 +172,33 @@ const IndexPage = () => {
             label="Image URL"
             defaultValue={''}
             fullWidth
-            onChange={debounceInputText('setImgUrl', '')}
+            onChange={(e) =>
+              debounceInputText('setImgUrl', '')({ value: e.target.value })
+            }
           />
         </Box>
         {[
           {
-            paramsKey: 'txt',
-            label: 'text',
-            defaultValue: ''
+            paramsKey: 'txt'
           },
           {
-            paramsKey: 'txt-size',
-            label: 'text font size',
-            defaultValue: '12'
+            paramsKey: 'txt-size'
           },
           {
-            paramsKey: 'txt-color',
-            label: 'text color(#AARRGGBB)',
-            defaultValue: 'FF000000'
+            paramsKey: 'txt-color'
           },
           {
-            paramsKey: 'txt-align',
-            label: 'text align',
-            defaultValue: 'bottom,right'
+            paramsKey: 'txt-align'
           }
-        ].map(
-          ({
-            paramsKey,
-            label,
-            defaultValue
-          }: {
-            paramsKey: string;
-            label: string;
-            defaultValue: string;
-          }) => (
-            <Box
-              p={1}
-              key={paramsKey}
-              display="flex"
-              flexDirection="row"
-              alignItems="center"
-            >
+        ].map(({ paramsKey }: { paramsKey: string }) => (
+          <Box
+            p={1}
+            key={paramsKey}
+            display="flex"
+            flexDirection="row"
+            alignItems="center"
+          >
+            <Box>
               <Switch
                 checked={paramKeyIsEnabled(paramsKey)}
                 onChange={(e) => {
@@ -221,20 +208,18 @@ const IndexPage = () => {
                   });
                 }}
                 color="primary"
-                name={label}
-                inputProps={{ 'aria-label': `switch enabled ${label}` }}
+                name={paramsKey}
+                inputProps={{ 'aria-label': `switch enabled ${paramsKey}` }}
               />
-              <TextField
-                variant="outlined"
-                id={paramsKey}
-                label={label}
-                defaultValue={defaultValue}
-                fullWidth
+            </Box>
+            <Box flexGrow={1}>
+              <ImgParams
+                paramsKey={paramsKey}
                 onChange={debounceInputText('setParam', paramsKey)}
               />
             </Box>
-          )
-        )}
+          </Box>
+        ))}
       </Container>
     </Layout>
   );
