@@ -43,3 +43,11 @@ export function paramsKeyIsColor(paramsKey: string): boolean {
   }
   return false;
 }
+
+export function paramsKeyToList(paramsKey: string): string[] | undefined {
+  const p: any = urlParams.parameters[paramsKey] || {};
+  if (p && p.expects && p.expects[0] && p.expects[0].type === 'list') {
+    return p.expects[0].possible_values;
+  }
+  return;
+}
