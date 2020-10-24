@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Typography from '@material-ui/core/Typography';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import Box from '@material-ui/core/Box';
@@ -25,6 +26,9 @@ const useStyles = makeStyles(() => ({
   // },
   root: {
     '& > .MuiBox-root >  *': {
+      textTransform: 'none'
+    },
+    '& > * > .MuiBox-root >  *': {
       textTransform: 'none'
     }
   },
@@ -71,12 +75,38 @@ function ImgParamsRange({
   paramsKey,
   onChange
 }: ImgParamsRangeProps) {
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up('sm'));
   const [min, max] = suggestRange;
   const classes = useStyles();
   const { defaultValue, ...p } = paramsKeyToSpread(paramsKey);
   const [value, setValue] = useState<number | string | Array<number | string>>(
     defaultValue
   );
+
+  const controlOuterMediaProps = matches
+    ? {
+        p: 1,
+        flexDirection: 'row',
+        alignItems: 'center'
+      }
+    : {
+        flexDirection: 'column',
+        alignItems: 'flex-start'
+      };
+  const labelOuterMediaProps = matches
+    ? { p: 1 }
+    : {
+        px: 1,
+        mb: -1
+      };
+  const sliderOuterMediaProps = matches
+    ? { flexGrow: 1, ml: 2 }
+    : {
+        px: 1,
+        mb: -2,
+        width: '100%'
+      };
 
   const handleSliderChange = (
     _event: React.ChangeEvent<{}>,
@@ -108,19 +138,21 @@ function ImgParamsRange({
       flexDirection="row"
       alignItems="center"
     >
-      <Box p={1}>
-        <Typography variant="button" display="block" gutterBottom>
-          {p.label}
-        </Typography>
-      </Box>
-      <Box flexGrow={1} p={1}>
-        <Slider
-          value={typeof value === 'number' ? value : 0}
-          onChange={handleSliderChange}
-          aria-labelledby="input-slider"
-          min={min}
-          max={max}
-        />
+      <Box display="flex" flexGrow={1} {...controlOuterMediaProps}>
+        <Box {...labelOuterMediaProps}>
+          <Typography variant="button" display="block" gutterBottom>
+            {p.label}
+          </Typography>
+        </Box>
+        <Box {...sliderOuterMediaProps}>
+          <Slider
+            value={typeof value === 'number' ? value : 0}
+            onChange={handleSliderChange}
+            aria-labelledby="input-slider"
+            min={min}
+            max={max}
+          />
+        </Box>
       </Box>
       <Box p={1}>
         <Input
