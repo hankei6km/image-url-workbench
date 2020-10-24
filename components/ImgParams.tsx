@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-// import Typography from '@material-ui/core/Typography';
+import Typography from '@material-ui/core/Typography';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import Box from '@material-ui/core/Box';
 import TextField from '@material-ui/core/TextField';
@@ -23,6 +23,11 @@ const useStyles = makeStyles(() => ({
   //     width: '25ch'
   //   }
   // },
+  root: {
+    '& > .MuiBox-root >  *': {
+      textTransform: 'none'
+    }
+  },
   colorSample: {
     width: 30,
     height: 30,
@@ -67,8 +72,7 @@ function ImgParamsRange({
   onChange
 }: ImgParamsRangeProps) {
   const [min, max] = suggestRange;
-  // const min = suggestRange[0];
-  // const max = suggestRange[0];
+  const classes = useStyles();
   const { defaultValue, ...p } = paramsKeyToSpread(paramsKey);
   const [value, setValue] = useState<number | string | Array<number | string>>(
     defaultValue
@@ -98,7 +102,17 @@ function ImgParamsRange({
   };
 
   return (
-    <Box display="flex" flexDirection="row" alignItems="center">
+    <Box
+      className={classes.root}
+      display="flex"
+      flexDirection="row"
+      alignItems="center"
+    >
+      <Box p={1}>
+        <Typography variant="button" display="block" gutterBottom>
+          {p.label}
+        </Typography>
+      </Box>
       <Box flexGrow={1} p={1}>
         <Slider
           value={typeof value === 'number' ? value : 0}
@@ -139,7 +153,12 @@ function ImgParamsColor({ paramsKey, onChange }: ImgParamsProps) {
 
   // Button のラベルは後で調整
   return (
-    <Box display="flex" flexDirection="row" alignItems="center">
+    <Box
+      className={classes.root}
+      display="flex"
+      flexDirection="row"
+      alignItems="center"
+    >
       <Box display="flex" alignItems="center">
         <Button onClick={() => setOpen(true)}>{p.label}</Button>
       </Box>
