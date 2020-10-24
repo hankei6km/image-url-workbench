@@ -207,7 +207,7 @@ function ImgParamsList({
           {...params}
           variant="outlined"
           label={p.label}
-          placeholder="Favorites"
+          placeholder={paramsKey}
         />
       )}
     />
