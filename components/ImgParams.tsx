@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 // import Typography from '@material-ui/core/Typography';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 import Box from '@material-ui/core/Box';
 import TextField from '@material-ui/core/TextField';
 import Slider from '@material-ui/core/Slider';
@@ -11,7 +12,8 @@ import { SketchPicker } from 'react-color';
 import {
   paramsKeyToSpread,
   paramsKeyToRange,
-  paramsKeyIsColor
+  paramsKeyIsColor,
+  paramsKeyToList
 } from '../utils/imgParamsUtils';
 
 const useStyles = makeStyles(() => ({
@@ -39,6 +41,11 @@ type ImgParamsRangeProps = {
   suggestRange: [number, number | undefined];
   // paramsKey: string;
   // onChange: (e: ImgUrlParamsOnChangeEvent) => void;
+  //};
+} & ImgParamsProps;
+
+type ImgParamsListProps = {
+  possibleValues: string[];
   //};
 } & ImgParamsProps;
 
@@ -177,12 +184,45 @@ function ImgParamsColor({ paramsKey, onChange }: ImgParamsProps) {
   );
 }
 
+function ImgParamsList({
+  possibleValues,
+  paramsKey,
+  onChange
+}: ImgParamsListProps) {
+  const p = paramsKeyToSpread(paramsKey);
+  return (
+    <Autocomplete
+      multiple
+      id="tags-standard"
+      options={possibleValues}
+      getOptionLabel={(option) => option}
+      defaultValue={[]}
+      onChange={(_event: React.ChangeEvent<{}>, newValue: string[]) => {
+        if (newValue) {
+          onChange({ value: newValue.join(',') });
+        }
+      }}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          variant="outlined"
+          label={p.label}
+          placeholder={paramsKey}
+        />
+      )}
+    />
+  );
+}
+
 export default function ImgParams(props: ImgParamsProps) {
   const suggestRange = paramsKeyToRange(props.paramsKey);
+  const possibleValues = paramsKeyToList(props.paramsKey);
   if (suggestRange) {
     return <ImgParamsRange suggestRange={suggestRange} {...props} />;
   } else if (paramsKeyIsColor(props.paramsKey)) {
     return <ImgParamsColor {...props} />;
+  } else if (possibleValues) {
+    return <ImgParamsList possibleValues={possibleValues} {...props} />;
   }
   return <ImgParamsTextField {...props} />;
 }
