@@ -131,6 +131,7 @@ function ImgParamsRange({
     }
   };
 
+  // Typography のラベルの色は後で調整(TextFieldのラベル色はどこで決まる?)
   return (
     <Box
       className={classes.root}
@@ -183,7 +184,7 @@ function ImgParamsColor({ paramsKey, onChange }: ImgParamsProps) {
 
   const p = paramsKeyToSpread(paramsKey);
 
-  // Button のラベルは後で調整
+  // Button のラベルの色は後で調整(TextFieldのラベル色はどこで決まる?)
   return (
     <Box
       className={classes.root}
