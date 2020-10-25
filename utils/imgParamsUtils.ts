@@ -21,6 +21,14 @@ export function paramsKeyToSpread(
   };
 }
 
+export function paramsKeyDisallowBase64(paramsKey: string): boolean {
+  const p: any = urlParams.parameters[paramsKey];
+  if (p) {
+    return p.disallow_base64 === undefined ? false : p.disallow_base64;
+  }
+  return false;
+}
+
 export function paramsKeyToRange(
   paramsKey: string
 ): [number, number | undefined] | undefined {
