@@ -3,10 +3,11 @@ import Layout from '../components/Layout';
 import Container from '@material-ui/core/Container';
 // import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-import Card from '@material-ui/core/Card';
+// import Card from '@material-ui/core/Card';
 import Switch from '@material-ui/core/Switch';
 import TextField from '@material-ui/core/TextField';
 import ImgParams, { ImgUrlParamsOnChangeEvent } from '../components/ImgParams';
+import ImgPreview from '../components/ImgPreview';
 import { paramsKeyDisallowBase64 } from '../utils/imgParamsUtils';
 
 type previewUrlState = {
@@ -162,9 +163,11 @@ const IndexPage = () => {
     <Layout title="Home | Next.js + TypeScript Example">
       <Container maxWidth="sm">
         <Box p={1}>
-          <Card style={{ height: 200 }}>
-            <img height="200" src={previewUrl} alt="preview" />
-          </Card>
+          {/*<Card style={{ height: 200 }}>
+             <img height="200" src={previewUrl} alt="preview" />
+            {' '}
+  </Card>*/}
+          <ImgPreview previewUrl={previewUrl} />
           <TextField
             id="preview-url"
             label="Preview URL"
