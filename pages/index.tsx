@@ -185,6 +185,15 @@ const IndexPage = () => {
         </Box>
         {[
           {
+            paramsKey: 'blur'
+          },
+          {
+            paramsKey: 'mark'
+          },
+          {
+            paramsKey: 'mark-alpha'
+          },
+          {
             paramsKey: 'blend'
           },
           {
