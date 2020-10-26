@@ -7,6 +7,7 @@ import Card from '@material-ui/core/Card';
 import Switch from '@material-ui/core/Switch';
 import TextField from '@material-ui/core/TextField';
 import ImgParams, { ImgUrlParamsOnChangeEvent } from '../components/ImgParams';
+import { paramsKeyDisallowBase64 } from '../utils/imgParamsUtils';
 
 type previewUrlState = {
   previewUrl: string;
@@ -58,10 +59,10 @@ const transformer64Value: paramTransformerFunc = (v: string | number) => {
     .replace(regExpTrailEq, '');
 };
 
-//  disallow_base64 判定で使う予定
-// const transformerPassthru: paramTransformerFunc = (
-//   v: string | number
-// ): string => `${v}`;
+// disallow_base64 判定で使う予定
+const transformerPassthru: paramTransformerFunc = (
+  v: string | number
+): string => `${v}`;
 
 function reducer(state: previewUrlState, action: actType): previewUrlState {
   const newState: previewUrlState = { ...state };
@@ -101,8 +102,13 @@ function reducer(state: previewUrlState, action: actType): previewUrlState {
   newState.params
     .filter(({ enabled }) => enabled)
     .forEach(({ key, value }) => {
-      const transformerName: paramTransformerFunc = transformer64Name; // https://github.com/imgix/imgix-url-params disallow_base64
-      const transformerValue: paramTransformerFunc = transformer64Value;
+      const disallowBase64 = paramsKeyDisallowBase64(key);
+      const transformerName: paramTransformerFunc = disallowBase64
+        ? transformerPassthru
+        : transformer64Name; // https://github.com/imgix/imgix-url-params disallow_base64
+      const transformerValue: paramTransformerFunc = disallowBase64
+        ? transformerPassthru
+        : transformer64Value;
       q.append(transformerName(key), transformerValue(value));
     });
   const s = q.toString();
@@ -178,6 +184,18 @@ const IndexPage = () => {
           />
         </Box>
         {[
+          {
+            paramsKey: 'blur'
+          },
+          {
+            paramsKey: 'mark'
+          },
+          {
+            paramsKey: 'mark-alpha'
+          },
+          {
+            paramsKey: 'blend'
+          },
           {
             paramsKey: 'txt'
           },
