@@ -1,9 +1,21 @@
 import imgixUrlParams from 'imgix-url-params/dist/parameters.json';
 
+type ParamsExpect = {
+  [key: string]: any;
+};
+type Parameters = {
+  [key: string]: { expects: ParamsExpect[] } & any;
+};
 const urlParams: {
   // とりあえず
-  parameters: { [key: string]: any };
+  parameters: Parameters;
 } = imgixUrlParams;
+
+export function paramsKeyParameters(
+  paramsKey: string
+): typeof urlParams['parameters'] | undefined {
+  return urlParams.parameters[paramsKey];
+}
 
 export function paramsKeyToSpread(
   paramsKey: string
@@ -29,33 +41,25 @@ export function paramsKeyDisallowBase64(paramsKey: string): boolean {
   return false;
 }
 
-export function paramsKeyToRange(
-  paramsKey: string
+export function expectToRange(
+  exp: ParamsExpect
 ): [number, number | undefined] | undefined {
-  const p: any = urlParams.parameters[paramsKey] || {};
-  if (p && p.expects && p.expects[0] && p.expects[0].suggested_range) {
+  if (exp.suggested_range) {
     const max =
-      p.expects[0].suggested_range.max !== undefined
-        ? p.expects[0].suggested_range.max
-        : 500;
-    return [p.expects[0].suggested_range.min, max];
+      exp.suggested_range.max !== undefined ? exp.suggested_range.max : 500;
+    return [exp.suggested_range.min, max];
   }
   return;
 }
 
 const colorTypes = ['hex_color', 'color_keyword'];
-export function paramsKeyIsColor(paramsKey: string): boolean {
-  const p: any = urlParams.parameters[paramsKey] || {};
-  if (p && p.expects && p.expects[0]) {
-    return colorTypes.includes(p.expects[0].type);
-  }
-  return false;
+export function expectIsColor(exp: ParamsExpect): boolean {
+  return colorTypes.includes(exp.type);
 }
 
-export function paramsKeyToList(paramsKey: string): string[] | undefined {
-  const p: any = urlParams.parameters[paramsKey] || {};
-  if (p && p.expects && p.expects[0] && p.expects[0].type === 'list') {
-    return p.expects[0].possible_values;
+export function expectToList(exp: ParamsExpect): string[] | undefined {
+  if (exp.type === 'list') {
+    return exp.possible_values;
   }
   return;
 }

@@ -11,10 +11,11 @@ import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import { SketchPicker } from 'react-color';
 import {
+  paramsKeyParameters,
   paramsKeyToSpread,
-  paramsKeyToRange,
-  paramsKeyIsColor,
-  paramsKeyToList
+  expectToRange,
+  expectIsColor,
+  expectToList
 } from '../utils/imgParamsUtils';
 
 const useStyles = makeStyles(() => ({
@@ -267,14 +268,18 @@ function ImgParamsList({
 }
 
 export default function ImgParams(props: ImgParamsProps) {
-  const suggestRange = paramsKeyToRange(props.paramsKey);
-  const possibleValues = paramsKeyToList(props.paramsKey);
-  if (suggestRange) {
-    return <ImgParamsRange suggestRange={suggestRange} {...props} />;
-  } else if (paramsKeyIsColor(props.paramsKey)) {
-    return <ImgParamsColor {...props} />;
-  } else if (possibleValues) {
-    return <ImgParamsList possibleValues={possibleValues} {...props} />;
+  const p = paramsKeyParameters(props.paramsKey);
+  if (p) {
+    const suggestRange = expectToRange(p.expects[0]);
+    const possibleValues = expectToList(p.expects[0]);
+    if (suggestRange) {
+      return <ImgParamsRange suggestRange={suggestRange} {...props} />;
+    } else if (expectIsColor(p.expects[0])) {
+      return <ImgParamsColor {...props} />;
+    } else if (possibleValues) {
+      return <ImgParamsList possibleValues={possibleValues} {...props} />;
+    }
+    return <ImgParamsTextField {...props} />;
   }
-  return <ImgParamsTextField {...props} />;
+  return <div></div>;
 }
