@@ -1,6 +1,6 @@
 import imgixUrlParams from 'imgix-url-params/dist/parameters.json';
 
-type ParamsExpect = {
+export type ParamsExpect = {
   [key: string]: any;
 };
 type Parameters = {
@@ -11,19 +11,17 @@ const urlParams: {
   parameters: Parameters;
 } = imgixUrlParams;
 
-export function paramsKeyParameters(
-  paramsKey: string
-): typeof urlParams['parameters'] | undefined {
-  return urlParams.parameters[paramsKey];
-}
-
 export function paramsKeyToSpread(
-  paramsKey: string
+  paramsKey: string,
+  paramsExpect: ParamsExpect,
+  detail: boolean = true
 ): { label: string; defaultValue: string | number } {
   const p: any = urlParams.parameters[paramsKey];
   if (p) {
     return {
-      label: p.display_name,
+      label: detail
+        ? `${p.display_name}(${paramsExpect.type})`
+        : p.display_name,
       defaultValue: p.default
     };
   }
@@ -41,6 +39,30 @@ export function paramsKeyDisallowBase64(paramsKey: string): boolean {
   return false;
 }
 
+export function pruneExpects(exp: ParamsExpect[]): ParamsExpect[] {
+  const m = exp.map((v) => {
+    const r = { ...v };
+    if (r.type === 'hex_color' || r.type === 'color_keyword') {
+      r.type = 'color';
+    }
+    return r;
+  });
+  const u: { [key: string]: ParamsExpect } = {};
+  return m.filter((v) => {
+    if (u[v.type]) {
+      return false;
+    }
+    u[v.type] = v;
+    return true;
+  });
+}
+
+export function paramsKeyParameters(
+  paramsKey: string
+): typeof urlParams['parameters'] | undefined {
+  return urlParams.parameters[paramsKey];
+}
+
 export function expectToRange(
   exp: ParamsExpect
 ): [number, number | undefined] | undefined {
@@ -52,9 +74,8 @@ export function expectToRange(
   return;
 }
 
-const colorTypes = ['hex_color', 'color_keyword'];
 export function expectIsColor(exp: ParamsExpect): boolean {
-  return colorTypes.includes(exp.type);
+  return exp.type === 'color';
 }
 
 export function expectToList(exp: ParamsExpect): string[] | undefined {

@@ -185,7 +185,7 @@ const IndexPage = () => {
         </Box>
         {[
           {
-            paramsKey: 'auto'
+            paramsKey: 'blend'
           },
           {
             paramsKey: 'txt'

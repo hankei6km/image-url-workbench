@@ -15,7 +15,9 @@ import {
   paramsKeyToSpread,
   expectToRange,
   expectIsColor,
-  expectToList
+  expectToList,
+  ParamsExpect,
+  pruneExpects
 } from '../utils/imgParamsUtils';
 
 const useStyles = makeStyles(() => ({
@@ -47,24 +49,35 @@ type ImgParamsProps = {
   onChange: (e: ImgUrlParamsOnChangeEvent) => void;
 };
 
-type ImgParamsRangeProps = {
-  suggestRange: [number, number | undefined];
-  // paramsKey: string;
-  // onChange: (e: ImgUrlParamsOnChangeEvent) => void;
+type ImgParamsTextFieldProps = {
+  paramsExpect: ParamsExpect;
   //};
+} & ImgParamsProps;
+
+type ImgParamsRangeProps = {
+  paramsExpect: ParamsExpect;
+  suggestRange: [number, number | undefined];
+} & ImgParamsProps;
+
+type ImgParamsColorProps = {
+  paramsExpect: ParamsExpect;
 } & ImgParamsProps;
 
 type ImgParamsListProps = {
+  paramsExpect: ParamsExpect;
   possibleValues: string[];
-  //};
 } & ImgParamsProps;
 
-function ImgParamsTextField({ paramsKey, onChange }: ImgParamsProps) {
+function ImgParamsTextField({
+  paramsKey,
+  paramsExpect,
+  onChange
+}: ImgParamsTextFieldProps) {
   return (
     <TextField
       variant="outlined"
-      id={paramsKey}
-      {...paramsKeyToSpread(paramsKey)}
+      id={`${paramsKey}(${paramsExpect.type})`}
+      {...paramsKeyToSpread(paramsKey, paramsExpect)}
       fullWidth
       onChange={(e) => onChange({ value: e.target.value })}
     />
@@ -72,15 +85,16 @@ function ImgParamsTextField({ paramsKey, onChange }: ImgParamsProps) {
 }
 
 function ImgParamsRange({
-  suggestRange,
   paramsKey,
+  paramsExpect,
+  suggestRange,
   onChange
 }: ImgParamsRangeProps) {
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
   const [min, max] = suggestRange;
   const classes = useStyles();
-  const { defaultValue, ...p } = paramsKeyToSpread(paramsKey);
+  const { defaultValue, ...p } = paramsKeyToSpread(paramsKey, paramsExpect);
   const [value, setValue] = useState<number | string | Array<number | string>>(
     defaultValue
   );
@@ -177,13 +191,17 @@ function ImgParamsRange({
   );
 }
 
-function ImgParamsColor({ paramsKey, onChange }: ImgParamsProps) {
+function ImgParamsColor({
+  paramsKey,
+  paramsExpect,
+  onChange
+}: ImgParamsColorProps) {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [color, setColor] = useState('');
   const [value, setValue] = useState('FF000000'); // ARGB
 
-  const p = paramsKeyToSpread(paramsKey);
+  const p = paramsKeyToSpread(paramsKey, paramsExpect);
 
   // Button のラベルの色は後で調整(TextFieldのラベル色はどこで決まる?)
   return (
@@ -239,10 +257,11 @@ function ImgParamsColor({ paramsKey, onChange }: ImgParamsProps) {
 
 function ImgParamsList({
   possibleValues,
+  paramsExpect,
   paramsKey,
   onChange
 }: ImgParamsListProps) {
-  const p = paramsKeyToSpread(paramsKey);
+  const p = paramsKeyToSpread(paramsKey, paramsExpect);
   return (
     <Autocomplete
       multiple
@@ -270,16 +289,37 @@ function ImgParamsList({
 export default function ImgParams(props: ImgParamsProps) {
   const p = paramsKeyParameters(props.paramsKey);
   if (p) {
-    const suggestRange = expectToRange(p.expects[0]);
-    const possibleValues = expectToList(p.expects[0]);
-    if (suggestRange) {
-      return <ImgParamsRange suggestRange={suggestRange} {...props} />;
-    } else if (expectIsColor(p.expects[0])) {
-      return <ImgParamsColor {...props} />;
-    } else if (possibleValues) {
-      return <ImgParamsList possibleValues={possibleValues} {...props} />;
-    }
-    return <ImgParamsTextField {...props} />;
+    return (
+      <div>
+        {pruneExpects(p.expects).map((v: ParamsExpect, i: number) => {
+          const suggestRange = expectToRange(v);
+          const possibleValues = expectToList(v);
+          const key = `${props.paramsKey}${v.type}${i}`;
+          if (suggestRange) {
+            return (
+              <ImgParamsRange
+                key={key}
+                paramsExpect={v}
+                suggestRange={suggestRange}
+                {...props}
+              />
+            );
+          } else if (expectIsColor(v)) {
+            return <ImgParamsColor key={key} paramsExpect={v} {...props} />;
+          } else if (possibleValues) {
+            return (
+              <ImgParamsList
+                key={key}
+                paramsExpect={v}
+                possibleValues={possibleValues}
+                {...props}
+              />
+            );
+          }
+          return <ImgParamsTextField key={key} paramsExpect={v} {...props} />;
+        })}
+      </div>
+    );
   }
   return <div></div>;
 }
