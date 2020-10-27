@@ -1,7 +1,10 @@
 import { useReducer, useCallback, useEffect } from 'react';
 import Box from '@material-ui/core/Box';
 import Switch from '@material-ui/core/Switch';
-import ImgParams, { ImgUrlParamsOnChangeEvent } from '../components/ImgParams';
+import ImgParams, {
+  ImgUrlParamsOnChangeEvent,
+  ImgParamsEnabled
+} from '../components/ImgParams';
 import { paramsKeyDisallowBase64 } from '../utils/imgParamsUtils';
 
 type previewUrlState = {
@@ -129,7 +132,7 @@ export default function ImgUrl({ paramsItem, baseUrl, onChange }: ImgUrlProps) {
 
   const debounceInputText = (
     // debounce だけでも無くなってきたような
-    act: actTypeInput['type'],
+    act: actTypeInput['type'] | actTypeEnabled['type'],
     paramKey = ''
   ) => {
     let id: any = 0;
@@ -139,7 +142,7 @@ export default function ImgUrl({ paramsItem, baseUrl, onChange }: ImgUrlProps) {
       }
       const value = e.value;
       id = setTimeout(
-        (payload: [string, string]) => {
+        (payload: [string, string] & [string, boolean]) => {
           dispatch({ type: act, payload: payload });
           id = 0;
         },
@@ -174,17 +177,10 @@ export default function ImgUrl({ paramsItem, baseUrl, onChange }: ImgUrlProps) {
           alignItems="center"
         >
           <Box>
-            <Switch
-              checked={paramKeyIsEnabled(paramsKey)}
-              onChange={(e) => {
-                dispatch({
-                  type: 'setEnabled',
-                  payload: [paramsKey, e.target.checked]
-                });
-              }}
-              color="primary"
-              name={paramsKey}
-              inputProps={{ 'aria-label': `switch enabled ${paramsKey}` }}
+            <ImgParamsEnabled
+              paramsKey={paramsKey}
+              enabled={paramKeyIsEnabled(paramsKey)}
+              onChange={debounceInputText('setEnabled', paramsKey)}
             />
           </Box>
           <Box flexGrow={1}>
