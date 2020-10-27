@@ -118,7 +118,7 @@ export type ImgUrOnChangeEvent = { value: string };
 type ImgUrlProps = {
   paramsItem: ParamsItem;
   baseUrl: string;
-  onChange: (e: ImgUrlParamsOnChangeEvent) => void;
+  onChange: (e: ImgUrOnChangeEvent) => void;
 };
 
 export default function ImgUrl({ paramsItem, baseUrl, onChange }: ImgUrlProps) {
