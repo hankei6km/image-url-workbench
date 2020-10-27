@@ -1,6 +1,5 @@
 import { useReducer, useCallback, useEffect } from 'react';
 import Box from '@material-ui/core/Box';
-import Switch from '@material-ui/core/Switch';
 import ImgParams, {
   ImgUrlParamsOnChangeEvent,
   ImgParamsEnabled

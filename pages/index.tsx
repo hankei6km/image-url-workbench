@@ -1,4 +1,4 @@
-import React, { useState, useReducer, useEffect, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import Layout from '../components/Layout';
 import Container from '@material-ui/core/Container';
 import Box from '@material-ui/core/Box';
