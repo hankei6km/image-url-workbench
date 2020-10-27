@@ -19,6 +19,7 @@ import {
   ParamsExpect,
   pruneExpects
 } from '../utils/imgParamsUtils';
+import { Switch } from '@material-ui/core';
 
 const useStyles = makeStyles(() => ({
   // root: {
@@ -42,7 +43,7 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-export type ImgUrlParamsOnChangeEvent = { value: string | number };
+export type ImgUrlParamsOnChangeEvent = { value: string | number | boolean };
 
 type ImgParamsProps = {
   paramsKey: string;
@@ -66,6 +67,10 @@ type ImgParamsColorProps = {
 type ImgParamsListProps = {
   paramsExpect: ParamsExpect;
   possibleValues: string[];
+} & ImgParamsProps;
+
+type ImgParamsEnabledProps = {
+  enabled: boolean;
 } & ImgParamsProps;
 
 function ImgParamsTextField({
@@ -282,6 +287,27 @@ function ImgParamsList({
           placeholder={paramsKey}
         />
       )}
+    />
+  );
+}
+
+export function ImgParamsEnabled({
+  enabled,
+  paramsKey,
+  onChange
+}: ImgParamsEnabledProps) {
+  const [checked, setChecked] = useState(enabled);
+
+  return (
+    <Switch
+      checked={checked}
+      onChange={(e) => {
+        setChecked(e.target.checked);
+        onChange({ value: e.target.checked });
+      }}
+      color="primary"
+      name={paramsKey}
+      inputProps={{ 'aria-label': `switch enabled ${paramsKey}` }}
     />
   );
 }
