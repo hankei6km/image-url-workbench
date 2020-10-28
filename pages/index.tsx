@@ -8,11 +8,21 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 // import Paper from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
-import TextField from '@material-ui/core/TextField';
 // import Collapse from '@material-ui/core/Collapse';
 // import Slide from '@material-ui/core/Slide';
+import TextField from '@material-ui/core/TextField';
+import Hidden from '@material-ui/core/Hidden';
 import ImgUrl from '../components/ImgUrl';
 import ImgPreview from '../components/ImgPreview';
+
+// function HideOnScroll({ children }: { children: React.ReactElement }) {
+//   const trigger = useScrollTrigger({
+//     disableHysteresis: true,
+//     threshold: 0
+//   });
+//
+//   return <Collapse in={!trigger}>{children}</Collapse>;
+// }
 
 const IndexPage = () => {
   const theme = useTheme();
@@ -39,7 +49,6 @@ const IndexPage = () => {
       );
     };
   }, []);
-
   const flexboxProps = upLg
     ? {
         display: 'flex',
@@ -69,7 +78,7 @@ const IndexPage = () => {
     : {
         style: {
           width: '100%',
-          height: upMd ? 280 : 180
+          minHeight: upMd ? 200 : 100
         }
       };
   const imgPreviewProps = upLg
@@ -105,15 +114,17 @@ const IndexPage = () => {
           <Box flexGrow={1}>
             <ImgPreview previewUrl={previewUrl} {...imgPreviewProps} />
           </Box>
-          <Box>
-            <TextField
-              id="image-url"
-              label="Image URL"
-              defaultValue={''}
-              fullWidth
-              onChange={debounceBaseUrl()}
-            />
-          </Box>
+          <Hidden mdDown>
+            <Box>
+              <TextField
+                id="image-url"
+                label="Image URL"
+                defaultValue={''}
+                fullWidth
+                onChange={debounceBaseUrl()}
+              />
+            </Box>
+          </Hidden>
         </Box>
       </Toolbar>
     </AppBar>
@@ -128,6 +139,17 @@ const IndexPage = () => {
             previewAppBar
           )}
           <Box mt={2} p={1}>
+            <Hidden lgUp>
+              <Box>
+                <TextField
+                  id="image-url"
+                  label="Image URL"
+                  defaultValue={''}
+                  fullWidth
+                  onChange={debounceBaseUrl()}
+                />
+              </Box>
+            </Hidden>
             <ImgUrl
               paramsItem={[
                 {
