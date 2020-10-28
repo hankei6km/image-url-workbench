@@ -12,7 +12,7 @@ import Box from '@material-ui/core/Box';
 // import Slide from '@material-ui/core/Slide';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
-import Hidden from '@material-ui/core/Hidden';
+// import Hidden from '@material-ui/core/Hidden';
 import ImgUrl from '../components/ImgUrl';
 import ImgPreview from '../components/ImgPreview';
 
@@ -115,7 +115,7 @@ const IndexPage = () => {
           <Box flexGrow={1}>
             <ImgPreview previewUrl={previewUrl} {...imgPreviewProps} />
           </Box>
-          <Hidden mdDown>
+          {upLg && (
             <Box>
               <TextField
                 id="image-url"
@@ -125,13 +125,15 @@ const IndexPage = () => {
                 onChange={debounceBaseUrl()}
               />
             </Box>
+          )}
+          {upLg && (
             <Box p={1}>
               <Typography variant="body1">
                 ここに簡易的な説明文を追加。テキスト等はmicroCMS で定義する?
                 そのときは言語別に設定できるようにフィールド名を考える(他の方法でもいいけど)
               </Typography>
             </Box>
-          </Hidden>
+          )}
         </Box>
       </Toolbar>
     </AppBar>
@@ -146,7 +148,7 @@ const IndexPage = () => {
             previewAppBar
           )}
           <Box mt={2} p={1}>
-            <Hidden lgUp>
+            {!upLg && (
               <Box>
                 <TextField
                   id="image-url"
@@ -156,7 +158,7 @@ const IndexPage = () => {
                   onChange={debounceBaseUrl()}
                 />
               </Box>
-            </Hidden>
+            )}
             <ImgUrl
               paramsItem={[
                 {
