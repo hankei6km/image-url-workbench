@@ -63,13 +63,13 @@ const IndexPage = () => {
     ? {
         style: {
           width: '100%',
-          minHeight: 300
+          minHeight: 100
         }
       }
     : {
         style: {
           width: '100%',
-          height: upMd ? 200 : 100
+          height: upMd ? 280 : 180
         }
       };
   const imgPreviewProps = upLg
@@ -96,8 +96,24 @@ const IndexPage = () => {
       {...appBarOuterProps}
     >
       <Toolbar style={{ width: '100%' }}>
-        <Box display="flex" justifyContent="center" {...imgPreviewOuterProps}>
-          <ImgPreview previewUrl={previewUrl} {...imgPreviewProps} />
+        <Box
+          display="flex"
+          justifyContent="center"
+          flexDirection="column"
+          {...imgPreviewOuterProps}
+        >
+          <Box flexGrow={1}>
+            <ImgPreview previewUrl={previewUrl} {...imgPreviewProps} />
+          </Box>
+          <Box>
+            <TextField
+              id="image-url"
+              label="Image URL"
+              defaultValue={''}
+              fullWidth
+              onChange={debounceBaseUrl()}
+            />
+          </Box>
         </Box>
       </Toolbar>
     </AppBar>
@@ -111,24 +127,7 @@ const IndexPage = () => {
           ) : (
             previewAppBar
           )}
-          <Box>
-            <Box p={1}>
-              <TextField
-                id="preview-url"
-                label="Preview URL"
-                fullWidth
-                value={previewUrl}
-              />
-            </Box>
-            <Box p={1}>
-              <TextField
-                id="image-url"
-                label="Image URL"
-                defaultValue={''}
-                fullWidth
-                onChange={debounceBaseUrl()}
-              />
-            </Box>
+          <Box mt={2} p={1}>
             <ImgUrl
               paramsItem={[
                 {
