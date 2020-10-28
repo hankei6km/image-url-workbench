@@ -11,6 +11,7 @@ import Box from '@material-ui/core/Box';
 // import Collapse from '@material-ui/core/Collapse';
 // import Slide from '@material-ui/core/Slide';
 import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
 import Hidden from '@material-ui/core/Hidden';
 import ImgUrl from '../components/ImgUrl';
 import ImgPreview from '../components/ImgPreview';
@@ -123,6 +124,12 @@ const IndexPage = () => {
                 fullWidth
                 onChange={debounceBaseUrl()}
               />
+            </Box>
+            <Box p={1}>
+              <Typography variant="body1">
+                ここに簡易的な説明文を追加。テキスト等はmicroCMS で定義する?
+                そのときは言語別に設定できるようにフィールド名を考える(他の方法でもいいけど)
+              </Typography>
             </Box>
           </Hidden>
         </Box>
