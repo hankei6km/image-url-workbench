@@ -62,7 +62,7 @@ const IndexPage = () => {
       };
   const appBarOuterProps = upLg
     ? {
-        flexGrow: 1,
+        // flexGrow: 1,
         style: {
           maxWidth: theme.breakpoints.values.sm
         }
