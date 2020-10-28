@@ -149,7 +149,12 @@ const IndexPage = () => {
           ) : (
             <Box {...appBarOuterProps}>{previewAppBar}</Box>
           )}
-          <Box mt={2} p={1}>
+          <Box
+            mt={2}
+            p={1}
+            flexGrow={1}
+            style={{ maxWidth: theme.breakpoints.values.sm }}
+          >
             <Hidden lgUp>
               <Box>
                 <TextField
