@@ -27,8 +27,12 @@ import ImgPreview from '../components/ImgPreview';
 
 const IndexPage = () => {
   const theme = useTheme();
-  const upLg = useMediaQuery(theme.breakpoints.up('lg'));
-  const upMd = useMediaQuery(theme.breakpoints.up('md'));
+  // useMediaQuery 初期状態では false になる? PC での表示(lg)が初期状態になる方がフリッカーが抑えられる/
+  // また、スマホ(Android の Chrome)でもちらつかない。
+  // ただし、PC でも md のサイズでリロードするとちらつく。
+  // TODO: makeStyle で CSS の機能で試す
+  const mdDown = useMediaQuery(theme.breakpoints.down('md'));
+  const smDown = useMediaQuery(theme.breakpoints.down('sm'));
   const [baseUrl, setBaseUrl] = useState('');
   const [previewUrl, setPreviewUrl] = useState('');
 
@@ -50,50 +54,50 @@ const IndexPage = () => {
       );
     };
   }, []);
-  const flexboxProps = upLg
+  const flexboxProps = mdDown
     ? {
         display: 'flex',
         justifyContent: 'center',
-        flexDirection: 'row'
+        flexDirection: 'column'
       }
     : {
         display: 'flex',
         justifyContent: 'center',
-        flexDirection: 'column'
+        flexDirection: 'row'
       };
-  const appBarOuterProps = upLg
-    ? {
+  const appBarOuterProps = mdDown
+    ? {}
+    : {
         // flexGrow: 1,
         style: {
           maxWidth: theme.breakpoints.values.sm
         }
-      }
-    : {};
-  const imgPreviewOuterProps = upLg
+      };
+  const imgPreviewOuterProps = mdDown
     ? {
         style: {
           width: '100%',
-          minHeight: 100
+          minHeight: smDown ? 100 : 200
         }
       }
     : {
         style: {
           width: '100%',
-          minHeight: upMd ? 200 : 100
+          minHeight: 100
         }
       };
-  const imgPreviewProps = upLg
+  const imgPreviewProps = mdDown
     ? {
-        width: theme.breakpoints.values.sm - 50,
-        height: undefined,
+        width: undefined,
+        // 画像の縦横比によってははみ出る(ImgPreview側で調整)
+        height: smDown ? 100 : 200,
         style: {
           width: '100%'
         }
       }
     : {
-        width: undefined,
-        // 画像の縦横比によってははみ出る(ImgPreview側で調整)
-        height: upMd ? 200 : 100,
+        width: theme.breakpoints.values.sm - 50,
+        height: undefined,
         style: {
           width: '100%'
         }
@@ -138,12 +142,12 @@ const IndexPage = () => {
   );
   return (
     <Layout title="Home | Next.js + TypeScript Example">
-      <Container maxWidth={upLg ? undefined : 'sm'}>
+      <Container maxWidth={mdDown ? 'sm' : undefined}>
         <Box {...flexboxProps}>
-          {upLg ? (
-            <Box {...appBarOuterProps}>{previewAppBar}</Box>
-          ) : (
+          {mdDown ? (
             previewAppBar
+          ) : (
+            <Box {...appBarOuterProps}>{previewAppBar}</Box>
           )}
           <Box mt={2} p={1}>
             <Hidden lgUp>
