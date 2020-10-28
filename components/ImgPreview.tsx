@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useReducer } from 'react';
 // import { makeStyles, useTheme } from '@material-ui/core/styles';
 // import Skeleton from '@material-ui/lab/Skeleton';
-import { Box } from '@material-ui/core';
-import { LinearProgress } from '@material-ui/core';
+import Box from '@material-ui/core/Box';
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 type previewImgState = {
   state: 'loading' | 'done' | 'err';
@@ -49,9 +49,17 @@ function reducer(state: previewImgState, action: actType): previewImgState {
   return newState;
 }
 
-type ImgPreviewProps = { previewUrl: string };
+type ImgPreviewProps = {
+  previewUrl: string;
+  width?: number | string;
+  height?: number | string;
+};
 
-export default function ImgPreview({ previewUrl }: ImgPreviewProps) {
+export default function ImgPreview({
+  previewUrl,
+  width,
+  height
+}: ImgPreviewProps) {
   const [state, dispatch] = useReducer(reducer, initialState);
   // const [imgUrl, setImgUrl] = useState('');
 
@@ -59,7 +67,7 @@ export default function ImgPreview({ previewUrl }: ImgPreviewProps) {
     previewUrl
   ]);
 
-  const ref = useCallback((node) => {
+  const imgRef = useCallback((node) => {
     if (node != null) {
       if (node.complete) {
         const rect = node.getBoundingClientRect();
@@ -74,17 +82,20 @@ export default function ImgPreview({ previewUrl }: ImgPreviewProps) {
   }, []);
 
   return (
-    <Box>
-      <Box style={{ height: 200 }}>
+    <Box width="100%">
+      <Box display="flex" justifyContent="center" width="100%">
         <img
-          ref={ref}
+          ref={imgRef}
           style={{
-            height: 200
-            // display: imgStat === 'done' ? 'block' : 'none'
+            // height: height,
+            maxWidth: width,
+            maxHeight: height
           }}
           src={state.previewUrl}
+          width={width}
+          height={height}
           alt=""
-          height={200}
+          // width="100%"
           onLoad={(e) => {
             if (e.currentTarget) {
               const rect = e.currentTarget.getBoundingClientRect();
@@ -97,8 +108,14 @@ export default function ImgPreview({ previewUrl }: ImgPreviewProps) {
           }}
         />
       </Box>
-      <Box display="flex" alignContent="flex-start" style={{ height: 10 }}>
-        <Box flexGrow={1}>
+      <Box
+        display="flex"
+        alignContent="flex-start"
+        style={{
+          height: 10
+        }}
+      >
+        <Box flexGrow={1} display="flex" justifyContent="center">
           {state.state === 'loading' && (
             <LinearProgress style={{ width: state.width }} />
           )}
