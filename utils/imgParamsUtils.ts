@@ -42,7 +42,9 @@ export function paramsKeyDisallowBase64(paramsKey: string): boolean {
 export function pruneExpects(exp: ParamsExpect[]): ParamsExpect[] {
   const m = exp.map((v) => {
     const r = { ...v };
-    if (r.type === 'hex_color' || r.type === 'color_keyword') {
+    if (r.type === 'url' || r.type === 'path') {
+      r.type = 'url or path';
+    } else if (r.type === 'hex_color' || r.type === 'color_keyword') {
       r.type = 'color';
     }
     return r;
