@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
 // import useScrollTrigger from '@material-ui/core/useScrollTrigger';
-import { useTheme } from '@material-ui/core/styles';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Layout from '../components/Layout';
 import Container from '@material-ui/core/Container';
@@ -12,7 +12,7 @@ import Box from '@material-ui/core/Box';
 // import Slide from '@material-ui/core/Slide';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
-import Hidden from '@material-ui/core/Hidden';
+// import Hidden from '@material-ui/core/Hidden';
 import ImgUrl from '../components/ImgUrl';
 import ImgPreview from '../components/ImgPreview';
 
@@ -25,8 +25,56 @@ import ImgPreview from '../components/ImgPreview';
 //   return <Collapse in={!trigger}>{children}</Collapse>;
 // }
 
+const useStyles = makeStyles((theme) => ({
+  container: {
+    [theme.breakpoints.down('md')]: {
+      maxWidth: theme.breakpoints.values.sm
+    }
+  },
+  root: {
+    display: 'flex',
+    justifyContent: 'center',
+    flexDirection: 'column',
+    [theme.breakpoints.up('lg')]: {
+      display: 'flex',
+      justifyContent: 'center',
+      flexDirection: 'row'
+    }
+  },
+  appBarOuter: {
+    [theme.breakpoints.up('lg')]: {
+      maxWidth: theme.breakpoints.values.sm
+    }
+  },
+  imgPreviewOuter: {
+    width: '100%',
+    minHeight: 200,
+    [theme.breakpoints.down('sm')]: {
+      minHeight: 100
+    },
+    [theme.breakpoints.up('lg')]: {
+      width: '100%',
+      minHeight: 100
+    }
+  },
+  imageUrlOuterLgUp: {
+    display: 'none',
+    [theme.breakpoints.up('lg')]: {
+      display: 'block'
+    }
+  },
+  imageUrlOuterMdDown: {
+    display: 'none',
+    [theme.breakpoints.down('md')]: {
+      display: 'block'
+    }
+  }
+}));
+
 const IndexPage = () => {
   const theme = useTheme();
+  const classes = useStyles();
+
   // useMediaQuery 初期状態では false になる? PC での表示(lg)が初期状態になる方がフリッカーが抑えられる/
   // また、スマホ(Android の Chrome)でもちらつかない。
   // ただし、PC でも md のサイズでリロードするとちらつく。
@@ -54,73 +102,67 @@ const IndexPage = () => {
       );
     };
   }, []);
-  const flexboxProps = mdDown
-    ? {
-        display: 'flex',
-        justifyContent: 'center',
-        flexDirection: 'column'
-      }
-    : {
-        display: 'flex',
-        justifyContent: 'center',
-        flexDirection: 'row'
-      };
-  const appBarOuterProps = mdDown
-    ? {}
-    : {
-        // flexGrow: 1,
-        style: {
-          maxWidth: theme.breakpoints.values.sm
-        }
-      };
-  const imgPreviewOuterProps = mdDown
-    ? {
-        style: {
-          width: '100%',
-          minHeight: smDown ? 100 : 200
-        }
-      }
-    : {
-        style: {
-          width: '100%',
-          minHeight: 100
-        }
-      };
+
   const imgPreviewProps = mdDown
     ? {
         width: undefined,
         // 画像の縦横比によってははみ出る(ImgPreview側で調整)
-        height: smDown ? 100 : 200,
-        style: {
-          width: '100%'
-        }
+        height: smDown ? 100 : 200
       }
     : {
         width: theme.breakpoints.values.sm - 50,
-        height: undefined,
-        style: {
-          width: '100%'
-        }
+        height: undefined
       };
   const previewAppBar = (
     <AppBar
+      className={classes.appBarOuter}
       color="inherit"
       position="sticky"
       elevation={0}
-      {...appBarOuterProps}
     >
       <Toolbar style={{ width: '100%' }}>
         <Box
           display="flex"
           justifyContent="center"
           flexDirection="column"
-          {...imgPreviewOuterProps}
+          className={classes.imgPreviewOuter}
         >
           <Box flexGrow={1}>
             <ImgPreview previewUrl={previewUrl} {...imgPreviewProps} />
           </Box>
-          <Hidden mdDown>
-            <Box>
+          <Box className={classes.imageUrlOuterLgUp}>
+            <TextField
+              id="image-url"
+              label="Image URL"
+              defaultValue={''}
+              fullWidth
+              onChange={debounceBaseUrl()}
+            />
+          </Box>
+          <Box className={classes.imageUrlOuterLgUp} p={1}>
+            <Typography variant="body1">
+              ここに簡易的な説明文を追加。テキスト等はmicroCMS で定義する?
+              そのときは言語別に設定できるようにフィールド名を考える(他の方法でもいいけど)
+            </Typography>
+          </Box>
+        </Box>
+      </Toolbar>
+    </AppBar>
+  );
+
+  return (
+    <Layout title="Home | Next.js + TypeScript Example">
+      <Container className={classes.container}>
+        <Box className={classes.root}>
+          {/*mdDown ? previewAppBar : <Box>{previewAppBar}</Box>*/}
+          <Box>{previewAppBar}</Box>
+          <Box
+            mt={2}
+            p={1}
+            flexGrow={1}
+            style={{ maxWidth: theme.breakpoints.values.sm }}
+          >
+            <Box className={classes.imageUrlOuterMdDown}>
               <TextField
                 id="image-url"
                 label="Image URL"
@@ -129,43 +171,6 @@ const IndexPage = () => {
                 onChange={debounceBaseUrl()}
               />
             </Box>
-            <Box p={1}>
-              <Typography variant="body1">
-                ここに簡易的な説明文を追加。テキスト等はmicroCMS で定義する?
-                そのときは言語別に設定できるようにフィールド名を考える(他の方法でもいいけど)
-              </Typography>
-            </Box>
-          </Hidden>
-        </Box>
-      </Toolbar>
-    </AppBar>
-  );
-  return (
-    <Layout title="Home | Next.js + TypeScript Example">
-      <Container maxWidth={mdDown ? 'sm' : undefined}>
-        <Box {...flexboxProps}>
-          {mdDown ? (
-            previewAppBar
-          ) : (
-            <Box {...appBarOuterProps}>{previewAppBar}</Box>
-          )}
-          <Box
-            mt={2}
-            p={1}
-            flexGrow={1}
-            style={{ maxWidth: theme.breakpoints.values.sm }}
-          >
-            <Hidden lgUp>
-              <Box>
-                <TextField
-                  id="image-url"
-                  label="Image URL"
-                  defaultValue={''}
-                  fullWidth
-                  onChange={debounceBaseUrl()}
-                />
-              </Box>
-            </Hidden>
             <ImgUrl
               paramsItem={[
                 {
