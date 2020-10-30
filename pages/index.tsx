@@ -128,17 +128,17 @@ const IndexPage = () => {
       <Box
         position="fixed"
         top={0}
-        left={0}
-        right={0}
+        // left={0}
+        // right={0}
         style={{
-          width: '100%',
+          width: '100%', // dialog が表示されてスクロールバーが消えると右へズレる
           // height: triggerP ? 200 : 0,
           // maxHeight: 10,
           zIndex: theme.zIndex.appBar
         }}
       >
         <Fade in={triggerP} timeout={{ enter: 700 }}>
-          <Paper square style={{ width: '100%' }}>
+          <Paper square style={{ padding: trigger ? theme.spacing(1) : 0 }}>
             {trigger && (
               <ImgPreview previewUrl={previewUrl} {...imgPreviewThumbProps} />
             )}
