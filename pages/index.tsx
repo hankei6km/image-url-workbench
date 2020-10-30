@@ -1,14 +1,13 @@
 import React, { useCallback, useState } from 'react';
-// import useScrollTrigger from '@material-ui/core/useScrollTrigger';
+import useScrollTrigger from '@material-ui/core/useScrollTrigger';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Layout from '../components/Layout';
 import Container from '@material-ui/core/Container';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-// import Paper from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
+import Paper from '@material-ui/core/Paper';
 // import Collapse from '@material-ui/core/Collapse';
+import Fade from '@material-ui/core/Fade';
 // import Slide from '@material-ui/core/Slide';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
@@ -17,8 +16,8 @@ import ImgUrl from '../components/ImgUrl';
 import ImgPreview from '../components/ImgPreview';
 
 // function HideOnScroll({ children }: { children: React.ReactElement }) {
-//   const trigger = useScrollTrigger({
-//     disableHysteresis: true,
+//   const trigger = usescrolltrigger({
+//     disablehysteresis: true,
 //     threshold: 0
 //   });
 //
@@ -41,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
       flexDirection: 'row'
     }
   },
-  appBarOuter: {
+  imagePanel: {
     [theme.breakpoints.up('lg')]: {
       maxWidth: theme.breakpoints.values.sm
     }
@@ -49,23 +48,21 @@ const useStyles = makeStyles((theme) => ({
   imgPreviewOuter: {
     width: '100%',
     minHeight: 200,
-    [theme.breakpoints.down('sm')]: {
-      minHeight: 100
-    },
     [theme.breakpoints.up('lg')]: {
-      width: '100%',
-      minHeight: 100
+      minHeight: 100,
+      width: theme.breakpoints.values.sm
+    }
+  },
+  imgPreviewFixLgUp: {
+    [theme.breakpoints.up('lg')]: {
+      position: 'fixed',
+      top: 70,
+      maxWidth: theme.breakpoints.values.sm
     }
   },
   imageUrlOuterLgUp: {
     display: 'none',
     [theme.breakpoints.up('lg')]: {
-      display: 'block'
-    }
-  },
-  imageUrlOuterMdDown: {
-    display: 'none',
-    [theme.breakpoints.down('md')]: {
       display: 'block'
     }
   }
@@ -80,7 +77,6 @@ const IndexPage = () => {
   // ただし、PC でも md のサイズでリロードするとちらつく。
   // TODO: makeStyle で CSS の機能で試す
   const mdDown = useMediaQuery(theme.breakpoints.down('md'));
-  const smDown = useMediaQuery(theme.breakpoints.down('sm'));
   const [baseUrl, setBaseUrl] = useState('');
   const [previewUrl, setPreviewUrl] = useState('');
 
@@ -107,70 +103,92 @@ const IndexPage = () => {
     ? {
         width: undefined,
         // 画像の縦横比によってははみ出る(ImgPreview側で調整)
-        height: smDown ? 100 : 200
+        height: 200
       }
     : {
         width: theme.breakpoints.values.sm - 50,
         height: undefined
       };
-  const previewAppBar = (
-    <AppBar
-      className={classes.appBarOuter}
-      color="inherit"
-      position="sticky"
-      elevation={0}
-    >
-      <Toolbar style={{ width: '100%' }}>
-        <Box
-          display="flex"
-          justifyContent="center"
-          flexDirection="column"
-          className={classes.imgPreviewOuter}
-        >
-          <Box flexGrow={1}>
-            <ImgPreview previewUrl={previewUrl} {...imgPreviewProps} />
-          </Box>
-          <Box className={classes.imageUrlOuterLgUp}>
-            <TextField
-              id="image-url"
-              label="Image URL"
-              defaultValue={''}
-              fullWidth
-              onChange={debounceBaseUrl()}
-            />
-          </Box>
-          <Box className={classes.imageUrlOuterLgUp} p={1}>
-            <Typography variant="body1">
-              ここに簡易的な説明文を追加。テキスト等はmicroCMS で定義する?
-              そのときは言語別に設定できるようにフィールド名を考える(他の方法でもいいけど)
-            </Typography>
-          </Box>
-        </Box>
-      </Toolbar>
-    </AppBar>
-  );
+  const imgPreviewThumbProps = {
+    width: undefined,
+    // 画像の縦横比によってははみ出る(ImgPreview側で調整)
+    height: 100
+  };
 
+  const triggerP = useScrollTrigger({
+    disableHysteresis: true,
+    threshold: 0
+  });
+  const trigger = useScrollTrigger({
+    disableHysteresis: true,
+    threshold: 150
+  });
   return (
     <Layout title="Home | Next.js + TypeScript Example">
+      <Box
+        position="fixed"
+        top={0}
+        left={0}
+        right={0}
+        style={{
+          width: '100%',
+          // height: triggerP ? 200 : 0,
+          // maxHeight: 10,
+          zIndex: theme.zIndex.appBar
+        }}
+      >
+        <Fade in={triggerP} timeout={{ enter: 700 }}>
+          <Paper square style={{ width: '100%' }}>
+            {trigger && (
+              <ImgPreview previewUrl={previewUrl} {...imgPreviewThumbProps} />
+            )}
+          </Paper>
+        </Fade>
+      </Box>
       <Container className={classes.container}>
         <Box className={classes.root}>
-          {/*mdDown ? previewAppBar : <Box>{previewAppBar}</Box>*/}
-          <Box>{previewAppBar}</Box>
+          <Box className={classes.imagePanel}>
+            <Box
+              display="flex"
+              justifyContent="center"
+              flexDirection="column"
+              className={classes.imgPreviewOuter}
+            >
+              <Box className={classes.imgPreviewFixLgUp}>
+                <Box>
+                  <TextField
+                    id="image-url"
+                    label="Image URL"
+                    defaultValue={''}
+                    fullWidth
+                    onChange={debounceBaseUrl()}
+                  />
+                </Box>
+                <Box className={classes.imageUrlOuterLgUp}>
+                  <Typography variant="body1">
+                    ここに簡易的な説明文を追加。テキスト等はmicroCMS で定義する?
+                    そのときは言語別に設定できるようにフィールド名を考える(他の方法でもいいけど)
+                  </Typography>
+                </Box>
+                <Box mt={3}>
+                  <Fade in={!trigger} timeout={{ enter: 700 }}>
+                    <Paper square elevation={0} style={{ width: '100%' }}>
+                      <ImgPreview
+                        previewUrl={previewUrl}
+                        {...imgPreviewProps}
+                      />
+                    </Paper>
+                  </Fade>
+                </Box>
+              </Box>
+            </Box>
+          </Box>
           <Box
             mt={2}
             p={1}
             flexGrow={1}
             style={{ maxWidth: theme.breakpoints.values.sm }}
           >
-            <Box className={classes.imageUrlOuterMdDown}>
-              <TextField
-                id="image-url"
-                label="Image URL"
-                defaultValue={''}
-                fullWidth
-                onChange={debounceBaseUrl()}
-              />
-            </Box>
             <ImgUrl
               paramsItem={[
                 {

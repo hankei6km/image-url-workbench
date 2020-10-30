@@ -109,8 +109,6 @@ export default function ImgPreview({
         />
       </Box>
       <Box
-        display="flex"
-        alignContent="flex-start"
         style={{
           height: 10
         }}
