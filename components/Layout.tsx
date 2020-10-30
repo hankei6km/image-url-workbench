@@ -41,12 +41,18 @@ function TabButton({
   );
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     '& > .MuiAppBar-root > .MuiToolbar-root , & > footer > div': {
       maxWidth: '36rem',
       padding: '0 1rem',
       margin: '0rem auto 0rem'
+    },
+    '& > .MuiAppBar-root': {
+      position: 'static',
+      [theme.breakpoints.up('lg')]: {
+        position: 'sticky'
+      }
     }
   }
 }));
@@ -68,7 +74,7 @@ const Layout = ({ children, title = 'This is the default title' }: Props) => {
         <meta charSet="utf-8" />
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
-      <AppBar color="default" position="static" elevation={0}>
+      <AppBar color="default" elevation={0}>
         <Toolbar variant="dense">
           {[
             { label: 'Home', href: '/' },
