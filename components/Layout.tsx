@@ -43,7 +43,7 @@ function TabButton({
 
 const useStyles = makeStyles(() => ({
   root: {
-    '& > header > div , & > footer > div': {
+    '& > .MuiAppBar-root > .MuiToolbar-root , & > footer > div': {
       maxWidth: '36rem',
       padding: '0 1rem',
       margin: '0rem auto 0rem'
