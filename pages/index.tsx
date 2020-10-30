@@ -164,7 +164,7 @@ const IndexPage = () => {
                     onChange={debounceBaseUrl()}
                   />
                 </Box>
-                <Box className={classes.imageUrlOuterLgUp}>
+                <Box mt={2} className={classes.imageUrlOuterLgUp}>
                   <Typography variant="body1">
                     ここに簡易的な説明文を追加。テキスト等はmicroCMS で定義する?
                     そのときは言語別に設定できるようにフィールド名を考える(他の方法でもいいけど)
@@ -172,7 +172,11 @@ const IndexPage = () => {
                 </Box>
                 <Box mt={3}>
                   <Fade in={!trigger} timeout={{ enter: 700 }}>
-                    <Paper square elevation={0} style={{ width: '100%' }}>
+                    <Paper
+                      square
+                      elevation={0}
+                      style={{ minHeight: 220, width: '100%' }}
+                    >
                       <ImgPreview
                         previewUrl={previewUrl}
                         {...imgPreviewProps}
