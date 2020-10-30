@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import Box from '@material-ui/core/Box';
@@ -21,7 +20,7 @@ import {
 } from '../utils/imgParamsUtils';
 import { Switch } from '@material-ui/core';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   // root: {
   //   '& > *': {
   //     margin: theme.spacing(1),
@@ -34,6 +33,36 @@ const useStyles = makeStyles(() => ({
     },
     '& > * > .MuiBox-root >  *': {
       textTransform: 'none'
+    }
+  },
+  controlOuterMedia: {
+    flexGrow: 1,
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    [theme.breakpoints.up('sm')]: {
+      padding: theme.spacing(1),
+      flexDirection: 'row',
+      alignItems: 'center'
+    }
+  },
+  labelOuterMedia: {
+    paddingLeft: theme.spacing(1),
+    paddingRight: theme.spacing(1),
+    marginBottom: theme.spacing(-1),
+    [theme.breakpoints.up('sm')]: {
+      padding: theme.spacing(1),
+      marginBottom: 0
+    }
+  },
+  sliderOuterMedia: {
+    paddingLeft: theme.spacing(1),
+    paddingRight: theme.spacing(1),
+    marginBottom: theme.spacing(-2),
+    width: '100%',
+    [theme.breakpoints.up('sm')]: {
+      flexGrow: 1,
+      mx: 0,
+      width: undefined
     }
   },
   colorSample: {
@@ -95,38 +124,12 @@ function ImgParamsRange({
   suggestRange,
   onChange
 }: ImgParamsRangeProps) {
-  const theme = useTheme();
-  const matches = useMediaQuery(theme.breakpoints.up('sm'));
   const [min, max] = suggestRange;
   const classes = useStyles();
   const { defaultValue, ...p } = paramsKeyToSpread(paramsKey, paramsExpect);
   const [value, setValue] = useState<number | string | Array<number | string>>(
     defaultValue
   );
-
-  const controlOuterMediaProps = matches
-    ? {
-        p: 1,
-        flexDirection: 'row',
-        alignItems: 'center'
-      }
-    : {
-        flexDirection: 'column',
-        alignItems: 'flex-start'
-      };
-  const labelOuterMediaProps = matches
-    ? { p: 1 }
-    : {
-        px: 1,
-        mb: -1
-      };
-  const sliderOuterMediaProps = matches
-    ? { flexGrow: 1, ml: 2 }
-    : {
-        px: 1,
-        mb: -2,
-        width: '100%'
-      };
 
   const handleSliderChange = (
     _event: React.ChangeEvent<{}>,
@@ -159,13 +162,13 @@ function ImgParamsRange({
       flexDirection="row"
       alignItems="center"
     >
-      <Box display="flex" flexGrow={1} {...controlOuterMediaProps}>
-        <Box {...labelOuterMediaProps}>
+      <Box display="flex" className={classes.controlOuterMedia}>
+        <Box className={classes.labelOuterMedia}>
           <Typography variant="button" display="block" gutterBottom>
             {p.label}
           </Typography>
         </Box>
-        <Box {...sliderOuterMediaProps}>
+        <Box className={classes.sliderOuterMedia}>
           <Slider
             value={typeof value === 'number' ? value : 0}
             onChange={handleSliderChange}
