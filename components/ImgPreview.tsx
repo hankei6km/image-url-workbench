@@ -51,12 +51,16 @@ function reducer(state: previewImgState, action: actType): previewImgState {
 
 type ImgPreviewProps = {
   previewUrl: string;
+  position?: string;
+  top?: number | string; // 必要なものだけ
   width?: number | string;
   height?: number | string;
 };
 
 export default function ImgPreview({
   previewUrl,
+  position,
+  top,
   width,
   height
 }: ImgPreviewProps) {
@@ -82,38 +86,49 @@ export default function ImgPreview({
   }, []);
 
   return (
-    <Box width="100%">
-      <Box display="flex" justifyContent="center" width="100%">
-        <img
-          ref={imgRef}
-          style={{
-            // height: height,
-            maxWidth: width,
-            maxHeight: height
-          }}
-          src={state.previewUrl}
-          width={width}
-          height={height}
-          alt=""
-          // width="100%"
-          onLoad={(e) => {
-            if (e.currentTarget) {
-              const rect = e.currentTarget.getBoundingClientRect();
-              dispatch({ type: 'setWidth', payload: [`${rect.width}px`] });
-              dispatch({ type: 'done', payload: [''] });
-            }
-          }}
-          onError={() => {
-            dispatch({ type: 'err', payload: [''] });
-          }}
-        />
-      </Box>
+    <Box width={'100%'} position={position} top={top}>
       <Box
-        style={{
-          height: 10
-        }}
+        display="flex"
+        flexDirection="column"
+        justifyContent="center"
+        width="100%"
       >
-        <Box flexGrow={1} display="flex" justifyContent="center">
+        <Box display="flex" justifyContent="center" width="100%">
+          <img
+            ref={imgRef}
+            style={{
+              // height: height,
+              maxWidth: width,
+              maxHeight: height
+            }}
+            src={state.previewUrl}
+            width={width}
+            height={height}
+            alt=""
+            // width="100%"
+            onLoad={(e) => {
+              if (e.currentTarget) {
+                const rect = e.currentTarget.getBoundingClientRect();
+                dispatch({ type: 'setWidth', payload: [`${rect.width}px`] });
+                dispatch({ type: 'done', payload: [''] });
+              }
+            }}
+            onError={() => {
+              dispatch({ type: 'err', payload: [''] });
+            }}
+          />
+        </Box>
+        <Box
+          flexGrow={1}
+          display="flex"
+          justifyContent="center"
+          style={{
+            position: 'relative',
+            bottom: 4,
+            marginBottom: state.state === 'loading' ? -4 : 0,
+            opacity: 0.5
+          }}
+        >
           {state.state === 'loading' && (
             <LinearProgress style={{ width: state.width }} />
           )}

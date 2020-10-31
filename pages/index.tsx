@@ -110,35 +110,42 @@ const IndexPage = () => {
         height: undefined
       };
   const imgPreviewThumbProps = {
+    position: 'fixed',
+    top: 0,
     width: undefined,
     // 画像の縦横比によってははみ出る(ImgPreview側で調整)
     height: 100
   };
 
-  const triggerP = useScrollTrigger({
-    disableHysteresis: true,
-    threshold: 0
-  });
   const trigger = useScrollTrigger({
     disableHysteresis: true,
-    threshold: 150
+    threshold: 250
   });
   return (
     <Layout title="Home | Next.js + TypeScript Example">
       <Box
         position="fixed"
         top={0}
-        left={0}
-        right={0}
+        // left={0}
+        // right={0}
         style={{
-          width: '100%',
-          // height: triggerP ? 200 : 0,
+          width: '100%', // dialog が表示されてスクロールバーが消えると右へズレる
+          // height: trigger ? 200 : 0,
           // maxHeight: 10,
           zIndex: theme.zIndex.appBar
         }}
       >
-        <Fade in={triggerP} timeout={{ enter: 700 }}>
-          <Paper square style={{ width: '100%' }}>
+        <Fade in={trigger} timeout={{ enter: 700 }}>
+          <Paper
+            square
+            style={{
+              position: 'fixed',
+              top: 0,
+              width: '100%',
+              height: 100,
+              padding: trigger ? theme.spacing(1) : 0
+            }}
+          >
             {trigger && (
               <ImgPreview previewUrl={previewUrl} {...imgPreviewThumbProps} />
             )}
@@ -178,6 +185,7 @@ const IndexPage = () => {
                       style={{ minHeight: 220, width: '100%' }}
                     >
                       <ImgPreview
+                        position={trigger ? 'fixed' : 'static'}
                         previewUrl={previewUrl}
                         {...imgPreviewProps}
                       />
