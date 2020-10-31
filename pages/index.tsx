@@ -117,13 +117,9 @@ const IndexPage = () => {
     height: 100
   };
 
-  const triggerP = useScrollTrigger({
-    disableHysteresis: true,
-    threshold: 0
-  });
   const trigger = useScrollTrigger({
     disableHysteresis: true,
-    threshold: 150
+    threshold: 250
   });
   return (
     <Layout title="Home | Next.js + TypeScript Example">
@@ -134,12 +130,12 @@ const IndexPage = () => {
         // right={0}
         style={{
           width: '100%', // dialog が表示されてスクロールバーが消えると右へズレる
-          // height: triggerP ? 200 : 0,
+          // height: trigger ? 200 : 0,
           // maxHeight: 10,
           zIndex: theme.zIndex.appBar
         }}
       >
-        <Fade in={triggerP} timeout={{ enter: 700 }}>
+        <Fade in={trigger} timeout={{ enter: 700 }}>
           <Paper
             square
             style={{
@@ -147,7 +143,7 @@ const IndexPage = () => {
               top: 0,
               width: '100%',
               height: 100,
-              padding: triggerP ? theme.spacing(1) : 0
+              padding: trigger ? theme.spacing(1) : 0
             }}
           >
             {trigger && (
