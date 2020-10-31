@@ -51,12 +51,16 @@ function reducer(state: previewImgState, action: actType): previewImgState {
 
 type ImgPreviewProps = {
   previewUrl: string;
+  position?: string;
+  top?: number | string; // 必要なものだけ
   width?: number | string;
   height?: number | string;
 };
 
 export default function ImgPreview({
   previewUrl,
+  position,
+  top,
   width,
   height
 }: ImgPreviewProps) {
@@ -82,7 +86,7 @@ export default function ImgPreview({
   }, []);
 
   return (
-    <Box width="100%">
+    <Box width={'100%'} position={position} top={top}>
       <Box
         display="flex"
         flexDirection="column"

@@ -110,6 +110,8 @@ const IndexPage = () => {
         height: undefined
       };
   const imgPreviewThumbProps = {
+    position: 'fixed',
+    top: 0,
     width: undefined,
     // 画像の縦横比によってははみ出る(ImgPreview側で調整)
     height: 100
@@ -138,7 +140,16 @@ const IndexPage = () => {
         }}
       >
         <Fade in={triggerP} timeout={{ enter: 700 }}>
-          <Paper square style={{ padding: trigger ? theme.spacing(1) : 0 }}>
+          <Paper
+            square
+            style={{
+              position: 'fixed',
+              top: 0,
+              width: '100%',
+              height: 100,
+              padding: triggerP ? theme.spacing(1) : 0
+            }}
+          >
             {trigger && (
               <ImgPreview previewUrl={previewUrl} {...imgPreviewThumbProps} />
             )}
@@ -178,6 +189,7 @@ const IndexPage = () => {
                       style={{ minHeight: 220, width: '100%' }}
                     >
                       <ImgPreview
+                        position={trigger ? 'fixed' : 'static'}
                         previewUrl={previewUrl}
                         {...imgPreviewProps}
                       />
