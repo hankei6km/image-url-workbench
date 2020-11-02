@@ -6,9 +6,12 @@ export type ParamsExpect = {
 type Parameters = {
   [key: string]: { expects: ParamsExpect[] } & any;
 };
+type FontValues = string[];
+
 const urlParams: {
   // とりあえず
   parameters: Parameters;
+  fontValues: FontValues;
 } = imgixUrlParams;
 
 export function paramsKeyToSpread(
@@ -83,6 +86,8 @@ export function expectIsColor(exp: ParamsExpect): boolean {
 export function expectToList(exp: ParamsExpect): string[] | undefined {
   if (exp.type === 'list') {
     return exp.possible_values;
+  } else if (exp.type === 'font') {
+    return urlParams.fontValues;
   }
   return;
 }

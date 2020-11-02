@@ -219,6 +219,9 @@ const IndexPage = () => {
                   paramsKey: 'txt'
                 },
                 {
+                  paramsKey: 'txt-font'
+                },
+                {
                   paramsKey: 'txt-size'
                 },
                 {
