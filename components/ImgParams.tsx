@@ -237,11 +237,12 @@ function ImgParamsColor({
       </Box>
       <Box px={1} display="flex" alignItems="center">
         <svg onClick={() => setOpen(true)} className={classes.colorSample}>
-          <polygon points="0,0 10,0, 10,10 0,10 0,0" fill="black" />
-          <polygon points="10,10 20,10, 20,20 10,20 10,10" fill="black" />
-          <polygon points="20,20 30,20, 30,30 20,30 20,20" fill="black" />
-          <polygon points="20,0 30,0, 30,10 20,10 20,0" fill="black" />
-          <polygon points="0,20 10,20, 10,30 0,30 0,20" fill="black" />
+          <polygon points="0,0 10,0, 10,5 0,5 0,0" fill="#eaeaea" />
+          <polygon points="10,5 20,5, 20,15 10,15 10,5" fill="#eaeaea" />
+          <polygon points="20,15 30,15, 30,25 20,25 20,15" fill="#eaeaea" />
+          <polygon points="20,0 30,0, 30,5 20,5 20,0" fill="#eaeaea" />
+          <polygon points="0,15 10,15, 10,25 0,25 0,15" fill="#eaeaea" />
+          <polygon points="10,25 20,25, 20,30 10,30 10,25" fill="#eaeaea" />
           <polygon
             points="0,0 30,0, 30,30 0,30 0,0"
             fill={`#${value.slice(2, 8)}${value.slice(0, 2)}`}
@@ -262,7 +263,7 @@ function ImgParamsColor({
         <SketchPicker
           color={color}
           onChange={(color: any) => {
-            console.log(color);
+            // console.log(color);
             setColor(color.rgb);
             setValue(
               `${Math.floor(255 * color.rgb.a).toString(16)}${color.hex.slice(
