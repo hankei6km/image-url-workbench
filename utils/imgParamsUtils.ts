@@ -6,9 +6,12 @@ export type ParamsExpect = {
 type Parameters = {
   [key: string]: { expects: ParamsExpect[] } & any;
 };
+type FontValues = string[];
+
 const urlParams: {
   // とりあえず
   parameters: Parameters;
+  fontValues: FontValues;
 } = imgixUrlParams;
 
 export function paramsKeyToSpread(
@@ -18,11 +21,17 @@ export function paramsKeyToSpread(
 ): { label: string; defaultValue: string | number } {
   const p: any = urlParams.parameters[paramsKey];
   if (p) {
+    // console.log(
+    //   `key: ${paramsKey}, default: ${
+    //     paramsExpect.default !== undefined ? paramsExpect.default : p.default
+    //   }`
+    // );
     return {
       label: detail
         ? `${p.display_name}(${paramsExpect.type})`
         : p.display_name,
-      defaultValue: p.default
+      defaultValue:
+        paramsExpect.default !== undefined ? paramsExpect.default : p.default
     };
   }
   return {
@@ -83,6 +92,8 @@ export function expectIsColor(exp: ParamsExpect): boolean {
 export function expectToList(exp: ParamsExpect): string[] | undefined {
   if (exp.type === 'list') {
     return exp.possible_values;
+  } else if (exp.type === 'font') {
+    return urlParams.fontValues;
   }
   return;
 }

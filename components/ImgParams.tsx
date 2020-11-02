@@ -217,12 +217,12 @@ function ImgParamsColor({
   paramsExpect,
   onChange
 }: ImgParamsColorProps) {
+  const p = paramsKeyToSpread(paramsKey, paramsExpect);
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [color, setColor] = useState('');
-  const [value, setValue] = useState('FF000000'); // ARGB
-
-  const p = paramsKeyToSpread(paramsKey, paramsExpect);
+  // TODO: defaultValue の書式によっては変換が必要なはず
+  const [value, setValue] = useState<string>(`${p.defaultValue}` || 'FF000000'); // ARGB
 
   // Button のラベルの色は後で調整(TextFieldのラベル色はどこで決まる?)
   return (
@@ -286,7 +286,7 @@ function ImgParamsList({
   return (
     <Autocomplete
       multiple
-      id="tags-standard"
+      id={`keyword-${paramsKey}`}
       options={possibleValues}
       getOptionLabel={(option) => option}
       defaultValue={[]}

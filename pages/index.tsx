@@ -219,10 +219,22 @@ const IndexPage = () => {
                   paramsKey: 'txt'
                 },
                 {
+                  paramsKey: 'txt-font'
+                },
+                {
                   paramsKey: 'txt-size'
                 },
                 {
+                  paramsKey: 'txt-line'
+                },
+                {
                   paramsKey: 'txt-color'
+                },
+                {
+                  paramsKey: 'txt-line-color'
+                },
+                {
+                  paramsKey: 'txt-pad'
                 },
                 {
                   paramsKey: 'txt-align'
