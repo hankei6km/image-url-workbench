@@ -29,9 +29,11 @@ const useStyles = makeStyles((theme) => ({
   // },
   root: {
     '& > .MuiBox-root >  *': {
+      textAlign: 'left',
       textTransform: 'none'
     },
     '& > * > .MuiBox-root >  *': {
+      textAlign: 'left',
       textTransform: 'none'
     }
   },
@@ -70,6 +72,19 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(1),
     width: 70,
     [theme.breakpoints.up('sm')]: {}
+  },
+  colorButtonOuter: {
+    width: '100%',
+    paddingLeft: theme.spacing(1),
+    [theme.breakpoints.up('sm')]: {
+      width: 120
+    }
+  },
+  colorSampleOuter: {
+    padding: 0,
+    margin: 0,
+    width: 32,
+    height: 32
   },
   colorSample: {
     width: 30,
@@ -232,22 +247,33 @@ function ImgParamsColor({
       flexDirection="row"
       alignItems="center"
     >
-      <Box display="flex" alignItems="center">
+      <Box
+        display="flex"
+        alignItems="center"
+        className={classes.colorButtonOuter}
+      >
         <Button onClick={() => setOpen(true)}>{p.label}</Button>
       </Box>
-      <Box px={1} display="flex" alignItems="center">
-        <svg onClick={() => setOpen(true)} className={classes.colorSample}>
-          <polygon points="0,0 10,0, 10,5 0,5 0,0" fill="#eaeaea" />
-          <polygon points="10,5 20,5, 20,15 10,15 10,5" fill="#eaeaea" />
-          <polygon points="20,15 30,15, 30,25 20,25 20,15" fill="#eaeaea" />
-          <polygon points="20,0 30,0, 30,5 20,5 20,0" fill="#eaeaea" />
-          <polygon points="0,15 10,15, 10,25 0,25 0,15" fill="#eaeaea" />
-          <polygon points="10,25 20,25, 20,30 10,30 10,25" fill="#eaeaea" />
-          <polygon
-            points="0,0 30,0, 30,30 0,30 0,0"
-            fill={`#${value.slice(2, 8)}${value.slice(0, 2)}`}
-          />
-        </svg>
+      <Box
+        px={1}
+        display="flex"
+        alignItems="center"
+        className={classes.colorSampleOuter}
+      >
+        <Box border={1} className={classes.colorSampleOuter}>
+          <svg onClick={() => setOpen(true)} className={classes.colorSample}>
+            <polygon points="0,0 10,0, 10,5 0,5 0,0" fill="#eaeaea" />
+            <polygon points="10,5 20,5, 20,15 10,15 10,5" fill="#eaeaea" />
+            <polygon points="20,15 30,15, 30,25 20,25 20,15" fill="#eaeaea" />
+            <polygon points="20,0 30,0, 30,5 20,5 20,0" fill="#eaeaea" />
+            <polygon points="0,15 10,15, 10,25 0,25 0,15" fill="#eaeaea" />
+            <polygon points="10,25 20,25, 20,30 10,30 10,25" fill="#eaeaea" />
+            <polygon
+              points="0,0 30,0, 30,30 0,30 0,0"
+              fill={`#${value.slice(2, 8)}${value.slice(0, 2)}`}
+            />
+          </svg>
+        </Box>
       </Box>
       <Dialog
         aria-labelledby={`color picker for ${p.label}`}
