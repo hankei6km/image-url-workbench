@@ -286,7 +286,7 @@ function ImgParamsList({
   return (
     <Autocomplete
       multiple
-      id="tags-standard"
+      id={`keyword-${paramsKey}`}
       options={possibleValues}
       getOptionLabel={(option) => option}
       defaultValue={[]}

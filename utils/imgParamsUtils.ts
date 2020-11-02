@@ -21,11 +21,11 @@ export function paramsKeyToSpread(
 ): { label: string; defaultValue: string | number } {
   const p: any = urlParams.parameters[paramsKey];
   if (p) {
-    console.log(
-      `key: ${paramsKey}, default: ${
-        paramsExpect.default !== undefined ? paramsExpect.default : p.default
-      }`
-    );
+    // console.log(
+    //   `key: ${paramsKey}, default: ${
+    //     paramsExpect.default !== undefined ? paramsExpect.default : p.default
+    //   }`
+    // );
     return {
       label: detail
         ? `${p.display_name}(${paramsExpect.type})`
