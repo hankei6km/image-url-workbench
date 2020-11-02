@@ -51,7 +51,8 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing(-1),
     [theme.breakpoints.up('sm')]: {
       padding: theme.spacing(1),
-      marginBottom: 0
+      marginBottom: 0,
+      width: 120
     }
   },
   sliderOuterMedia: {
@@ -64,6 +65,11 @@ const useStyles = makeStyles((theme) => ({
       mx: 0,
       width: undefined
     }
+  },
+  rangeInputOuter: {
+    padding: theme.spacing(1),
+    width: 70,
+    [theme.breakpoints.up('sm')]: {}
   },
   colorSample: {
     width: 30,
@@ -164,7 +170,12 @@ function ImgParamsRange({
     >
       <Box display="flex" className={classes.controlOuterMedia}>
         <Box className={classes.labelOuterMedia}>
-          <Typography variant="button" display="block" gutterBottom>
+          <Typography
+            variant="button"
+            display="block"
+            gutterBottom
+            style={{ width: '100%' }}
+          >
             {p.label}
           </Typography>
         </Box>
@@ -175,15 +186,17 @@ function ImgParamsRange({
             aria-labelledby="input-slider"
             min={min}
             max={max}
+            style={{ width: '100%' }}
           />
         </Box>
       </Box>
-      <Box p={1}>
+      <Box className={classes.rangeInputOuter}>
         <Input
           // :className={classes.input}
           value={value}
           {...p}
           margin="dense"
+          fullWidth
           onChange={handleInputChange}
           onBlur={handleBlur}
           inputProps={{
