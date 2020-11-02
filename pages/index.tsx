@@ -135,7 +135,7 @@ const IndexPage = () => {
           zIndex: theme.zIndex.appBar
         }}
       >
-        <Fade in={trigger} timeout={{ enter: 700 }}>
+        <Fade in={mdDown && trigger} timeout={{ enter: 700 }}>
           <Paper
             square
             style={{
@@ -143,10 +143,10 @@ const IndexPage = () => {
               top: 0,
               width: '100%',
               height: 100,
-              padding: trigger ? theme.spacing(1) : 0
+              padding: mdDown && trigger ? theme.spacing(1) : 0
             }}
           >
-            {trigger && (
+            {mdDown && trigger && (
               <ImgPreview previewUrl={previewUrl} {...imgPreviewThumbProps} />
             )}
           </Paper>
@@ -178,14 +178,14 @@ const IndexPage = () => {
                   </Typography>
                 </Box>
                 <Box mt={3}>
-                  <Fade in={!trigger} timeout={{ enter: 700 }}>
+                  <Fade in={!(mdDown && trigger)} timeout={{ enter: 700 }}>
                     <Paper
                       square
                       elevation={0}
                       style={{ minHeight: 220, width: '100%' }}
                     >
                       <ImgPreview
-                        position={trigger ? 'fixed' : 'static'}
+                        position={mdDown && trigger ? 'fixed' : 'static'}
                         previewUrl={previewUrl}
                         {...imgPreviewProps}
                       />
