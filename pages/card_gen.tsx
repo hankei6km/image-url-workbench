@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 // import { GetStaticProps } from 'next';
 import {
   //GetStaticProps,
@@ -13,6 +13,7 @@ import Container from '@material-ui/core/Container';
 import Box from '@material-ui/core/Box';
 import TextField from '@material-ui/core/TextField';
 import { encodeBase64Url, decodeBase64Url } from '../utils/base64';
+import PreviewContext from '../components/PreviewContext';
 
 type CardGenPagePropsData = {
   imageUrl?: string;
@@ -41,7 +42,10 @@ const CardGenPage = ({
   cardDescription
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   //const router = useRouter();
-  const [previewImageUrl, setPreviewImageUrl] = useState(imageUrl);
+  const previewStateContext = useContext(PreviewContext);
+  const [previewImageUrl, setPreviewImageUrl] = useState(
+    imageUrl || previewStateContext.previewImageUrl
+  );
   const [previewCardTitle, setPreviewCardTitle] = useState(cardTitle);
   const [previewCardDescription, setPreviewCardDescription] = useState(
     cardDescription
@@ -81,7 +85,7 @@ const CardGenPage = ({
             <TextField
               id="preview-image-url"
               label="Preview Image URL"
-              defaultValue={imageUrl}
+              defaultValue={previewImageUrl}
               fullWidth
               onChange={(e) => {
                 setPreviewImageUrl(e.target.value);
