@@ -78,6 +78,7 @@ const Layout = ({ children, title = 'This is the default title' }: Props) => {
         <Toolbar variant="dense">
           {[
             { label: 'Home', href: '/' },
+            { label: 'Card', href: '/card_gen' },
             { label: 'About', href: '/about' },
             { label: 'User List', href: '/users' },
             {

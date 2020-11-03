@@ -1,5 +1,6 @@
 import { useReducer, useCallback, useEffect } from 'react';
 import Box from '@material-ui/core/Box';
+import { encodeBase64Url } from '../utils/base64';
 import ImgParams, {
   ImgUrlParamsOnChangeEvent,
   ImgParamsEnabled
@@ -38,23 +39,11 @@ type actTypeEnabled = {
 };
 type actType = actTypeInput | actTypeEnabled;
 
-const regExpPlus = /\+/g;
-const regExpSlash = /\//g;
-const regExpTrailEq = /=+$/g;
 type paramTransformerFunc = (v: string | number) => string;
 const transformer64Name: paramTransformerFunc = (v: string | number) =>
   `${v}64`;
-const transformer64Value: paramTransformerFunc = (v: string | number) => {
-  // https://docs.imgix.com/apis/rendering#base64-variants
-  // https://developer.mozilla.org/ja/docs/Web/API/WindowBase64/Base64_encoding_and_decoding
-  // https://stackoverflow.com/questions/24523532/how-do-i-convert-an-image-to-a-base64-encoded-data-url-in-sails-js-or-generally
-  // https://qiita.com/awakia/items/049791daca69120d7035
-  return Buffer.from(`${v}`, 'utf-8')
-    .toString('base64')
-    .replace(regExpSlash, '_')
-    .replace(regExpPlus, '-')
-    .replace(regExpTrailEq, '');
-};
+const transformer64Value: paramTransformerFunc = (v: string | number) =>
+  encodeBase64Url(v as string);
 
 const transformerPassthru: paramTransformerFunc = (
   v: string | number
