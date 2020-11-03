@@ -12,6 +12,7 @@ import Layout from '../components/Layout';
 import Container from '@material-ui/core/Container';
 import Box from '@material-ui/core/Box';
 import TextField from '@material-ui/core/TextField';
+import { encodeBase64Url, decodeBase64Url } from '../utils/base64';
 
 type CardGenPagePropsData = {
   imageUrl?: string;
@@ -22,9 +23,11 @@ type CardGenPagePropsData = {
 export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
     const data: CardGenPagePropsData = {
-      imageUrl: (context.query?.imageUrl as string) || '',
-      cardTitle: (context.query?.cardTitle as string) || '',
-      cardDescription: (context.query?.cardDescription as string) || ''
+      imageUrl: decodeBase64Url((context.query?.imageUrl as string) || ''),
+      cardTitle: decodeBase64Url((context.query?.cardTitle as string) || ''),
+      cardDescription: decodeBase64Url(
+        (context.query?.cardDescription as string) || ''
+      )
     };
     return { props: { ...data } };
   } catch (err) {
@@ -52,13 +55,10 @@ const CardGenPage = ({
     if (previewImageUrl) {
       const q = new URLSearchParams('');
       q.append('type', 'cardPreview');
-      q.append('imageUrl', previewImageUrl);
-      q.append('cardTitle', previewCardTitle);
-      q.append('cardDescription', previewCardDescription);
+      q.append('imageUrl', encodeBase64Url(previewImageUrl));
+      q.append('cardTitle', encodeBase64Url(previewCardTitle));
+      q.append('cardDescription', encodeBase64Url(previewCardDescription));
       // setCardPreviewUrl(`${window.location.href}?${q.toString()}`);
-      console.log(window.location);
-      console.log(window.location.href.split('?', 1)[0]);
-      console.log(q.toString());
       setCardPreviewUrl(
         `${window.location.href.split('?', 1)[0]}?${q.toString()}`
       );
