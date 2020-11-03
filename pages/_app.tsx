@@ -6,6 +6,11 @@ import Head from 'next/head';
 import { ThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import theme from '../src/theme';
+import PreviewContext, {
+  PreviewDispatch,
+  previewContextReducer,
+  previewContextInitialState
+} from '../components/PreviewContext';
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   React.useEffect(() => {
@@ -16,6 +21,15 @@ export default function MyApp({ Component, pageProps }: AppProps) {
     }
   }, []);
 
+  // React.createContext だと router から外れた場所からの get では
+  // 共有されないもよう。
+  // sessionStorage は?
+  // https://ja.reactjs.org/docs/hooks-faq.html#how-to-avoid-passing-callbacks-down
+  const [state, dispatch] = React.useReducer(
+    previewContextReducer,
+    previewContextInitialState
+  );
+
   return (
     <React.Fragment>
       <Head>
@@ -25,11 +39,15 @@ export default function MyApp({ Component, pageProps }: AppProps) {
           content="minimum-scale=1, initial-scale=1, width=device-width"
         />
       </Head>
-      <ThemeProvider theme={theme}>
-        {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-        <CssBaseline />
-        <Component {...pageProps} />
-      </ThemeProvider>
+      <PreviewDispatch.Provider value={dispatch}>
+        <PreviewContext.Provider value={state}>
+          <ThemeProvider theme={theme}>
+            {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+            <CssBaseline />
+            <Component {...pageProps} />
+          </ThemeProvider>
+        </PreviewContext.Provider>
+      </PreviewDispatch.Provider>
     </React.Fragment>
   );
 }
