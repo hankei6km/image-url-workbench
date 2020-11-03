@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState, useContext } from 'react';
 import useScrollTrigger from '@material-ui/core/useScrollTrigger';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
@@ -12,6 +12,7 @@ import Fade from '@material-ui/core/Fade';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 // import Hidden from '@material-ui/core/Hidden';
+import { PreviewDispatch } from '../components/PreviewContext';
 import ImgUrl from '../components/ImgUrl';
 import ImgPreview from '../components/ImgPreview';
 
@@ -70,6 +71,8 @@ const useStyles = makeStyles((theme) => ({
 
 const IndexPage = () => {
   const theme = useTheme();
+  // const previewStateContext = useContext(PreviewContext);
+  const previewDispatch = useContext(PreviewDispatch);
   const classes = useStyles();
 
   // useMediaQuery 初期状態では false になる? PC での表示(lg)が初期状態になる方がフリッカーが抑えられる/
@@ -79,6 +82,13 @@ const IndexPage = () => {
   const mdDown = useMediaQuery(theme.breakpoints.down('md'));
   const [baseUrl, setBaseUrl] = useState('');
   const [previewUrl, setPreviewUrl] = useState('');
+
+  useEffect(() => {
+    previewDispatch({
+      type: 'setPreviewImageUrl',
+      payload: [previewUrl]
+    });
+  }, [previewDispatch, previewUrl]);
 
   const debounceBaseUrl = useCallback(() => {
     // 汎用化できないか？
