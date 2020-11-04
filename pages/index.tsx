@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import useScrollTrigger from '@material-ui/core/useScrollTrigger';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
@@ -9,10 +9,10 @@ import Paper from '@material-ui/core/Paper';
 // import Collapse from '@material-ui/core/Collapse';
 import Fade from '@material-ui/core/Fade';
 // import Slide from '@material-ui/core/Slide';
-import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 // import Hidden from '@material-ui/core/Hidden';
 import { PreviewDispatch } from '../components/PreviewContext';
+import ImgBaseUrl, { BaseUrlOnChangeEvent } from '../components/ImgBaseUrl';
 import ImgUrl from '../components/ImgUrl';
 import ImgPreview from '../components/ImgPreview';
 
@@ -80,7 +80,8 @@ const IndexPage = () => {
   // ただし、PC でも md のサイズでリロードするとちらつく。
   // TODO: makeStyle で CSS の機能で試す
   const mdDown = useMediaQuery(theme.breakpoints.down('md'));
-  const [baseUrl, setBaseUrl] = useState('');
+  const [imageRawUrl, setImageRawUrl] = useState('');
+  const [imageBaseUrl, setImageBaseUrl] = useState('');
   const [previewUrl, setPreviewUrl] = useState('');
 
   useEffect(() => {
@@ -90,24 +91,24 @@ const IndexPage = () => {
     });
   }, [previewDispatch, previewUrl]);
 
-  const debounceBaseUrl = useCallback(() => {
+  const debounceImageRawUrl = () => {
     // 汎用化できないか？
     let id: any = 0;
-    return (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    return (e: BaseUrlOnChangeEvent) => {
       if (id !== 0) {
         clearTimeout(id);
       }
       id = setTimeout(
         (newValue) => {
           // set系をコールバックの中で呼んでも大丈夫?
-          setBaseUrl(newValue);
+          setImageRawUrl(newValue);
           id = 0;
         },
         100,
-        e.target.value
+        e.value
       );
     };
-  }, []);
+  };
 
   const imgPreviewProps = mdDown
     ? {
@@ -173,12 +174,9 @@ const IndexPage = () => {
             >
               <Box className={classes.imgPreviewFixLgUp}>
                 <Box>
-                  <TextField
-                    id="image-url"
-                    label="Image URL"
-                    defaultValue={''}
-                    fullWidth
-                    onChange={debounceBaseUrl()}
+                  <ImgBaseUrl
+                    baseUrl={imageBaseUrl}
+                    onChange={debounceImageRawUrl()}
                   />
                 </Box>
                 <Box mt={2} className={classes.imageUrlOuterLgUp}>
@@ -250,8 +248,12 @@ const IndexPage = () => {
                   paramsKey: 'txt-align'
                 }
               ]}
-              baseUrl={baseUrl}
-              onChange={({ value }) => {
+              imageRawUrl={imageRawUrl}
+              onChangeImageUrl={({ value }) => {
+                // console.log(value);
+                setImageBaseUrl(value);
+              }}
+              onChangePreviewUrl={({ value }) => {
                 // console.log(value);
                 setPreviewUrl(value);
               }}

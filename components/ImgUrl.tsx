@@ -1,25 +1,27 @@
 import { useReducer, useCallback, useEffect } from 'react';
 import Box from '@material-ui/core/Box';
-import { encodeBase64Url } from '../utils/base64';
+import { decodeBase64Url, encodeBase64Url } from '../utils/base64';
 import ImgParams, {
   ImgUrlParamsOnChangeEvent,
   ImgParamsEnabled
 } from '../components/ImgParams';
 import { paramsKeyDisallowBase64 } from '../utils/imgParamsUtils';
 
+type previewUrlStateParam = {
+  enabled: boolean;
+  key: string;
+  value: string;
+};
+
 type previewUrlState = {
   previewUrl: string;
-  imgUrl: string;
-  params: {
-    enabled: boolean;
-    key: string;
-    value: string;
-  }[];
+  baseUrl: string;
+  params: previewUrlStateParam[];
 };
 
 const initialState: previewUrlState = {
   previewUrl: '',
-  imgUrl: '',
+  baseUrl: '',
   params: []
 };
 // function initState(s: paramsState): paramsState {
@@ -28,9 +30,9 @@ const initialState: previewUrlState = {
 // オブジェクトで型を指定しておいた方が payload の型を拘束できるのだが、
 // debouce する関数をまとめるのが難しいので今回は見送り
 // type actSetParam = { type: 'setParam'; payload: [string, string] };
-// type actSetImgUrl = { type: 'setImgUrl'; payload: string };
+// type actSetImgUrl = { type: 'setImageRawUrl'; payload: string };
 type actTypeInput = {
-  type: 'setParam' | 'setImgUrl';
+  type: 'setParam' | 'setImageRawUrl';
   payload: [string, string];
 };
 type actTypeEnabled = {
@@ -76,8 +78,28 @@ function reducer(state: previewUrlState, action: actType): previewUrlState {
       }
       newState.params = r;
       break;
-    case 'setImgUrl':
-      newState.imgUrl = action.payload[0];
+    case 'setImageRawUrl':
+      const [u, p] = action.payload[0].split('?', 2);
+      newState.baseUrl = u;
+      if (p) {
+        const q = new URLSearchParams(p);
+        newState.params = [];
+        q.forEach((v, k) => {
+          if (k.slice(-2) === '64') {
+            newState.params.push({
+              enabled: true,
+              key: k.slice(0, -2),
+              value: decodeBase64Url(v)
+            });
+            return;
+          }
+          newState.params.push({
+            enabled: true,
+            key: k,
+            value: v
+          });
+        });
+      }
       break;
     default:
       throw new Error();
@@ -97,26 +119,38 @@ function reducer(state: previewUrlState, action: actType): previewUrlState {
       q.append(transformerName(key), transformerValue(value));
     });
   const s = q.toString();
-  const paramsString = newState.imgUrl && s ? `?${s}` : '';
-  newState.previewUrl = `${newState.imgUrl}${paramsString}`;
+  const paramsString = newState.baseUrl && s ? `?${s}` : '';
+  newState.previewUrl = `${newState.baseUrl}${paramsString}`;
   return newState;
 }
 
 export type ParamsItem = { paramsKey: string }[];
-export type ImgUrOnChangeEvent = { value: string };
+export type ImgUrOnChangeImageUrlEvent = { value: string };
+export type ImgUrOnChangePreviewUrlEvent = { value: string };
 type ImgUrlProps = {
   paramsItem: ParamsItem;
-  baseUrl: string;
-  onChange: (e: ImgUrOnChangeEvent) => void;
+  imageRawUrl: string;
+  onChangeImageUrl: (e: ImgUrOnChangePreviewUrlEvent) => void;
+  onChangePreviewUrl: (e: ImgUrOnChangePreviewUrlEvent) => void;
 };
 
-export default function ImgUrl({ paramsItem, baseUrl, onChange }: ImgUrlProps) {
+export default function ImgUrl({
+  paramsItem,
+  imageRawUrl: baseUrl,
+  onChangeImageUrl,
+  onChangePreviewUrl
+}: ImgUrlProps) {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
     // console.log(state.previewUrl);
-    onChange({ value: state.previewUrl });
-  }, [state.previewUrl, onChange]);
+    onChangeImageUrl({ value: state.baseUrl });
+  }, [state.baseUrl, onChangeImageUrl]);
+
+  useEffect(() => {
+    // console.log(state.previewUrl);
+    onChangePreviewUrl({ value: state.previewUrl });
+  }, [state.previewUrl, onChangePreviewUrl]);
 
   const debounceInputText = (
     // debounce だけでも無くなってきたような
@@ -150,8 +184,18 @@ export default function ImgUrl({ paramsItem, baseUrl, onChange }: ImgUrlProps) {
     [state.params]
   );
 
+  const paramsValue = useCallback(
+    (paramKey: string) => {
+      const idx = state.params.findIndex(
+        ({ enabled, key }) => key === paramKey && enabled
+      );
+      return idx >= 0 ? state.params[idx].value : '';
+    },
+    [state.params]
+  );
+
   useEffect(() => {
-    debounceInputText('setImgUrl', '')({ value: baseUrl });
+    debounceInputText('setImageRawUrl', '')({ value: baseUrl });
   }, [baseUrl]);
 
   return (
@@ -174,6 +218,7 @@ export default function ImgUrl({ paramsItem, baseUrl, onChange }: ImgUrlProps) {
           <Box flexGrow={1}>
             <ImgParams
               paramsKey={paramsKey}
+              paramsValue={paramsValue(paramsKey)}
               onChange={debounceInputText('setParam', paramsKey)}
             />
           </Box>
