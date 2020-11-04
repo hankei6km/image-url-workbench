@@ -1,6 +1,6 @@
 import { useReducer, useCallback, useEffect } from 'react';
 import Box from '@material-ui/core/Box';
-import { encodeBase64Url } from '../utils/base64';
+import { decodeBase64Url, encodeBase64Url } from '../utils/base64';
 import ImgParams, {
   ImgUrlParamsOnChangeEvent,
   ImgParamsEnabled
@@ -77,7 +77,27 @@ function reducer(state: previewUrlState, action: actType): previewUrlState {
       newState.params = r;
       break;
     case 'setImgUrl':
-      newState.imgUrl = action.payload[0];
+      const [u, p] = action.payload[0].split('?', 2);
+      newState.imgUrl = u;
+      if (p) {
+        const q = new URLSearchParams(p);
+        newState.params = [];
+        q.forEach((v, k) => {
+          if (k.slice(-2) === '64') {
+            newState.params.push({
+              enabled: true,
+              key: k.slice(0, -2),
+              value: decodeBase64Url(v)
+            });
+            return;
+          }
+          newState.params.push({
+            enabled: true,
+            key: k,
+            value: v
+          });
+        });
+      }
       break;
     default:
       throw new Error();
