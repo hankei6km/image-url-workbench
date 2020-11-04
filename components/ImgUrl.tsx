@@ -125,20 +125,32 @@ function reducer(state: previewUrlState, action: actType): previewUrlState {
 }
 
 export type ParamsItem = { paramsKey: string }[];
-export type ImgUrOnChangeEvent = { value: string };
+export type ImgUrOnChangeImageUrlEvent = { value: string };
+export type ImgUrOnChangePreviewUrlEvent = { value: string };
 type ImgUrlProps = {
   paramsItem: ParamsItem;
   baseUrl: string;
-  onChange: (e: ImgUrOnChangeEvent) => void;
+  onChangeImageUrl: (e: ImgUrOnChangePreviewUrlEvent) => void;
+  onChangePreviewUrl: (e: ImgUrOnChangePreviewUrlEvent) => void;
 };
 
-export default function ImgUrl({ paramsItem, baseUrl, onChange }: ImgUrlProps) {
+export default function ImgUrl({
+  paramsItem,
+  baseUrl,
+  onChangeImageUrl,
+  onChangePreviewUrl
+}: ImgUrlProps) {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
     // console.log(state.previewUrl);
-    onChange({ value: state.previewUrl });
-  }, [state.previewUrl, onChange]);
+    onChangeImageUrl({ value: state.imgUrl });
+  }, [state.imgUrl, onChangeImageUrl]);
+
+  useEffect(() => {
+    // console.log(state.previewUrl);
+    onChangePreviewUrl({ value: state.previewUrl });
+  }, [state.previewUrl, onChangePreviewUrl]);
 
   const debounceInputText = (
     // debounce だけでも無くなってきたような
