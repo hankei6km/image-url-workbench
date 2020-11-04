@@ -18,8 +18,8 @@ export default function ImgBaseUrl({ baseUrl, onChange }: BaseUrlParamsProps) {
   return (
     <Box>
       <TextField
-        id="image-url"
-        label="Image URL"
+        id="image-base-url"
+        label="Image Base URL"
         // defaultValue={''}
         value={value}
         fullWidth

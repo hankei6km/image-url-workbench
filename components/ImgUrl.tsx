@@ -15,13 +15,13 @@ type previewUrlStateParam = {
 
 type previewUrlState = {
   previewUrl: string;
-  imgUrl: string;
+  baseUrl: string;
   params: previewUrlStateParam[];
 };
 
 const initialState: previewUrlState = {
   previewUrl: '',
-  imgUrl: '',
+  baseUrl: '',
   params: []
 };
 // function initState(s: paramsState): paramsState {
@@ -30,9 +30,9 @@ const initialState: previewUrlState = {
 // オブジェクトで型を指定しておいた方が payload の型を拘束できるのだが、
 // debouce する関数をまとめるのが難しいので今回は見送り
 // type actSetParam = { type: 'setParam'; payload: [string, string] };
-// type actSetImgUrl = { type: 'setImgUrl'; payload: string };
+// type actSetImgUrl = { type: 'setImageRawUrl'; payload: string };
 type actTypeInput = {
-  type: 'setParam' | 'setImgUrl';
+  type: 'setParam' | 'setImageRawUrl';
   payload: [string, string];
 };
 type actTypeEnabled = {
@@ -78,9 +78,9 @@ function reducer(state: previewUrlState, action: actType): previewUrlState {
       }
       newState.params = r;
       break;
-    case 'setImgUrl':
+    case 'setImageRawUrl':
       const [u, p] = action.payload[0].split('?', 2);
-      newState.imgUrl = u;
+      newState.baseUrl = u;
       if (p) {
         const q = new URLSearchParams(p);
         newState.params = [];
@@ -119,8 +119,8 @@ function reducer(state: previewUrlState, action: actType): previewUrlState {
       q.append(transformerName(key), transformerValue(value));
     });
   const s = q.toString();
-  const paramsString = newState.imgUrl && s ? `?${s}` : '';
-  newState.previewUrl = `${newState.imgUrl}${paramsString}`;
+  const paramsString = newState.baseUrl && s ? `?${s}` : '';
+  newState.previewUrl = `${newState.baseUrl}${paramsString}`;
   return newState;
 }
 
@@ -129,14 +129,14 @@ export type ImgUrOnChangeImageUrlEvent = { value: string };
 export type ImgUrOnChangePreviewUrlEvent = { value: string };
 type ImgUrlProps = {
   paramsItem: ParamsItem;
-  baseUrl: string;
+  imageRawUrl: string;
   onChangeImageUrl: (e: ImgUrOnChangePreviewUrlEvent) => void;
   onChangePreviewUrl: (e: ImgUrOnChangePreviewUrlEvent) => void;
 };
 
 export default function ImgUrl({
   paramsItem,
-  baseUrl,
+  imageRawUrl: baseUrl,
   onChangeImageUrl,
   onChangePreviewUrl
 }: ImgUrlProps) {
@@ -144,8 +144,8 @@ export default function ImgUrl({
 
   useEffect(() => {
     // console.log(state.previewUrl);
-    onChangeImageUrl({ value: state.imgUrl });
-  }, [state.imgUrl, onChangeImageUrl]);
+    onChangeImageUrl({ value: state.baseUrl });
+  }, [state.baseUrl, onChangeImageUrl]);
 
   useEffect(() => {
     // console.log(state.previewUrl);
@@ -195,7 +195,7 @@ export default function ImgUrl({
   );
 
   useEffect(() => {
-    debounceInputText('setImgUrl', '')({ value: baseUrl });
+    debounceInputText('setImageRawUrl', '')({ value: baseUrl });
   }, [baseUrl]);
 
   return (

@@ -1,4 +1,4 @@
-import React, {  useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import useScrollTrigger from '@material-ui/core/useScrollTrigger';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
@@ -80,8 +80,8 @@ const IndexPage = () => {
   // ただし、PC でも md のサイズでリロードするとちらつく。
   // TODO: makeStyle で CSS の機能で試す
   const mdDown = useMediaQuery(theme.breakpoints.down('md'));
-  const [baseUrl, setBaseUrl] = useState('');
-  const [imageUrl, setImageUrl] = useState('');
+  const [imageRawUrl, setImageRawUrl] = useState('');
+  const [imageBaseUrl, setImageBaseUrl] = useState('');
   const [previewUrl, setPreviewUrl] = useState('');
 
   useEffect(() => {
@@ -91,7 +91,7 @@ const IndexPage = () => {
     });
   }, [previewDispatch, previewUrl]);
 
-  const debounceBaseUrl = () => {
+  const debounceImageRawUrl = () => {
     // 汎用化できないか？
     let id: any = 0;
     return (e: BaseUrlOnChangeEvent) => {
@@ -101,7 +101,7 @@ const IndexPage = () => {
       id = setTimeout(
         (newValue) => {
           // set系をコールバックの中で呼んでも大丈夫?
-          setBaseUrl(newValue);
+          setImageRawUrl(newValue);
           id = 0;
         },
         100,
@@ -174,7 +174,10 @@ const IndexPage = () => {
             >
               <Box className={classes.imgPreviewFixLgUp}>
                 <Box>
-                  <ImgBaseUrl baseUrl={imageUrl} onChange={debounceBaseUrl()} />
+                  <ImgBaseUrl
+                    baseUrl={imageBaseUrl}
+                    onChange={debounceImageRawUrl()}
+                  />
                 </Box>
                 <Box mt={2} className={classes.imageUrlOuterLgUp}>
                   <Typography variant="body1">
@@ -245,10 +248,10 @@ const IndexPage = () => {
                   paramsKey: 'txt-align'
                 }
               ]}
-              baseUrl={baseUrl}
+              imageRawUrl={imageRawUrl}
               onChangeImageUrl={({ value }) => {
                 // console.log(value);
-                setImageUrl(value);
+                setImageBaseUrl(value);
               }}
               onChangePreviewUrl={({ value }) => {
                 // console.log(value);
