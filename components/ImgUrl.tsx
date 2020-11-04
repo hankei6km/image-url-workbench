@@ -7,14 +7,16 @@ import ImgParams, {
 } from '../components/ImgParams';
 import { paramsKeyDisallowBase64 } from '../utils/imgParamsUtils';
 
+type previewUrlStateParam = {
+  enabled: boolean;
+  key: string;
+  value: string;
+};
+
 type previewUrlState = {
   previewUrl: string;
   imgUrl: string;
-  params: {
-    enabled: boolean;
-    key: string;
-    value: string;
-  }[];
+  params: previewUrlStateParam[];
 };
 
 const initialState: previewUrlState = {
@@ -170,6 +172,16 @@ export default function ImgUrl({ paramsItem, baseUrl, onChange }: ImgUrlProps) {
     [state.params]
   );
 
+  const paramsValue = useCallback(
+    (paramKey: string) => {
+      const idx = state.params.findIndex(
+        ({ enabled, key }) => key === paramKey && enabled
+      );
+      return idx >= 0 ? state.params[idx].value : '';
+    },
+    [state.params]
+  );
+
   useEffect(() => {
     debounceInputText('setImgUrl', '')({ value: baseUrl });
   }, [baseUrl]);
@@ -194,6 +206,7 @@ export default function ImgUrl({ paramsItem, baseUrl, onChange }: ImgUrlProps) {
           <Box flexGrow={1}>
             <ImgParams
               paramsKey={paramsKey}
+              paramsValue={paramsValue(paramsKey)}
               onChange={debounceInputText('setParam', paramsKey)}
             />
           </Box>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -97,6 +97,7 @@ export type ImgUrlParamsOnChangeEvent = { value: string | number | boolean };
 
 type ImgParamsProps = {
   paramsKey: string;
+  paramsValue?: string;
   onChange: (e: ImgUrlParamsOnChangeEvent) => void;
 };
 
@@ -125,22 +126,34 @@ type ImgParamsEnabledProps = {
 
 function ImgParamsTextField({
   paramsKey,
+  paramsValue = '',
   paramsExpect,
   onChange
 }: ImgParamsTextFieldProps) {
+  const [value, setValue] = useState('');
+
+  useEffect(() => {
+    setValue(paramsValue);
+  }, [paramsValue]);
+
   return (
     <TextField
       variant="outlined"
+      value={value}
       id={`${paramsKey}(${paramsExpect.type})`}
       {...paramsKeyToSpread(paramsKey, paramsExpect)}
       fullWidth
-      onChange={(e) => onChange({ value: e.target.value })}
+      onChange={(e) => {
+        setValue(e.target.value);
+        onChange({ value: e.target.value });
+      }}
     />
   );
 }
 
 function ImgParamsRange({
   paramsKey,
+  paramsValue,
   paramsExpect,
   suggestRange,
   onChange
@@ -151,6 +164,12 @@ function ImgParamsRange({
   const [value, setValue] = useState<number | string | Array<number | string>>(
     defaultValue
   );
+
+  useEffect(() => {
+    if (paramsValue) {
+      setValue(paramsValue);
+    }
+  }, [paramsValue]);
 
   const handleSliderChange = (
     _event: React.ChangeEvent<{}>,
@@ -196,7 +215,7 @@ function ImgParamsRange({
         </Box>
         <Box className={classes.sliderOuterMedia}>
           <Slider
-            value={typeof value === 'number' ? value : 0}
+            value={value ? parseInt(value as string, 10) : 0}
             onChange={handleSliderChange}
             aria-labelledby="input-slider"
             min={min}
@@ -229,6 +248,7 @@ function ImgParamsRange({
 
 function ImgParamsColor({
   paramsKey,
+  paramsValue,
   paramsExpect,
   onChange
 }: ImgParamsColorProps) {
@@ -238,6 +258,12 @@ function ImgParamsColor({
   const [color, setColor] = useState('');
   // TODO: defaultValue の書式によっては変換が必要なはず
   const [value, setValue] = useState<string>(`${p.defaultValue}` || 'FF000000'); // ARGB
+
+  useEffect(() => {
+    if (paramsValue) {
+      setValue(paramsValue);
+    }
+  }, [paramsValue]);
 
   // Button のラベルの色は後で調整(TextFieldのラベル色はどこで決まる?)
   return (
@@ -307,9 +333,20 @@ function ImgParamsList({
   possibleValues,
   paramsExpect,
   paramsKey,
+  paramsValue,
   onChange
 }: ImgParamsListProps) {
+  const [value, setValue] = useState<string[]>([]);
   const p = paramsKeyToSpread(paramsKey, paramsExpect);
+
+  useEffect(() => {
+    if (paramsValue) {
+      setValue(
+        paramsValue.split(',').filter((v) => possibleValues.indexOf(v) >= 0)
+      );
+    }
+  }, [paramsValue, possibleValues]);
+
   return (
     <Autocomplete
       multiple
@@ -317,8 +354,10 @@ function ImgParamsList({
       options={possibleValues}
       getOptionLabel={(option) => option}
       defaultValue={[]}
+      value={value}
       onChange={(_event: React.ChangeEvent<{}>, newValue: string[]) => {
         if (newValue) {
+          setValue(newValue);
           onChange({ value: newValue.join(',') });
         }
       }}
@@ -340,6 +379,10 @@ export function ImgParamsEnabled({
   onChange
 }: ImgParamsEnabledProps) {
   const [checked, setChecked] = useState(enabled);
+
+  useEffect(() => {
+    setChecked(enabled);
+  }, [enabled]);
 
   return (
     <Switch
