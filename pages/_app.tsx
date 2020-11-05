@@ -27,7 +27,17 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   // https://ja.reactjs.org/docs/hooks-faq.html#how-to-avoid-passing-callbacks-down
   const [state, dispatch] = React.useReducer(
     previewContextReducer,
-    previewContextInitialState
+    previewContextInitialState,
+    (init) => {
+      const newState = { ...init };
+      newState.validateAssets = process.env.VALIDATE_ASSETS ? true : false;
+      try {
+        newState.assets = JSON.parse(process.env.ASSETS || '[]');
+      } catch (err) {
+        console.error(`error: assets parse error: ${err.name}`);
+      }
+      return newState;
+    }
   );
 
   return (
