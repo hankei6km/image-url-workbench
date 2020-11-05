@@ -5,7 +5,10 @@ import ImgParams, {
   ImgUrlParamsOnChangeEvent,
   ImgParamsEnabled
 } from '../components/ImgParams';
-import { paramsKeyDisallowBase64 } from '../utils/imgParamsUtils';
+import {
+  paramsKeyDisallowBase64,
+  paramsKeyParameters
+} from '../utils/imgParamsUtils';
 
 type previewUrlStateParam = {
   enabled: boolean;
@@ -86,18 +89,23 @@ function reducer(state: previewUrlState, action: actType): previewUrlState {
         newState.params = [];
         q.forEach((v, k) => {
           if (k.slice(-2) === '64') {
-            newState.params.push({
-              enabled: true,
-              key: k.slice(0, -2),
-              value: decodeBase64Url(v)
-            });
-            return;
+            const bareKeyName = k.slice(0, -2);
+            if (paramsKeyParameters(bareKeyName)) {
+              newState.params.push({
+                enabled: true,
+                key: k.slice(0, -2),
+                value: decodeBase64Url(v)
+              });
+            }
+          } else {
+            if (paramsKeyParameters(k)) {
+              newState.params.push({
+                enabled: true,
+                key: k,
+                value: v
+              });
+            }
           }
-          newState.params.push({
-            enabled: true,
-            key: k,
-            value: v
-          });
         });
       }
       break;
