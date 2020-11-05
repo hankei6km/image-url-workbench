@@ -13,7 +13,10 @@ import Container from '@material-ui/core/Container';
 import Box from '@material-ui/core/Box';
 import TextField from '@material-ui/core/TextField';
 import { encodeBase64Url, decodeBase64Url } from '../utils/base64';
+import Validator from '../utils/validator';
 import PreviewContext from '../components/PreviewContext';
+
+const validator = Validator();
 
 type CardGenPagePropsData = {
   imageUrl?: string;
@@ -46,6 +49,12 @@ const CardGenPage = ({
   const [description, setDescription] = useState(data.cardDescription || '');
   const [cardPreviewUrl, setCardPreviewUrl] = useState('');
 
+  const dataImageUrlErr = validator.assets(
+    data.imageUrl,
+    previewStateContext.validateAssets,
+    previewStateContext.assets,
+    true
+  );
   // console.log(router);
   // console.log(window.location);
 
@@ -70,9 +79,16 @@ const CardGenPage = ({
       <Head>
         <meta
           name="og:description"
-          content={data.description || '[preview] description'}
+          content={
+            dataImageUrlErr === undefined
+              ? data.description || '[preview] description'
+              : dataImageUrlErr.message
+          }
         />
-        <meta property="og:image" content={data.imageUrl} />
+        <meta
+          property="og:image"
+          content={dataImageUrlErr === undefined ? data.imageUrl : ''}
+        />
         <meta name="og:title" content={data.title || '[preview] title'} />
         <meta name="twitter:card" content="summary_large_image" />
       </Head>
