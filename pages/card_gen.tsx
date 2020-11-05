@@ -74,9 +74,12 @@ const CardGenPage = ({
   return (
     <Layout title="Card Gen">
       <Head>
-        <meta name="og:description" content={cardDescription} />
+        <meta
+          name="og:description"
+          content={cardDescription || '[preview] description'}
+        />
         <meta property="og:image" content={imageUrl} />
-        <meta name="og:title" content={cardTitle} />
+        <meta name="og:title" content={cardTitle || '[preview] title'} />
         <meta name="twitter:card" content="summary_large_image" />
       </Head>
       <Container maxWidth="sm">
