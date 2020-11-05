@@ -2,6 +2,9 @@ import React, { useEffect, useState, useContext } from 'react';
 import Box from '@material-ui/core/Box';
 import TextField from '@material-ui/core/TextField';
 import PreviewContext from '../components/PreviewContext';
+import Validator from '../utils/validator';
+
+const validator = Validator();
 
 export type BaseUrlOnChangeEvent = { value: string };
 
@@ -11,7 +14,7 @@ type BaseUrlParamsProps = {
 };
 
 export default function ImgBaseUrl({ baseUrl, onChange }: BaseUrlParamsProps) {
-  const previewStateContext = useContext(PreviewContext);
+  const { validateAssets, assets } = useContext(PreviewContext);
   const [value, setValue] = useState(baseUrl);
   const [errMsg, setErrMsg] = useState('');
 
@@ -32,15 +35,13 @@ export default function ImgBaseUrl({ baseUrl, onChange }: BaseUrlParamsProps) {
         onChange={(e) => {
           const newValue = e.target.value;
           setValue(newValue);
-          try {
-            const u = new URL(newValue);
-            if (previewStateContext.validateAssets && previewStateContext.assets.indexOf(u.origin) < 0) {
-              setErrMsg('Incorect assets');
-            } else {
-              onChange({ value: e.target.value });
-              setErrMsg('');
-            }
-          } catch (err) {}
+          const err = validator.assets(newValue, validateAssets, assets, true);
+          if (err && newValue !== '') {
+            setErrMsg(err.message);
+          } else {
+            onChange({ value: e.target.value });
+            setErrMsg('');
+          }
         }}
       />
     </Box>
