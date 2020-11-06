@@ -27,6 +27,13 @@ import ImgPreview from '../components/ImgPreview';
 
 const useStyles = makeStyles((theme) => ({
   container: {
+    // chrome mobile で横スクロールが発生する状態で
+    // position="fixed" で固定した領域が横幅が広がる、アドレスバーの裏に隠れるなどが発生する。
+    // "auto" にすると回避できるが、これが良いのかは不明。
+    // desktop の chrome で横スクロールバーが表示されるような記述があるが、
+    // 試したかぎりでは出てこない。
+    overflow: 'auto',
+    // chrome mobile で
     [theme.breakpoints.down('md')]: {
       maxWidth: theme.breakpoints.values.sm
     }
