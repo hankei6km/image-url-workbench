@@ -11,7 +11,7 @@ import Fade from '@material-ui/core/Fade';
 // import Slide from '@material-ui/core/Slide';
 import Typography from '@material-ui/core/Typography';
 // import Hidden from '@material-ui/core/Hidden';
-import { PreviewDispatch } from '../components/PreviewContext';
+import PreviewContext, { PreviewDispatch } from '../components/PreviewContext';
 import ImgBaseUrl, { BaseUrlOnChangeEvent } from '../components/ImgBaseUrl';
 import ImgUrl from '../components/ImgUrl';
 import ImgPreview from '../components/ImgPreview';
@@ -78,7 +78,7 @@ const useStyles = makeStyles((theme) => ({
 
 const IndexPage = () => {
   const theme = useTheme();
-  // const previewStateContext = useContext(PreviewContext);
+  const previewStateContext = useContext(PreviewContext);
   const previewDispatch = useContext(PreviewDispatch);
   const classes = useStyles();
 
@@ -87,9 +87,15 @@ const IndexPage = () => {
   // ただし、PC でも md のサイズでリロードするとちらつく。
   // TODO: makeStyle で CSS の機能で試す
   const mdDown = useMediaQuery(theme.breakpoints.down('md'));
-  const [imageRawUrl, setImageRawUrl] = useState('');
-  const [imageBaseUrl, setImageBaseUrl] = useState('');
-  const [previewUrl, setPreviewUrl] = useState('');
+  const [imageRawUrl, setImageRawUrl] = useState(
+    previewStateContext.previewImageUrl
+  );
+  const [imageBaseUrl, setImageBaseUrl] = useState(
+    previewStateContext.previewImageUrl
+  );
+  const [previewUrl, setPreviewUrl] = useState(
+    previewStateContext.previewImageUrl
+  );
 
   useEffect(() => {
     previewDispatch({
