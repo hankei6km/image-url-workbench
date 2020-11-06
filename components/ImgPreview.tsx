@@ -25,7 +25,7 @@ function reducer(state: previewImgState, action: actType): previewImgState {
   switch (action.type) {
     case 'setUrl':
       newState.previewUrl = action.payload[0];
-      if (newState.previewUrl) {
+      if (newState.previewUrl && newState.previewUrl !== state.previewUrl) {
         newState.state = 'loading';
       }
       break;
@@ -64,7 +64,13 @@ export default function ImgPreview({
   width,
   height
 }: ImgPreviewProps) {
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [state, dispatch] = useReducer(reducer, initialState, (init) => {
+    const newState = { ...init };
+    newState.previewUrl = previewUrl;
+    newState.state = 'loading';
+    setTimeout(() => dispatch({ type: 'setUrl', payload: [previewUrl] }), 1); // dispatch でないと即時反映されない?
+    return newState;
+  });
   // const [imgUrl, setImgUrl] = useState('');
 
   useEffect(() => dispatch({ type: 'setUrl', payload: [previewUrl] }), [

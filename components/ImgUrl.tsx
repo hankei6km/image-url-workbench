@@ -148,7 +148,11 @@ export default function ImgUrl({
   onChangeImageUrl,
   onChangePreviewUrl
 }: ImgUrlProps) {
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [state, dispatch] = useReducer(reducer, initialState, (init) => {
+    const newState = { ...init };
+    newState.baseUrl = baseUrl;
+    return newState;
+  });
 
   useEffect(() => {
     // console.log(state.previewUrl);
