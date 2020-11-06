@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext, useCallback } from 'react';
 // import { GetStaticProps } from 'next';
 import {
   //GetStaticProps,
@@ -14,7 +14,7 @@ import Box from '@material-ui/core/Box';
 import TextField from '@material-ui/core/TextField';
 import { encodeBase64Url, decodeBase64Url } from '../utils/base64';
 import Validator from '../utils/validator';
-import PreviewContext from '../components/PreviewContext';
+import PreviewContext, { PreviewDispatch } from '../components/PreviewContext';
 
 const validator = Validator();
 
@@ -42,12 +42,15 @@ const CardGenPage = ({
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   //const router = useRouter();
   const previewStateContext = useContext(PreviewContext);
+  const previewDispatch = useContext(PreviewDispatch);
   const [imageUrl, setImageUrl] = useState(
-    data.imageUrl || previewStateContext.previewImageUrl
+    data.imageUrl || previewStateContext.previewImageUrl // assets のチェックが入らない状態になる. あとで対応
   );
   const [title, setTitle] = useState(data.cardTitle || '');
   const [description, setDescription] = useState(data.cardDescription || '');
   const [cardPreviewUrl, setCardPreviewUrl] = useState('');
+
+  const [imageUrlErrMsg, setImageUrlErrMsg] = useState('');
 
   const dataImageUrlErr = validator.assets(
     data.imageUrl,
@@ -55,11 +58,30 @@ const CardGenPage = ({
     previewStateContext.assets,
     true
   );
-  // console.log(router);
-  // console.log(window.location);
+
+  const validateImageUrl = useCallback(() => {
+    const err = validator.assets(
+      imageUrl,
+      previewStateContext.validateAssets,
+      previewStateContext.assets,
+      true
+    );
+    if (err && imageUrl !== '') {
+      return err.message;
+    }
+    return '';
+  }, [
+    previewStateContext.validateAssets,
+    previewStateContext.assets,
+    imageUrl
+  ]);
 
   useEffect(() => {
-    if (imageUrl) {
+    setImageUrlErrMsg(validateImageUrl());
+  }, [validateImageUrl, imageUrl]);
+
+  useEffect(() => {
+    if (imageUrl && validateImageUrl() === '') {
       const q = new URLSearchParams('');
       q.append('type', 'cardPreview');
       q.append('imageUrl', encodeBase64Url(imageUrl));
@@ -72,7 +94,16 @@ const CardGenPage = ({
     } else {
       setCardPreviewUrl('');
     }
-  }, [imageUrl, title, description]);
+  }, [imageUrl, title, description, validateImageUrl]);
+
+  useEffect(() => {
+    if (validateImageUrl() === '') {
+      previewDispatch({
+        type: 'setPreviewImageUrl',
+        payload: [imageUrl]
+      });
+    }
+  }, [previewDispatch, imageUrl, validateImageUrl]);
 
   return (
     <Layout title="Card Gen">
@@ -96,10 +127,13 @@ const CardGenPage = ({
         <Box pb={3}>
           <Box p={1}>
             <TextField
+              error={imageUrlErrMsg ? true : false}
               id="preview-card-image-url"
               label="Preview Card Image URL"
               defaultValue={imageUrl}
               fullWidth
+              helperText={imageUrlErrMsg}
+              // 入力できないようにする?
               onChange={(e) => {
                 setImageUrl(e.target.value);
               }}
