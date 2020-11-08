@@ -6,27 +6,15 @@ import Box from '@material-ui/core/Box';
 import TextField from '@material-ui/core/TextField';
 // import TurndownService from 'turndown';
 import PreviewContext from '../components/PreviewContext';
+import VariantMarkdown from '../components/VariantMarkdown';
 
-// const turndownService = new TurndownService();
-
-const markdwonEscapeRegExp = /([[\]\\<>])/g;
 const VariantPage = () => {
   const previewStateContext = useContext(PreviewContext);
   //const previewDispatch = useContext(PreviewDispatch);
   const [altText, setAltText] = useState('');
-  const [markdown, setMarkdown] = useState('');
   const [imgElement, setImgElement] = useState(
     <img src={previewStateContext.previewImageUrl} alt="" />
   );
-
-  useEffect(() => {
-    // markdown は手動でエスケープでも良いのでは?
-    setMarkdown(
-      `![${altText.replace(markdwonEscapeRegExp, '\\$1')}](${
-        previewStateContext.previewImageUrl
-      })`
-    );
-  }, [previewStateContext.previewImageUrl, altText]);
 
   useEffect(() => {
     setImgElement(
@@ -38,15 +26,15 @@ const VariantPage = () => {
     <Layout title="Variant">
       <Container maxWidth="sm">
         <Box>
+          <VariantMarkdown />
+        </Box>
+        <Box>
           <TextField
             fullWidth
             multiline
             value={altText}
             onChange={(e) => setAltText(e.target.value)}
           />
-        </Box>
-        <Box>
-          <TextField fullWidth multiline value={markdown} />
         </Box>
         <Box>
           <TextField
