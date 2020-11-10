@@ -15,6 +15,7 @@ import TextField from '@material-ui/core/TextField';
 import { encodeBase64Url, decodeBase64Url } from '../utils/base64';
 import Validator from '../utils/validator';
 import PreviewContext, { PreviewDispatch } from '../components/PreviewContext';
+import DebTextField from '../components/DebTextField';
 
 const validator = Validator();
 
@@ -126,7 +127,7 @@ const CardGenPage = ({
       <Container maxWidth="sm">
         <Box pb={3}>
           <Box p={1}>
-            <TextField
+            <DebTextField
               error={imageUrlErrMsg ? true : false}
               id="preview-card-image-url"
               label="Preview Card Image URL"
@@ -134,30 +135,30 @@ const CardGenPage = ({
               fullWidth
               helperText={imageUrlErrMsg}
               // 入力できないようにする?
-              onChange={(e) => {
-                setImageUrl(e.target.value);
+              onChangeValue={({ value }) => {
+                setImageUrl(value);
               }}
             />
           </Box>
           <Box p={1}>
-            <TextField
+            <DebTextField
               id="preview-card-title"
               label="Preview Card Title"
               defaultValue={data.cardTitle}
               fullWidth
-              onChange={(e) => {
-                setTitle(e.target.value);
+              onChangeValue={({ value }) => {
+                setTitle(value);
               }}
             />
           </Box>
           <Box p={1}>
-            <TextField
+            <DebTextField
               id="preview-card-description"
               label="Preview Card Description"
               defaultValue={data.cardDescription}
               fullWidth
-              onChange={(e) => {
-                setDescription(e.target.value);
+              onChangeValue={({ value }) => {
+                setDescription(value);
               }}
             />
           </Box>
