@@ -39,11 +39,7 @@ const VariantPage = () => {
 
   useEffect(() => {
     const imgElement = (
-      <img
-        src={previewStateContext.previewImageUrl}
-        alt={altText}
-        title={altText}
-      />
+      <img src={previewStateContext.previewImageUrl} alt={altText} />
     );
     const t = newTab
       ? {
@@ -117,6 +113,7 @@ const VariantPage = () => {
             fullWidth
             multiline
             value={imgHtml}
+            onSelect={(e) => e.target.select()}
           />
         </Box>
         <Box p={1}>
@@ -126,6 +123,7 @@ const VariantPage = () => {
             fullWidth
             multiline
             value={imgMarkdown}
+            onSelect={(e) => e.target.select()}
           />
         </Box>
       </Container>
