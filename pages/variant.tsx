@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect, useRef } from 'react';
 import ReactDomServer from 'react-dom/server';
 import Layout from '../components/Layout';
 import Container from '@material-ui/core/Container';
@@ -36,6 +36,8 @@ const VariantPage = () => {
   const [newTab, setNewTab] = useState(false);
   const [imgHtml, setImgHtml] = useState('');
   const [imgMarkdown, setImgMarkdown] = useState('');
+  const htmlInputRef = useRef<HTMLTextAreaElement>();
+  const markdownInputRef = useRef<HTMLTextAreaElement>();
 
   useEffect(() => {
     const imgElement = (
@@ -113,7 +115,12 @@ const VariantPage = () => {
             fullWidth
             multiline
             value={imgHtml}
-            onSelect={(e) => e.target.select()}
+            inputRef={htmlInputRef}
+            onSelect={(_e) => {
+              if (htmlInputRef && htmlInputRef.current) {
+                htmlInputRef.current.select();
+              }
+            }}
           />
         </Box>
         <Box p={1}>
@@ -123,7 +130,12 @@ const VariantPage = () => {
             fullWidth
             multiline
             value={imgMarkdown}
-            onSelect={(e) => e.target.select()}
+            inputRef={markdownInputRef}
+            onSelect={(_e) => {
+              if (markdownInputRef && markdownInputRef.current) {
+                markdownInputRef.current.select();
+              }
+            }}
           />
         </Box>
       </Container>
