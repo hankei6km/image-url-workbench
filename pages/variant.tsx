@@ -13,7 +13,7 @@ import rehypeToRemark from 'rehype-remark';
 import remarkStringify from 'remark-stringify';
 import rehypeSanitize from 'rehype-sanitize';
 import PreviewContext from '../components/PreviewContext';
-// import VariantMarkdown from '../components/VariantMarkdown';
+import DebTextField from '../components/DebTextField';
 
 const processorHtml = unified()
   .use(rehypeParse, { fragment: true })
@@ -75,20 +75,20 @@ const VariantPage = () => {
     <Layout title="Variant">
       <Container maxWidth="sm">
         <Box p={1}>
-          <TextField
+          <DebTextField
             label="alt text"
             fullWidth
             value={altText}
-            onChange={(e) => setAltText(e.target.value)}
+            onChangeValue={({ value }) => setAltText(value)}
           />
         </Box>
         <Box p={1} display="flex" flexDirection="row">
           <Box flexGrow={1} mr={1}>
-            <TextField
+            <DebTextField
               label="link"
               fullWidth
               value={linkText}
-              onChange={(e) => setLinkText(e.target.value)}
+              onChangeValue={({ value }) => setLinkText(value)}
             />
           </Box>
           <Box>
