@@ -11,6 +11,7 @@ import Fade from '@material-ui/core/Fade';
 // import Slide from '@material-ui/core/Slide';
 import Typography from '@material-ui/core/Typography';
 // import Hidden from '@material-ui/core/Hidden';
+import { flattenParams } from '../utils/imgParamsUtils';
 import PreviewContext, { PreviewDispatch } from '../components/PreviewContext';
 import ImgBaseUrl, { BaseUrlOnChangeEvent } from '../components/ImgBaseUrl';
 import ImgUrl from '../components/ImgUrl';
