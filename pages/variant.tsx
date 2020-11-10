@@ -60,7 +60,7 @@ const VariantPage = () => {
       imgElement
     );
     const html = ReactDomServer.renderToStaticMarkup(elm);
-    processorHtml.process('<div abc</div>', (err, file) => {
+    processorHtml.process(html, (err, file) => {
       if (err) {
         console.error(reporter(err || file));
       }
