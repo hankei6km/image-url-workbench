@@ -13,7 +13,6 @@ import rehypeToRemark from 'rehype-remark';
 import remarkStringify from 'remark-stringify';
 import rehypeSanitize from 'rehype-sanitize';
 import PreviewContext from '../components/PreviewContext';
-import reporter from 'vfile-reporter';
 // import VariantMarkdown from '../components/VariantMarkdown';
 
 const processorHtml = unified()
@@ -62,13 +61,13 @@ const VariantPage = () => {
     const html = ReactDomServer.renderToStaticMarkup(elm);
     processorHtml.process(html, (err, file) => {
       if (err) {
-        console.error(reporter(err || file));
+        console.error(err);
       }
       setImgHtml(String(file));
     });
     processorMarkdown.process(html, (err, file) => {
       if (err) {
-        console.error(reporter(file)); // 今回の利用ではここでデバッグ用の情報は表示されなさそう
+        //console.error(reporter(file)); // 今回の利用ではここでデバッグ用の情報は表示されなさそう
       }
       setImgMarkdown(String(file).trimEnd());
     });
