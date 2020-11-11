@@ -9,10 +9,13 @@ import Paper from '@material-ui/core/Paper';
 // import Collapse from '@material-ui/core/Collapse';
 import Fade from '@material-ui/core/Fade';
 // import Slide from '@material-ui/core/Slide';
+import InputAdornment from '@material-ui/core/InputAdornment';
 import Typography from '@material-ui/core/Typography';
 // import Hidden from '@material-ui/core/Hidden';
+import SearchIcon from '@material-ui/icons/Search';
 import PreviewContext, { PreviewDispatch } from '../components/PreviewContext';
-import { flattenParams } from '../utils/imgParamsUtils';
+import { flattenParams, imgParasmItemInclude } from '../utils/imgParamsUtils';
+import DebTextField from '../components/DebTextField';
 import ImgBaseUrl, { BaseUrlOnChangeEvent } from '../components/ImgBaseUrl';
 import ImgUrl from '../components/ImgUrl';
 import ImgPreview from '../components/ImgPreview';
@@ -103,6 +106,8 @@ const IndexPage = () => {
     previewStateContext.previewImageUrl
   );
 
+  const [searchText, setSearchText] = useState('');
+
   useEffect(() => {
     previewDispatch({
       type: 'setPreviewImageUrl',
@@ -151,6 +156,9 @@ const IndexPage = () => {
     disableHysteresis: true,
     threshold: 250
   });
+
+  useEffect(() => {}, [searchText]);
+
   return (
     <Layout title="Home | Next.js + TypeScript Example">
       <Box
@@ -228,8 +236,27 @@ const IndexPage = () => {
             flexGrow={1}
             style={{ maxWidth: theme.breakpoints.values.sm }}
           >
+            <DebTextField
+              placeholder="search"
+              fullWidth
+              value={searchText}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon />
+                  </InputAdornment>
+                )
+              }}
+              onChangeValue={({ value }) => setSearchText(value)}
+            />
             <ImgUrl
-              paramsItem={imgUrlParams}
+              paramsItem={
+                searchText
+                  ? imgUrlParams.filter((v) =>
+                      imgParasmItemInclude(v, searchText)
+                    )
+                  : imgUrlParams
+              }
               // paramsItem={[
               //   {
               //     paramsKey: 'blur'

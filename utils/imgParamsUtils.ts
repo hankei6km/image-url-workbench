@@ -114,6 +114,10 @@ export function flattenParams(): ImgParamsItems {
   }));
 }
 
+export function imgParasmItemInclude(p: ImgParamsItem, text: string): boolean {
+  return p.paramsKey.includes(text) || p.category.includes(text);
+}
+
 export function imgParamsInCategory(
   paramsItems: ImgParamsItems,
   category: string
