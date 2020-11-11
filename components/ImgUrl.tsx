@@ -1,4 +1,4 @@
-import { useReducer, useCallback, useEffect } from 'react';
+import React, { useReducer, useCallback, useEffect, useState } from 'react';
 import Box from '@material-ui/core/Box';
 import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
@@ -217,10 +217,23 @@ export default function ImgUrl({
     debounceInputText('setImageRawUrl', '')({ value: baseUrl });
   }, [baseUrl]);
 
+  // state が１つだと map のループが回るよね?
+  const [opened, setOpened] = useState('');
+  const changeOpend = (category: string) => {
+    return (_e: React.ChangeEvent<{}>, isExpanded: boolean): void => {
+      setOpened(isExpanded ? category : '');
+    };
+  };
+
   return (
     <Box>
       {imgParamsCategories().map((v) => (
-        <Accordion elevation={0} key={`category-${v}`}>
+        <Accordion
+          elevation={0}
+          key={`category-${v}`}
+          expanded={v===opened}
+          onChange={changeOpend(v)}
+        >
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
             aria-controls={`category panel : ${v}`}
@@ -231,32 +244,33 @@ export default function ImgUrl({
           </AccordionSummary>
           <AccordionDetails style={{ padding: 0 }}>
             <Box width="100%">
-              {imgParamsInCategory(paramsItem, v).map(
-                ({ paramsKey }: { paramsKey: string }) => (
-                  <Box
-                    p={1}
-                    key={paramsKey}
-                    display="flex"
-                    flexDirection="row"
-                    alignItems="center"
-                  >
-                    <Box>
-                      <ImgParamsEnabled
-                        paramsKey={paramsKey}
-                        enabled={paramKeyIsEnabled(paramsKey)}
-                        onChange={debounceInputText('setEnabled', paramsKey)}
-                      />
+              {opened === v &&
+                imgParamsInCategory(paramsItem, v).map(
+                  ({ paramsKey }: { paramsKey: string }) => (
+                    <Box
+                      p={1}
+                      key={paramsKey}
+                      display="flex"
+                      flexDirection="row"
+                      alignItems="center"
+                    >
+                      <Box>
+                        <ImgParamsEnabled
+                          paramsKey={paramsKey}
+                          enabled={paramKeyIsEnabled(paramsKey)}
+                          onChange={debounceInputText('setEnabled', paramsKey)}
+                        />
+                      </Box>
+                      <Box flexGrow={1}>
+                        <ImgParams
+                          paramsKey={paramsKey}
+                          paramsValue={paramsValue(paramsKey)}
+                          onChange={debounceInputText('setParam', paramsKey)}
+                        />
+                      </Box>
                     </Box>
-                    <Box flexGrow={1}>
-                      <ImgParams
-                        paramsKey={paramsKey}
-                        paramsValue={paramsValue(paramsKey)}
-                        onChange={debounceInputText('setParam', paramsKey)}
-                      />
-                    </Box>
-                  </Box>
-                )
-              )}
+                  )
+                )}
             </Box>
           </AccordionDetails>
         </Accordion>
