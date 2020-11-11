@@ -1,5 +1,9 @@
 import { useReducer, useCallback, useEffect } from 'react';
 import Box from '@material-ui/core/Box';
+import Accordion from '@material-ui/core/Accordion';
+import AccordionSummary from '@material-ui/core/AccordionSummary';
+import AccordionDetails from '@material-ui/core/AccordionDetails';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { decodeBase64Url, encodeBase64Url } from '../utils/base64';
 import ImgParams, {
   ImgUrlParamsOnChangeEvent,
@@ -7,7 +11,10 @@ import ImgParams, {
 } from '../components/ImgParams';
 import {
   paramsKeyDisallowBase64,
-  paramsKeyParameters
+  paramsKeyParameters,
+  ImgParamsItems,
+  imgParamsCategories,
+  imgParamsInCategory
 } from '../utils/imgParamsUtils';
 
 type previewUrlStateParam = {
@@ -132,7 +139,7 @@ function reducer(state: previewUrlState, action: actType): previewUrlState {
   return newState;
 }
 
-export type ParamsItem = { paramsKey: string }[];
+export type ParamsItem = ImgParamsItems;
 export type ImgUrOnChangeImageUrlEvent = { value: string };
 export type ImgUrOnChangePreviewUrlEvent = { value: string };
 type ImgUrlProps = {
@@ -212,29 +219,47 @@ export default function ImgUrl({
 
   return (
     <Box>
-      {paramsItem.map(({ paramsKey }: { paramsKey: string }) => (
-        <Box
-          p={1}
-          key={paramsKey}
-          display="flex"
-          flexDirection="row"
-          alignItems="center"
-        >
-          <Box>
-            <ImgParamsEnabled
-              paramsKey={paramsKey}
-              enabled={paramKeyIsEnabled(paramsKey)}
-              onChange={debounceInputText('setEnabled', paramsKey)}
-            />
-          </Box>
-          <Box flexGrow={1}>
-            <ImgParams
-              paramsKey={paramsKey}
-              paramsValue={paramsValue(paramsKey)}
-              onChange={debounceInputText('setParam', paramsKey)}
-            />
-          </Box>
-        </Box>
+      {imgParamsCategories().map((v) => (
+        <Accordion elevation={0} key={`category-${v}`}>
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls={`category panel : ${v}`}
+            id={`category-${v}`}
+            IconButtonProps={{ edge: 'end' }}
+          >
+            {`${v}`}
+          </AccordionSummary>
+          <AccordionDetails style={{ padding: 0 }}>
+            <Box width="100%">
+              {imgParamsInCategory(paramsItem, v).map(
+                ({ paramsKey }: { paramsKey: string }) => (
+                  <Box
+                    p={1}
+                    key={paramsKey}
+                    display="flex"
+                    flexDirection="row"
+                    alignItems="center"
+                  >
+                    <Box>
+                      <ImgParamsEnabled
+                        paramsKey={paramsKey}
+                        enabled={paramKeyIsEnabled(paramsKey)}
+                        onChange={debounceInputText('setEnabled', paramsKey)}
+                      />
+                    </Box>
+                    <Box flexGrow={1}>
+                      <ImgParams
+                        paramsKey={paramsKey}
+                        paramsValue={paramsValue(paramsKey)}
+                        onChange={debounceInputText('setParam', paramsKey)}
+                      />
+                    </Box>
+                  </Box>
+                )
+              )}
+            </Box>
+          </AccordionDetails>
+        </Accordion>
       ))}
     </Box>
   );

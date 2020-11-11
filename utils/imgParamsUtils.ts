@@ -116,6 +116,13 @@ export function flattenParams(filter: string = ''): ImgParamsItems {
     }));
 }
 
+export function imgParamsInCategory(
+  paramsItems: ImgParamsItems,
+  category: string
+): ImgParamsItems {
+  return paramsItems.filter((v) => v.category === category);
+}
+
 export function imgParamsCategories(filter: string = '') {
   return urlParams.categoryValues.filter((v) => (filter ? v === filter : true)); // filter は同上
 }

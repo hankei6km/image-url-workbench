@@ -11,8 +11,8 @@ import Fade from '@material-ui/core/Fade';
 // import Slide from '@material-ui/core/Slide';
 import Typography from '@material-ui/core/Typography';
 // import Hidden from '@material-ui/core/Hidden';
-import { flattenParams } from '../utils/imgParamsUtils';
 import PreviewContext, { PreviewDispatch } from '../components/PreviewContext';
+import { flattenParams } from '../utils/imgParamsUtils';
 import ImgBaseUrl, { BaseUrlOnChangeEvent } from '../components/ImgBaseUrl';
 import ImgUrl from '../components/ImgUrl';
 import ImgPreview from '../components/ImgPreview';
@@ -224,44 +224,45 @@ const IndexPage = () => {
             style={{ maxWidth: theme.breakpoints.values.sm }}
           >
             <ImgUrl
-              paramsItem={[
-                {
-                  paramsKey: 'blur'
-                },
-                {
-                  paramsKey: 'mark'
-                },
-                {
-                  paramsKey: 'mark-alpha'
-                },
-                {
-                  paramsKey: 'blend'
-                },
-                {
-                  paramsKey: 'txt'
-                },
-                {
-                  paramsKey: 'txt-font'
-                },
-                {
-                  paramsKey: 'txt-size'
-                },
-                {
-                  paramsKey: 'txt-line'
-                },
-                {
-                  paramsKey: 'txt-color'
-                },
-                {
-                  paramsKey: 'txt-line-color'
-                },
-                {
-                  paramsKey: 'txt-pad'
-                },
-                {
-                  paramsKey: 'txt-align'
-                }
-              ]}
+              paramsItem={flattenParams()}
+              // paramsItem={[
+              //   {
+              //     paramsKey: 'blur'
+              //   },
+              //   {
+              //     paramsKey: 'mark'
+              //   },
+              //   {
+              //     paramsKey: 'mark-alpha'
+              //   },
+              //   {
+              //     paramsKey: 'blend'
+              //   },
+              //   {
+              //     paramsKey: 'txt'
+              //   },
+              //   {
+              //     paramsKey: 'txt-font'
+              //   },
+              //   {
+              //     paramsKey: 'txt-size'
+              //   },
+              //   {
+              //     paramsKey: 'txt-line'
+              //   },
+              //   {
+              //     paramsKey: 'txt-color'
+              //   },
+              //   {
+              //     paramsKey: 'txt-line-color'
+              //   },
+              //   {
+              //     paramsKey: 'txt-pad'
+              //   },
+              //   {
+              //     paramsKey: 'txt-align'
+              //   }
+              // ]}
               imageRawUrl={imageRawUrl}
               onChangeImageUrl={({ value }) => {
                 // console.log(value);
