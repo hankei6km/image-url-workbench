@@ -106,10 +106,9 @@ export type ImgParamsItem = {
 };
 export type ImgParamsItems = ImgParamsItem[];
 
-export function flattenParams(filter: string = ''): ImgParamsItems {
+export function flattenParams(): ImgParamsItems {
   const params = Object.entries(urlParams.parameters);
   return params
-    .filter(([k]) => (filter ? k === filter : true)) // filter 仮の処理(現状では完全一致になっている)
     .map(([k, v]) => ({
       category: v.category,
       paramsKey: k
@@ -123,6 +122,6 @@ export function imgParamsInCategory(
   return paramsItems.filter((v) => v.category === category);
 }
 
-export function imgParamsCategories(filter: string = '') {
-  return urlParams.categoryValues.filter((v) => (filter ? v === filter : true)); // filter は同上
+export function imgParamsCategories() {
+  return urlParams.categoryValues;
 }
