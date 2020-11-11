@@ -26,6 +26,11 @@ import ImgPreview from '../components/ImgPreview';
 //   return <Collapse in={!trigger}>{children}</Collapse>;
 // }
 
+// クライアント側で毎回リスト作るのも効率悪くない?
+// props 経由で渡すのは?
+// どこまでサーバー側でやるのがよい?
+const imgUrlParams = flattenParams();
+
 const useStyles = makeStyles((theme) => ({
   container: {
     // chrome mobile で横スクロールが発生する状態で
@@ -224,7 +229,7 @@ const IndexPage = () => {
             style={{ maxWidth: theme.breakpoints.values.sm }}
           >
             <ImgUrl
-              paramsItem={flattenParams()}
+              paramsItem={imgUrlParams}
               // paramsItem={[
               //   {
               //     paramsKey: 'blur'

@@ -108,11 +108,10 @@ export type ImgParamsItems = ImgParamsItem[];
 
 export function flattenParams(): ImgParamsItems {
   const params = Object.entries(urlParams.parameters);
-  return params
-    .map(([k, v]) => ({
-      category: v.category,
-      paramsKey: k
-    }));
+  return params.map(([k, v]) => ({
+    category: v.category,
+    paramsKey: k
+  }));
 }
 
 export function imgParamsInCategory(
