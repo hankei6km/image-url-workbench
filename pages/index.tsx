@@ -249,32 +249,36 @@ const IndexPage = () => {
             flexGrow={1}
             style={{ maxWidth: theme.breakpoints.values.sm }}
           >
-            <DebTextField
-              placeholder="search"
-              fullWidth
-              value={searchText}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <SearchIcon />
-                  </InputAdornment>
-                )
-              }}
-              onChangeValue={({ value }) => setSearchText(value)}
-            />
-            <ImgUrl
-              paramsItem={filteredImgParams}
-              categorize={searchText ? false : true}
-              imageRawUrl={imageRawUrl}
-              onChangeImageUrl={({ value }) => {
-                // console.log(value);
-                setImageBaseUrl(value);
-              }}
-              onChangePreviewUrl={({ value }) => {
-                // console.log(value);
-                setPreviewUrl(value);
-              }}
-            />
+            <Box mb={1}>
+              <DebTextField
+                placeholder="search"
+                fullWidth
+                value={searchText}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SearchIcon />
+                    </InputAdornment>
+                  )
+                }}
+                onChangeValue={({ value }) => setSearchText(value)}
+              />
+            </Box>
+            <Box>
+              <ImgUrl
+                paramsItem={filteredImgParams}
+                categorize={searchText ? false : true}
+                imageRawUrl={imageRawUrl}
+                onChangeImageUrl={({ value }) => {
+                  // console.log(value);
+                  setImageBaseUrl(value);
+                }}
+                onChangePreviewUrl={({ value }) => {
+                  // console.log(value);
+                  setPreviewUrl(value);
+                }}
+              />
+            </Box>
           </Box>
         </Box>
       </Container>
