@@ -79,7 +79,7 @@ const Layout = ({ children, title = 'This is the default title' }: Props) => {
           {[
             { label: 'Home', href: '/' },
             { label: 'Card', href: '/card_gen' },
-            { label: 'Variant', href: '/variant' },
+            { label: 'Fragment', href: '/fragment' },
             { label: 'About', href: '/about' },
           ].map((v, i) => (
             <TabButton {...v} curTab={router.pathname === v.href} key={i} />

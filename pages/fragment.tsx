@@ -28,7 +28,7 @@ const processorMarkdown = unified()
   .use(remarkStringify)
   .freeze();
 
-const VariantPage = () => {
+const FragmentPage = () => {
   const previewStateContext = useContext(PreviewContext);
   //const previewDispatch = useContext(PreviewDispatch);
   const [altText, setAltText] = useState('');
@@ -72,7 +72,7 @@ const VariantPage = () => {
   }, [previewStateContext.previewImageUrl, altText, linkText, newTab]);
 
   return (
-    <Layout title="Variant">
+    <Layout title="Fragment">
       <Container maxWidth="sm">
         <Box p={1}>
           <DebTextField
@@ -143,4 +143,4 @@ const VariantPage = () => {
   );
 };
 
-export default VariantPage;
+export default FragmentPage;
