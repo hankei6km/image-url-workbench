@@ -257,44 +257,7 @@ const IndexPage = () => {
                     )
                   : imgUrlParams
               }
-              // paramsItem={[
-              //   {
-              //     paramsKey: 'blur'
-              //   },
-              //   {
-              //     paramsKey: 'mark'
-              //   },
-              //   {
-              //     paramsKey: 'mark-alpha'
-              //   },
-              //   {
-              //     paramsKey: 'blend'
-              //   },
-              //   {
-              //     paramsKey: 'txt'
-              //   },
-              //   {
-              //     paramsKey: 'txt-font'
-              //   },
-              //   {
-              //     paramsKey: 'txt-size'
-              //   },
-              //   {
-              //     paramsKey: 'txt-line'
-              //   },
-              //   {
-              //     paramsKey: 'txt-color'
-              //   },
-              //   {
-              //     paramsKey: 'txt-line-color'
-              //   },
-              //   {
-              //     paramsKey: 'txt-pad'
-              //   },
-              //   {
-              //     paramsKey: 'txt-align'
-              //   }
-              // ]}
+              categorize={searchText ? false : true}
               imageRawUrl={imageRawUrl}
               onChangeImageUrl={({ value }) => {
                 // console.log(value);

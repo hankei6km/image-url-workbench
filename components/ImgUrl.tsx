@@ -17,6 +17,44 @@ import {
   imgParamsInCategory
 } from '../utils/imgParamsUtils';
 
+type CategoryPanelProps = {
+  category: string;
+  opened: string;
+  categorize: boolean;
+  children: React.ReactNode;
+  onChange: (_e: React.ChangeEvent<{}>, isExpanded: boolean) => void;
+};
+function CategoryPanel({
+  category,
+  opened,
+  categorize,
+  children,
+  onChange
+}: CategoryPanelProps) {
+  if (categorize) {
+    return (
+      <Accordion
+        elevation={0}
+        key={`category-${category}`}
+        expanded={category === opened}
+        onChange={onChange}
+      >
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls={`category panel : ${category}`}
+          id={`category-${category}`}
+          IconButtonProps={{ edge: 'end' }}
+        >
+          {`${category}`}
+        </AccordionSummary>
+        <AccordionDetails style={{ padding: 0 }}>{children}</AccordionDetails>
+      </Accordion>
+    );
+  } else {
+    return <div>{children}</div>;
+  }
+}
+
 type previewUrlStateParam = {
   enabled: boolean;
   key: string;
@@ -144,6 +182,7 @@ export type ImgUrOnChangeImageUrlEvent = { value: string };
 export type ImgUrOnChangePreviewUrlEvent = { value: string };
 type ImgUrlProps = {
   paramsItem: ParamsItem;
+  categorize: boolean;
   imageRawUrl: string;
   onChangeImageUrl: (e: ImgUrOnChangePreviewUrlEvent) => void;
   onChangePreviewUrl: (e: ImgUrOnChangePreviewUrlEvent) => void;
@@ -151,6 +190,7 @@ type ImgUrlProps = {
 
 export default function ImgUrl({
   paramsItem,
+  categorize,
   imageRawUrl: baseUrl,
   onChangeImageUrl,
   onChangePreviewUrl
@@ -228,52 +268,43 @@ export default function ImgUrl({
   return (
     <Box>
       {imgParamsCategories().map((v) => (
-        <Accordion
-          elevation={0}
+        <CategoryPanel
           key={`category-${v}`}
-          expanded={v===opened}
+          category={v}
+          opened={opened}
+          categorize={categorize}
           onChange={changeOpend(v)}
         >
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
-            aria-controls={`category panel : ${v}`}
-            id={`category-${v}`}
-            IconButtonProps={{ edge: 'end' }}
-          >
-            {`${v}`}
-          </AccordionSummary>
-          <AccordionDetails style={{ padding: 0 }}>
-            <Box width="100%">
-              {opened === v &&
-                imgParamsInCategory(paramsItem, v).map(
-                  ({ paramsKey }: { paramsKey: string }) => (
-                    <Box
-                      p={1}
-                      key={paramsKey}
-                      display="flex"
-                      flexDirection="row"
-                      alignItems="center"
-                    >
-                      <Box>
-                        <ImgParamsEnabled
-                          paramsKey={paramsKey}
-                          enabled={paramKeyIsEnabled(paramsKey)}
-                          onChange={debounceInputText('setEnabled', paramsKey)}
-                        />
-                      </Box>
-                      <Box flexGrow={1}>
-                        <ImgParams
-                          paramsKey={paramsKey}
-                          paramsValue={paramsValue(paramsKey)}
-                          onChange={debounceInputText('setParam', paramsKey)}
-                        />
-                      </Box>
+          <Box width="100%">
+            {(opened === v || !categorize) &&
+              imgParamsInCategory(paramsItem, v).map(
+                ({ paramsKey }: { paramsKey: string }) => (
+                  <Box
+                    p={1}
+                    key={paramsKey}
+                    display="flex"
+                    flexDirection="row"
+                    alignItems="center"
+                  >
+                    <Box>
+                      <ImgParamsEnabled
+                        paramsKey={paramsKey}
+                        enabled={paramKeyIsEnabled(paramsKey)}
+                        onChange={debounceInputText('setEnabled', paramsKey)}
+                      />
                     </Box>
-                  )
-                )}
-            </Box>
-          </AccordionDetails>
-        </Accordion>
+                    <Box flexGrow={1}>
+                      <ImgParams
+                        paramsKey={paramsKey}
+                        paramsValue={paramsValue(paramsKey)}
+                        onChange={debounceInputText('setParam', paramsKey)}
+                      />
+                    </Box>
+                  </Box>
+                )
+              )}
+          </Box>
+        </CategoryPanel>
       ))}
     </Box>
   );
