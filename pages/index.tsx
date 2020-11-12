@@ -14,11 +14,7 @@ import Typography from '@material-ui/core/Typography';
 // import Hidden from '@material-ui/core/Hidden';
 import SearchIcon from '@material-ui/icons/Search';
 import PreviewContext, { PreviewDispatch } from '../components/PreviewContext';
-import {
-  ImgParamsItems,
-  flattenParams,
-  imgParasmItemInclude
-} from '../utils/imgParamsUtils';
+import { flattenParams, imgParasmItemInclude } from '../utils/imgParamsUtils';
 import DebTextField from '../components/DebTextField';
 import ImgBaseUrl, { BaseUrlOnChangeEvent } from '../components/ImgBaseUrl';
 import ImgUrl from '../components/ImgUrl';
@@ -161,16 +157,17 @@ const IndexPage = () => {
     threshold: 250
   });
 
-  const [filteredImgParams, setFilteredImgParams] = useState<ImgParamsItems>(
-    []
-  );
-  useEffect(() => {
-    setFilteredImgParams(
-      searchText
-        ? imgUrlParams.filter((v) => imgParasmItemInclude(v, searchText))
-        : imgUrlParams
-    );
-  }, [searchText]);
+  // これはレスポンスが良くない
+  // const [filteredImgParams, setFilteredImgParams] = useState<ImgParamsItems>(
+  //   []
+  // );
+  // useEffect(() => {
+  //   setFilteredImgParams(
+  //     searchText
+  //       ? imgUrlParams.filter((v) => imgParasmItemInclude(v, searchText))
+  //       : imgUrlParams
+  //   );
+  // }, [searchText]);
 
   return (
     <Layout title="Home | Next.js + TypeScript Example">
@@ -266,7 +263,13 @@ const IndexPage = () => {
             </Box>
             <Box>
               <ImgUrl
-                paramsItem={filteredImgParams}
+                paramsItem={
+                  searchText
+                    ? imgUrlParams.filter((v) =>
+                        imgParasmItemInclude(v, searchText)
+                      )
+                    : imgUrlParams
+                }
                 categorize={searchText ? false : true}
                 imageRawUrl={imageRawUrl}
                 onChangeImageUrl={({ value }) => {
