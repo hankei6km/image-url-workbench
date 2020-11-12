@@ -9,9 +9,13 @@ import Paper from '@material-ui/core/Paper';
 // import Collapse from '@material-ui/core/Collapse';
 import Fade from '@material-ui/core/Fade';
 // import Slide from '@material-ui/core/Slide';
+import InputAdornment from '@material-ui/core/InputAdornment';
 import Typography from '@material-ui/core/Typography';
 // import Hidden from '@material-ui/core/Hidden';
+import SearchIcon from '@material-ui/icons/Search';
 import PreviewContext, { PreviewDispatch } from '../components/PreviewContext';
+import { flattenParams, imgParasmItemInclude } from '../utils/imgParamsUtils';
+import DebTextField from '../components/DebTextField';
 import ImgBaseUrl, { BaseUrlOnChangeEvent } from '../components/ImgBaseUrl';
 import ImgUrl from '../components/ImgUrl';
 import ImgPreview from '../components/ImgPreview';
@@ -24,6 +28,11 @@ import ImgPreview from '../components/ImgPreview';
 //
 //   return <Collapse in={!trigger}>{children}</Collapse>;
 // }
+
+// クライアント側で毎回リスト作るのも効率悪くない?
+// props 経由で渡すのは?
+// どこまでサーバー側でやるのがよい?
+const imgUrlParams = flattenParams();
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -97,6 +106,8 @@ const IndexPage = () => {
     previewStateContext.previewImageUrl
   );
 
+  const [searchText, setSearchText] = useState('');
+
   useEffect(() => {
     previewDispatch({
       type: 'setPreviewImageUrl',
@@ -145,6 +156,19 @@ const IndexPage = () => {
     disableHysteresis: true,
     threshold: 250
   });
+
+  // これはレスポンスが良くない
+  // const [filteredImgParams, setFilteredImgParams] = useState<ImgParamsItems>(
+  //   []
+  // );
+  // useEffect(() => {
+  //   setFilteredImgParams(
+  //     searchText
+  //       ? imgUrlParams.filter((v) => imgParasmItemInclude(v, searchText))
+  //       : imgUrlParams
+  //   );
+  // }, [searchText]);
+
   return (
     <Layout title="Home | Next.js + TypeScript Example">
       <Box
@@ -222,55 +246,42 @@ const IndexPage = () => {
             flexGrow={1}
             style={{ maxWidth: theme.breakpoints.values.sm }}
           >
-            <ImgUrl
-              paramsItem={[
-                {
-                  paramsKey: 'blur'
-                },
-                {
-                  paramsKey: 'mark'
-                },
-                {
-                  paramsKey: 'mark-alpha'
-                },
-                {
-                  paramsKey: 'blend'
-                },
-                {
-                  paramsKey: 'txt'
-                },
-                {
-                  paramsKey: 'txt-font'
-                },
-                {
-                  paramsKey: 'txt-size'
-                },
-                {
-                  paramsKey: 'txt-line'
-                },
-                {
-                  paramsKey: 'txt-color'
-                },
-                {
-                  paramsKey: 'txt-line-color'
-                },
-                {
-                  paramsKey: 'txt-pad'
-                },
-                {
-                  paramsKey: 'txt-align'
+            <Box mb={1}>
+              <DebTextField
+                placeholder="search"
+                fullWidth
+                value={searchText}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SearchIcon />
+                    </InputAdornment>
+                  )
+                }}
+                onChangeValue={({ value }) => setSearchText(value)}
+              />
+            </Box>
+            <Box>
+              <ImgUrl
+                paramsItem={
+                  searchText
+                    ? imgUrlParams.filter((v) =>
+                        imgParasmItemInclude(v, searchText)
+                      )
+                    : imgUrlParams
                 }
-              ]}
-              imageRawUrl={imageRawUrl}
-              onChangeImageUrl={({ value }) => {
-                // console.log(value);
-                setImageBaseUrl(value);
-              }}
-              onChangePreviewUrl={({ value }) => {
-                // console.log(value);
-                setPreviewUrl(value);
-              }}
-            />
+                categorize={searchText ? false : true}
+                imageRawUrl={imageRawUrl}
+                onChangeImageUrl={({ value }) => {
+                  // console.log(value);
+                  setImageBaseUrl(value);
+                }}
+                onChangePreviewUrl={({ value }) => {
+                  // console.log(value);
+                  setPreviewUrl(value);
+                }}
+              />
+            </Box>
           </Box>
         </Box>
       </Container>

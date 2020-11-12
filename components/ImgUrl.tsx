@@ -1,5 +1,9 @@
-import { useReducer, useCallback, useEffect } from 'react';
+import React, { useReducer, useCallback, useEffect, useState } from 'react';
 import Box from '@material-ui/core/Box';
+import Accordion from '@material-ui/core/Accordion';
+import AccordionSummary from '@material-ui/core/AccordionSummary';
+import AccordionDetails from '@material-ui/core/AccordionDetails';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { decodeBase64Url, encodeBase64Url } from '../utils/base64';
 import ImgParams, {
   ImgUrlParamsOnChangeEvent,
@@ -7,8 +11,49 @@ import ImgParams, {
 } from '../components/ImgParams';
 import {
   paramsKeyDisallowBase64,
-  paramsKeyParameters
+  paramsKeyParameters,
+  ImgParamsItems,
+  imgParamsCategories,
+  imgParamsInCategory
 } from '../utils/imgParamsUtils';
+
+type CategoryPanelProps = {
+  category: string;
+  opened: string;
+  categorize: boolean;
+  children: React.ReactNode;
+  onChange: (_e: React.ChangeEvent<{}>, isExpanded: boolean) => void;
+};
+function CategoryPanel({
+  category,
+  opened,
+  categorize,
+  children,
+  onChange
+}: CategoryPanelProps) {
+  if (categorize) {
+    return (
+      <Accordion
+        elevation={0}
+        key={`category-${category}`}
+        expanded={category === opened}
+        onChange={onChange}
+      >
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls={`category panel : ${category}`}
+          id={`category-${category}`}
+          IconButtonProps={{ edge: 'end' }}
+        >
+          {`${category}`}
+        </AccordionSummary>
+        <AccordionDetails style={{ padding: 0 }}>{children}</AccordionDetails>
+      </Accordion>
+    );
+  } else {
+    return <div>{children}</div>;
+  }
+}
 
 type previewUrlStateParam = {
   enabled: boolean;
@@ -132,11 +177,12 @@ function reducer(state: previewUrlState, action: actType): previewUrlState {
   return newState;
 }
 
-export type ParamsItem = { paramsKey: string }[];
+export type ParamsItem = ImgParamsItems;
 export type ImgUrOnChangeImageUrlEvent = { value: string };
 export type ImgUrOnChangePreviewUrlEvent = { value: string };
 type ImgUrlProps = {
   paramsItem: ParamsItem;
+  categorize: boolean;
   imageRawUrl: string;
   onChangeImageUrl: (e: ImgUrOnChangePreviewUrlEvent) => void;
   onChangePreviewUrl: (e: ImgUrOnChangePreviewUrlEvent) => void;
@@ -144,6 +190,7 @@ type ImgUrlProps = {
 
 export default function ImgUrl({
   paramsItem,
+  categorize,
   imageRawUrl: baseUrl,
   onChangeImageUrl,
   onChangePreviewUrl
@@ -210,31 +257,54 @@ export default function ImgUrl({
     debounceInputText('setImageRawUrl', '')({ value: baseUrl });
   }, [baseUrl]);
 
+  // state が１つだと map のループが回るよね?
+  const [opened, setOpened] = useState('');
+  const changeOpend = (category: string) => {
+    return (_e: React.ChangeEvent<{}>, isExpanded: boolean): void => {
+      setOpened(isExpanded ? category : '');
+    };
+  };
+
   return (
     <Box>
-      {paramsItem.map(({ paramsKey }: { paramsKey: string }) => (
-        <Box
-          p={1}
-          key={paramsKey}
-          display="flex"
-          flexDirection="row"
-          alignItems="center"
+      {imgParamsCategories().map((v) => (
+        <CategoryPanel
+          key={`category-${v}`}
+          category={v}
+          opened={opened}
+          categorize={categorize}
+          onChange={changeOpend(v)}
         >
-          <Box>
-            <ImgParamsEnabled
-              paramsKey={paramsKey}
-              enabled={paramKeyIsEnabled(paramsKey)}
-              onChange={debounceInputText('setEnabled', paramsKey)}
-            />
+          <Box width="100%">
+            {(opened === v || !categorize) &&
+              imgParamsInCategory(paramsItem, v).map(
+                ({ paramsKey }: { paramsKey: string }) => (
+                  <Box
+                    p={1}
+                    key={paramsKey}
+                    display="flex"
+                    flexDirection="row"
+                    alignItems="center"
+                  >
+                    <Box>
+                      <ImgParamsEnabled
+                        paramsKey={paramsKey}
+                        enabled={paramKeyIsEnabled(paramsKey)}
+                        onChange={debounceInputText('setEnabled', paramsKey)}
+                      />
+                    </Box>
+                    <Box flexGrow={1}>
+                      <ImgParams
+                        paramsKey={paramsKey}
+                        paramsValue={paramsValue(paramsKey)}
+                        onChange={debounceInputText('setParam', paramsKey)}
+                      />
+                    </Box>
+                  </Box>
+                )
+              )}
           </Box>
-          <Box flexGrow={1}>
-            <ImgParams
-              paramsKey={paramsKey}
-              paramsValue={paramsValue(paramsKey)}
-              onChange={debounceInputText('setParam', paramsKey)}
-            />
-          </Box>
-        </Box>
+        </CategoryPanel>
       ))}
     </Box>
   );

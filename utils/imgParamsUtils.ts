@@ -4,13 +4,15 @@ export type ParamsExpect = {
   [key: string]: any;
 };
 type Parameters = {
-  [key: string]: { expects: ParamsExpect[] } & any;
+  [key: string]: { category: string; expects: ParamsExpect[] } & any;
 };
 type FontValues = string[];
+type CategoryValues = string[];
 
 const urlParams: {
   // とりあえず
   parameters: Parameters;
+  categoryValues: CategoryValues;
   fontValues: FontValues;
 } = imgixUrlParams;
 
@@ -96,4 +98,39 @@ export function expectToList(exp: ParamsExpect): string[] | undefined {
     return urlParams.fontValues;
   }
   return;
+}
+
+export type ImgParamsItem = {
+  category: string;
+  paramsKey: string;
+  displayName: string;
+};
+export type ImgParamsItems = ImgParamsItem[];
+
+export function flattenParams(): ImgParamsItems {
+  const params = Object.entries(urlParams.parameters);
+  return params.map(([k, v]) => ({
+    category: v.category,
+    displayName: v.display_name,
+    paramsKey: k
+  }));
+}
+
+export function imgParasmItemInclude(p: ImgParamsItem, text: string): boolean {
+  return (
+    p.paramsKey.includes(text) ||
+    p.displayName.includes(text) ||
+    p.category.includes(text)
+  );
+}
+
+export function imgParamsInCategory(
+  paramsItems: ImgParamsItems,
+  category: string
+): ImgParamsItems {
+  return paramsItems.filter((v) => v.category === category);
+}
+
+export function imgParamsCategories() {
+  return urlParams.categoryValues;
 }
