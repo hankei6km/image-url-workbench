@@ -103,6 +103,7 @@ export function expectToList(exp: ParamsExpect): string[] | undefined {
 export type ImgParamsItem = {
   category: string;
   paramsKey: string;
+  displayName: string;
 };
 export type ImgParamsItems = ImgParamsItem[];
 
@@ -110,12 +111,17 @@ export function flattenParams(): ImgParamsItems {
   const params = Object.entries(urlParams.parameters);
   return params.map(([k, v]) => ({
     category: v.category,
+    displayName: v.display_name,
     paramsKey: k
   }));
 }
 
 export function imgParasmItemInclude(p: ImgParamsItem, text: string): boolean {
-  return p.paramsKey.includes(text) || p.category.includes(text);
+  return (
+    p.paramsKey.includes(text) ||
+    p.displayName.includes(text) ||
+    p.category.includes(text)
+  );
 }
 
 export function imgParamsInCategory(
