@@ -107,22 +107,10 @@ const FragmentPage = () => {
           </Box>
         </Box>
         <Box p={1}>
-          <FragmentTextField
-            label="html"
-            variant="outlined"
-            fullWidth
-            multiline
-            value={imgHtml}
-          />
+          <FragmentTextField label="html" value={imgHtml} />
         </Box>
         <Box p={1}>
-          <FragmentTextField
-            label="markdown"
-            variant="outlined"
-            fullWidth
-            multiline
-            value={imgMarkdown}
-          />
+          <FragmentTextField label="markdown" value={imgMarkdown} />
         </Box>
       </Container>
     </Layout>
