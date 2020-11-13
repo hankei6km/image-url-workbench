@@ -1,9 +1,8 @@
-import React, { useState, useContext, useEffect, useRef } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import ReactDomServer from 'react-dom/server';
 import Layout from '../components/Layout';
 import Container from '@material-ui/core/Container';
 import Box from '@material-ui/core/Box';
-import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import unified from 'unified';
@@ -14,6 +13,7 @@ import remarkStringify from 'remark-stringify';
 import rehypeSanitize from 'rehype-sanitize';
 import PreviewContext from '../components/PreviewContext';
 import DebTextField from '../components/DebTextField';
+import FragmentTextField from '../components/FragmentTextField';
 
 const processorHtml = unified()
   .use(rehypeParse, { fragment: true })
@@ -36,8 +36,6 @@ const FragmentPage = () => {
   const [newTab, setNewTab] = useState(false);
   const [imgHtml, setImgHtml] = useState('');
   const [imgMarkdown, setImgMarkdown] = useState('');
-  const htmlInputRef = useRef<HTMLTextAreaElement>();
-  const markdownInputRef = useRef<HTMLTextAreaElement>();
 
   useEffect(() => {
     const imgElement = (
@@ -109,33 +107,21 @@ const FragmentPage = () => {
           </Box>
         </Box>
         <Box p={1}>
-          <TextField
+          <FragmentTextField
             label="html"
             variant="outlined"
             fullWidth
             multiline
             value={imgHtml}
-            inputRef={htmlInputRef}
-            onSelect={(_e) => {
-              if (htmlInputRef && htmlInputRef.current) {
-                htmlInputRef.current.select();
-              }
-            }}
           />
         </Box>
         <Box p={1}>
-          <TextField
+          <FragmentTextField
             label="markdown"
             variant="outlined"
             fullWidth
             multiline
             value={imgMarkdown}
-            inputRef={markdownInputRef}
-            onSelect={(_e) => {
-              if (markdownInputRef && markdownInputRef.current) {
-                markdownInputRef.current.select();
-              }
-            }}
           />
         </Box>
       </Container>
