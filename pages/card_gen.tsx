@@ -11,11 +11,11 @@ import Head from 'next/head';
 import Layout from '../components/Layout';
 import Container from '@material-ui/core/Container';
 import Box from '@material-ui/core/Box';
-import TextField from '@material-ui/core/TextField';
 import { encodeBase64Url, decodeBase64Url } from '../utils/base64';
 import Validator from '../utils/validator';
 import PreviewContext, { PreviewDispatch } from '../components/PreviewContext';
 import DebTextField from '../components/DebTextField';
+import FragmentTextField from '../components/FragmentTextField';
 
 const validator = Validator();
 
@@ -164,13 +164,10 @@ const CardGenPage = ({
           </Box>
         </Box>
         <Box p={1}>
-          <TextField
+          <FragmentTextField
             id="card-preview-url"
             label="Card Preview URL"
-            //defaultValue={''}
             value={cardPreviewUrl}
-            fullWidth
-            //onChange={debounceBaseUrl()}
           />
         </Box>
       </Container>
