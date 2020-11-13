@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Link from './Link';
 import { makeStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
+import Paper from '@material-ui/core/Paper';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
@@ -43,15 +43,18 @@ function TabButton({
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    '& > .MuiAppBar-root > .MuiToolbar-root , & > footer > div': {
+    '& > .MuiPapert-root > .MuiToolbar-root , & > footer > div': {
       maxWidth: '36rem',
       padding: '0 1rem',
       margin: '0rem auto 0rem'
     },
-    '& > .MuiAppBar-root': {
+    '& > .MuiPaper-root': {
       position: 'static',
+      overflowX:'auto',
       [theme.breakpoints.up('lg')]: {
-        position: 'sticky'
+        position: 'sticky',
+        top: 0,
+        zIndex: theme.zIndex.appBar
       }
     }
   }
@@ -74,7 +77,7 @@ const Layout = ({ children, title = 'This is the default title' }: Props) => {
         <meta charSet="utf-8" />
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
-      <AppBar color="default" elevation={0}>
+      <Paper elevation={1}>
         <Toolbar variant="dense">
           {[
             { label: 'Home', href: '/' },
@@ -86,7 +89,7 @@ const Layout = ({ children, title = 'This is the default title' }: Props) => {
             <TabButton {...v} curTab={router.pathname === v.href} key={i} />
           ))}
         </Toolbar>
-      </AppBar>
+      </Paper>
       <div>{children}</div>
       <footer>
         <hr />
