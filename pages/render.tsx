@@ -8,7 +8,6 @@ import Box from '@material-ui/core/Box';
 import Paper from '@material-ui/core/Paper';
 import Fade from '@material-ui/core/Fade';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import Typography from '@material-ui/core/Typography';
 import SearchIcon from '@material-ui/icons/Search';
 import PreviewContext, { PreviewDispatch } from '../components/PreviewContext';
 import { flattenParams, imgParasmItemInclude } from '../utils/imgParamsUtils';
@@ -63,12 +62,6 @@ const useStyles = makeStyles((theme) => ({
       position: 'fixed',
       top: 70,
       maxWidth: theme.breakpoints.values.sm
-    }
-  },
-  imageUrlOuterLgUp: {
-    display: 'none',
-    [theme.breakpoints.up('lg')]: {
-      display: 'block'
     }
   }
 }));
@@ -203,12 +196,6 @@ const RederPage = () => {
                     baseUrl={imageBaseUrl}
                     onChange={debounceImageRawUrl()}
                   />
-                </Box>
-                <Box mt={2} className={classes.imageUrlOuterLgUp}>
-                  <Typography variant="body1">
-                    ここに簡易的な説明文を追加。テキスト等はmicroCMS で定義する?
-                    そのときは言語別に設定できるようにフィールド名を考える(他の方法でもいいけど)
-                  </Typography>
                 </Box>
                 <Box mt={3}>
                   <Fade in={!(mdDown && trigger)} timeout={{ enter: 700 }}>
