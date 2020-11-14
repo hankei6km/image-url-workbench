@@ -66,7 +66,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const RederPage = () => {
+const RenderPage = () => {
   const theme = useTheme();
   const previewStateContext = useContext(PreviewContext);
   const previewDispatch = useContext(PreviewDispatch);
@@ -264,4 +264,4 @@ const RederPage = () => {
   );
 };
 
-export default RederPage;
+export default RenderPage;
