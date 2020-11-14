@@ -40,7 +40,7 @@ const tabLink = [
   { label: 'Home', href: '/' },
   { label: 'Render', href: '/render' },
   { label: 'Fragment', href: '/fragment' },
-  { label: 'Card', href: '/card_gen' },
+  { label: 'Card', href: '/card' },
   { label: 'About', href: '/about' }
 ];
 
