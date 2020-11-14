@@ -56,6 +56,7 @@ const CardGenPage = ({
 
   return (
     <Head>
+      <title>redirecting...</title>
       <meta
         name="og:description"
         content={
