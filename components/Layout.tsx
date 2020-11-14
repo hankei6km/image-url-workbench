@@ -39,8 +39,8 @@ const useStyles = makeStyles((theme) => ({
 const tabLink = [
   { label: 'Home', href: '/' },
   { label: 'Render', href: '/render' },
-  { label: 'Card', href: '/card_gen' },
   { label: 'Fragment', href: '/fragment' },
+  { label: 'Card', href: '/card_gen' },
   { label: 'About', href: '/about' }
 ];
 
