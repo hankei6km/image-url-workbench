@@ -19,6 +19,8 @@ const useStyles = makeStyles((theme) => ({
       position: 'static',
       flexGrow: 1,
       width: '100%',
+      display: 'flex',
+      justifyContent: 'center',
       [theme.breakpoints.up('lg')]: {
         position: 'sticky',
         top: 0,
@@ -26,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
       },
       '& .MuiTab-root': {
         textTransform: 'none',
-        [theme.breakpoints.up('lg')]: {
+        [theme.breakpoints.up('sm')]: {
           minWidth: 120
         }
       }
@@ -67,7 +69,6 @@ const Layout = ({ children, title = 'This is the default title' }: Props) => {
         <Tabs
           indicatorColor="primary"
           textColor="primary"
-          centered // TODO: スクロールで中央寄せ
           variant="scrollable"
           value={tabValue(router.asPath)}
         >
