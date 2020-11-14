@@ -198,6 +198,7 @@ export default function ImgUrl({
   const [state, dispatch] = useReducer(reducer, initialState, (init) => {
     const newState = { ...init };
     newState.baseUrl = baseUrl;
+    newState.previewUrl = baseUrl;
     return newState;
   });
 
