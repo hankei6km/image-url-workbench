@@ -58,12 +58,21 @@ const useStyles = makeStyles((theme) => ({
     }
   },
   imgPreviewFixLgUp: {
+    '& MuiBox': {
+      display: 'flex',
+      flexDirection: 'column',
+      width: '100%',
+      height: 200
+    },
     [theme.breakpoints.up('lg')]: {
-      height: '100%',
       position: 'fixed',
       top: 70,
-      bottom: 0,
-      maxWidth: theme.breakpoints.values.sm
+      bottom: 70,
+      maxWidth: theme.breakpoints.values.sm,
+      width: '100%',
+      '& MuiBox': {
+        height: '100%'
+      }
     }
   }
 }));
@@ -193,7 +202,15 @@ const RenderPage = () => {
               className={classes.imgPreviewOuter}
             >
               <Box className={classes.imgPreviewFixLgUp}>
-                <Box height="100%">
+                <Box
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    width: '100%',
+                    // height: 200
+                    height: '100%'
+                  }}
+                >
                   <Box>
                     <ImgBaseUrl
                       baseUrl={imageBaseUrl}

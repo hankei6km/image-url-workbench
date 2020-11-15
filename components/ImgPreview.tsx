@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useReducer } from 'react';
+import React, { useRef, useEffect, useState, useReducer } from 'react';
 // import { makeStyles, useTheme } from '@material-ui/core/styles';
 // import Skeleton from '@material-ui/lab/Skeleton';
 import Box from '@material-ui/core/Box';
@@ -80,54 +80,66 @@ export default function ImgPreview({
   });
   const [imgWidth, setImgWidth] = useState<string | number>(0);
   const [imgHeight, setImgHeight] = useState<string | number>(0);
+  const outerEl = useRef(HTMLDivElement);
 
   useEffect(() => {
-    dispatch({ type: 'setUrl', payload: [previewUrl] });
-    if (previewUrl) {
-      const img = new Image();
-      const handleLoad = (e: Event) => {
-        if (e.target) {
-          // console.log(`${img.width}x${img.height}`);
-          let w = 0;
-          let h = 0;
-          if (width !== undefined) {
-            if (img.width > img.height) {
-              w = width;
-              h = (img.height * width) / img.width;
+    if (outerEl && outerEl.current) {
+      dispatch({ type: 'setUrl', payload: [previewUrl] });
+      if (previewUrl) {
+        const {
+          width: outerWidth,
+          height: outerHeight
+        } = outerEl.current.getBoundingClientRect();
+        console.log(`w x h: ${outerWidth} x ${outerHeight}`);
+        const img = new Image();
+        const handleLoad = (e: Event) => {
+          if (e.target) {
+            let w = 0;
+            let h = 0;
+            if (width !== undefined) {
+              // 横長を機体されている(width で判定はあまりよろしくない)
+              w = outerWidth;
+              h = (img.height * outerWidth) / img.width;
+              if (h > outerHeight) {
+                w = (w * outerHeight) / h;
+                h = outerHeight;
+              }
+            } else if (height !== undefined) {
+              w = (img.width * outerHeight) / img.height;
+              h = outerHeight;
             }
-          } else if (height !== undefined) {
-            w = (img.width * height) / img.height;
-            h = height;
+            setImgWidth(w);
+            setImgHeight(h);
+            dispatch({ type: 'setWidth', payload: [`${w}`] });
+            dispatch({ type: 'done', payload: [''] });
           }
-          setImgWidth(w);
-          setImgHeight(h);
-          dispatch({ type: 'setWidth', payload: [`${w}`] });
-          dispatch({ type: 'done', payload: [''] });
-        }
-      };
-      img.addEventListener('load', handleLoad);
-      img.src = previewUrl;
-      return () => {
-        img.removeEventListener('load', handleLoad);
-      };
-    } else {
-      setImgWidth(width || 0);
-      setImgHeight(height || 0);
-      dispatch({ type: 'setWidth', payload: ['100%'] });
-      dispatch({ type: 'done', payload: [''] });
+        };
+        img.addEventListener('load', handleLoad);
+        img.src = previewUrl;
+        // 階層が深い位置にあるのが気になる
+        return () => {
+          img.removeEventListener('load', handleLoad);
+        };
+      } else {
+        setImgWidth(width || 0);
+        setImgHeight(height || 0);
+        dispatch({ type: 'setWidth', payload: ['100%'] });
+        dispatch({ type: 'done', payload: [''] });
+      }
     }
-  }, [previewUrl, width, height]);
+  }, [previewUrl, width, height, outerEl]);
 
   return (
     <Box width={'100%'} height={'100%'} position={position} top={top}>
       <Box
+        ref={outerEl}
         display="flex"
         flexDirection="column"
         justifyContent="center"
         width="100%"
         height="100%"
       >
-        <Box display="flex" justifyContent="center" width="100%" height="100%">
+        <Box display="flex" justifyContent="center" width="100%">
           <img
             src={state.previewUrl}
             width={imgWidth}
@@ -139,8 +151,8 @@ export default function ImgPreview({
           />
         </Box>
         <Box
-          flexGrow={1}
           display="flex"
+          flexGrow="1"
           justifyContent="center"
           style={{
             position: 'relative',
