@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useReducer } from 'react';
+import React, { useEffect, useState, useReducer } from 'react';
 // import { makeStyles, useTheme } from '@material-ui/core/styles';
 // import Skeleton from '@material-ui/lab/Skeleton';
 import Box from '@material-ui/core/Box';
@@ -6,12 +6,14 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 
 type previewImgState = {
   state: 'loading' | 'done' | 'err';
+  loadingUrl: string;
   previewUrl: string;
   width: string;
 };
 
 const initialState: previewImgState = {
   state: 'done',
+  loadingUrl: '',
   previewUrl: '',
   width: '100%'
 };
@@ -24,23 +26,28 @@ function reducer(state: previewImgState, action: actType): previewImgState {
   const newState: previewImgState = { ...state };
   switch (action.type) {
     case 'setUrl':
-      newState.previewUrl = action.payload[0];
-      if (newState.previewUrl && newState.previewUrl !== state.previewUrl) {
+      newState.loadingUrl = action.payload[0];
+      if (newState.loadingUrl && newState.loadingUrl !== state.loadingUrl) {
         newState.state = 'loading';
       }
       break;
     case 'setWidth':
-      if (newState.previewUrl) {
-        newState.width = action.payload[0];
+      if (newState.loadingUrl) {
+        if (action.payload[0] === '100%') {
+          newState.width = '100%';
+        } else {
+          newState.width = `${action.payload[0]}px`;
+        }
       }
       break;
     case 'loading':
-      if (newState.previewUrl) {
+      if (newState.loadingUrl) {
         newState.state = 'loading';
       }
       break;
     case 'done':
       newState.state = 'done';
+      newState.previewUrl = state.loadingUrl;
       break;
     case 'err':
       newState.state = 'err';
@@ -53,8 +60,8 @@ type ImgPreviewProps = {
   previewUrl: string;
   position?: string;
   top?: number | string; // 必要なものだけ
-  width?: number | string;
-  height?: number | string;
+  width?: number;
+  height?: number;
 };
 
 export default function ImgPreview({
@@ -66,30 +73,47 @@ export default function ImgPreview({
 }: ImgPreviewProps) {
   const [state, dispatch] = useReducer(reducer, initialState, (init) => {
     const newState = { ...init };
-    newState.previewUrl = previewUrl;
+    newState.loadingUrl = previewUrl;
     newState.state = 'loading';
     setTimeout(() => dispatch({ type: 'setUrl', payload: [previewUrl] }), 1); // dispatch でないと即時反映されない?
     return newState;
   });
-  // const [imgUrl, setImgUrl] = useState('');
+  const [imgWidth, setImgWidth] = useState<string | number>(0);
+  const [imgHeight, setImgHeight] = useState<string | number>(0);
 
-  useEffect(() => dispatch({ type: 'setUrl', payload: [previewUrl] }), [
-    previewUrl
-  ]);
-
-  const imgRef = useCallback((node) => {
-    if (node != null) {
-      if (node.complete) {
-        const rect = node.getBoundingClientRect();
-        dispatch({ type: 'setWidth', payload: [`${rect.width}px`] });
-        dispatch({ type: 'done', payload: [''] });
-        // } else {
-        //   dispatch({ type: 'loading', payload: [''] });
-      }
-      //} else {
-      //  dispatch({ type: 'loading', payload: [''] });
+  useEffect(() => {
+    dispatch({ type: 'setUrl', payload: [previewUrl] });
+    if (previewUrl) {
+      const img = new Image();
+      const handleLoad = (e: Event) => {
+        if (e.target) {
+          // console.log(`${img.width}x${img.height}`);
+          let w = 0;
+          if (width !== undefined) {
+            w = width;
+            setImgWidth(w);
+            setImgHeight((img.height * width) / img.width);
+          } else if (height !== undefined) {
+            w = (img.width * height) / img.height;
+            setImgWidth(w);
+            setImgHeight(height);
+          }
+          dispatch({ type: 'setWidth', payload: [`${w}`] });
+          dispatch({ type: 'done', payload: [''] });
+        }
+      };
+      img.addEventListener('load', handleLoad);
+      img.src = previewUrl;
+      return () => {
+        img.removeEventListener('load', handleLoad);
+      };
+    } else {
+      setImgWidth(width || 0);
+      setImgHeight(height || 0);
+      dispatch({ type: 'setWidth', payload: ['100%'] });
+      dispatch({ type: 'done', payload: [''] });
     }
-  }, []);
+  }, [previewUrl, width, height]);
 
   return (
     <Box width={'100%'} position={position} top={top}>
@@ -101,24 +125,10 @@ export default function ImgPreview({
       >
         <Box display="flex" justifyContent="center" width="100%">
           <img
-            ref={imgRef}
-            style={{
-              // height: height,
-              maxWidth: width,
-              maxHeight: height
-            }}
             src={state.previewUrl}
-            width={width}
-            height={height}
+            width={imgWidth}
+            height={imgHeight}
             alt=""
-            // width="100%"
-            onLoad={(e) => {
-              if (e.currentTarget) {
-                const rect = e.currentTarget.getBoundingClientRect();
-                dispatch({ type: 'setWidth', payload: [`${rect.width}px`] });
-                dispatch({ type: 'done', payload: [''] });
-              }
-            }}
             onError={() => {
               dispatch({ type: 'err', payload: [''] });
             }}
