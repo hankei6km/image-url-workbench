@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState, useReducer } from 'react';
+import React, { useEffect, useState, useReducer } from 'react';
 // import { makeStyles, useTheme } from '@material-ui/core/styles';
 // import Skeleton from '@material-ui/lab/Skeleton';
 import Box from '@material-ui/core/Box';
@@ -105,20 +105,6 @@ export default function ImgPreview({
     }
   }, [previewUrl, width, height]);
 
-  const imgRef = useCallback((node) => {
-    if (node != null) {
-      if (node.complete) {
-        // const rect = node.getBoundingClientRect();
-        // dispatch({ type: 'setWidth', payload: [`${rect.width}px`] });
-        // dispatch({ type: 'done', payload: [''] });
-        // } else {
-        //   dispatch({ type: 'loading', payload: [''] });
-      }
-      //} else {
-      //  dispatch({ type: 'loading', payload: [''] });
-    }
-  }, []);
-
   return (
     <Box width={'100%'} position={position} top={top}>
       <Box
@@ -129,12 +115,6 @@ export default function ImgPreview({
       >
         <Box display="flex" justifyContent="center" width="100%">
           <img
-            ref={imgRef}
-            style={{
-              // height: height,
-              maxWidth: imgWidth,
-              maxHeight: imgHeight
-            }}
             src={state.previewUrl}
             width={imgWidth}
             height={imgHeight}
