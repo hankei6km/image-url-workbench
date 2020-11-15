@@ -6,12 +6,14 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 
 type previewImgState = {
   state: 'loading' | 'done' | 'err';
+  loadingUrl: string;
   previewUrl: string;
   width: string;
 };
 
 const initialState: previewImgState = {
   state: 'done',
+  loadingUrl: '',
   previewUrl: '',
   width: '100%'
 };
@@ -24,13 +26,13 @@ function reducer(state: previewImgState, action: actType): previewImgState {
   const newState: previewImgState = { ...state };
   switch (action.type) {
     case 'setUrl':
-      newState.previewUrl = action.payload[0];
-      if (newState.previewUrl && newState.previewUrl !== state.previewUrl) {
+      newState.loadingUrl = action.payload[0];
+      if (newState.loadingUrl && newState.loadingUrl !== state.loadingUrl) {
         newState.state = 'loading';
       }
       break;
     case 'setWidth':
-      if (newState.previewUrl) {
+      if (newState.loadingUrl) {
         if (action.payload[0] === '100%') {
           newState.width = '100%';
         } else {
@@ -39,12 +41,13 @@ function reducer(state: previewImgState, action: actType): previewImgState {
       }
       break;
     case 'loading':
-      if (newState.previewUrl) {
+      if (newState.loadingUrl) {
         newState.state = 'loading';
       }
       break;
     case 'done':
       newState.state = 'done';
+      newState.previewUrl = state.loadingUrl;
       break;
     case 'err':
       newState.state = 'err';
@@ -70,7 +73,7 @@ export default function ImgPreview({
 }: ImgPreviewProps) {
   const [state, dispatch] = useReducer(reducer, initialState, (init) => {
     const newState = { ...init };
-    newState.previewUrl = previewUrl;
+    newState.loadingUrl = previewUrl;
     newState.state = 'loading';
     setTimeout(() => dispatch({ type: 'setUrl', payload: [previewUrl] }), 1); // dispatch でないと即時反映されない?
     return newState;
