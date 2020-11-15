@@ -31,7 +31,11 @@ function reducer(state: previewImgState, action: actType): previewImgState {
       break;
     case 'setWidth':
       if (newState.previewUrl) {
-        newState.width = action.payload[0];
+        if (action.payload[0] === '100%') {
+          newState.width = '100%';
+        } else {
+          newState.width = `${action.payload[0]}px`;
+        }
       }
       break;
     case 'loading':
@@ -81,14 +85,17 @@ export default function ImgPreview({
       const handleLoad = (e: Event) => {
         if (e.target) {
           // console.log(`${img.width}x${img.height}`);
+          let w = 0;
           if (width !== undefined) {
-            setImgWidth(width);
+            w = width;
+            setImgWidth(w);
             setImgHeight((img.height * width) / img.width);
           } else if (height !== undefined) {
-            setImgWidth((img.width * height) / img.height);
+            w = (img.width * height) / img.height;
+            setImgWidth(w);
             setImgHeight(height);
           }
-          dispatch({ type: 'setWidth', payload: [`${width}`] });
+          dispatch({ type: 'setWidth', payload: [`${w}`] });
           dispatch({ type: 'done', payload: [''] });
         }
       };
@@ -119,14 +126,6 @@ export default function ImgPreview({
             width={imgWidth}
             height={imgHeight}
             alt=""
-            // width="100%"
-            // onLoad={(e) => {
-            //   if (e.currentTarget) {
-            //     const rect = e.currentTarget.getBoundingClientRect();
-            //     dispatch({ type: 'setWidth', payload: [`${rect.width}px`] });
-            //     dispatch({ type: 'done', payload: [''] });
-            //   }
-            // }}
             onError={() => {
               dispatch({ type: 'err', payload: [''] });
             }}
