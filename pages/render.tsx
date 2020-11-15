@@ -53,14 +53,16 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     minHeight: 200,
     [theme.breakpoints.up('lg')]: {
-      minHeight: 100,
+      height: '100%',
       width: theme.breakpoints.values.sm
     }
   },
   imgPreviewFixLgUp: {
     [theme.breakpoints.up('lg')]: {
+      height: '100%',
       position: 'fixed',
       top: 70,
+      bottom: 0,
       maxWidth: theme.breakpoints.values.sm
     }
   }
@@ -191,26 +193,35 @@ const RenderPage = () => {
               className={classes.imgPreviewOuter}
             >
               <Box className={classes.imgPreviewFixLgUp}>
-                <Box>
-                  <ImgBaseUrl
-                    baseUrl={imageBaseUrl}
-                    onChange={debounceImageRawUrl()}
-                  />
-                </Box>
-                <Box mt={3}>
-                  <Fade in={!(mdDown && trigger)} timeout={{ enter: 700 }}>
-                    <Paper
-                      square
-                      elevation={0}
-                      style={{ minHeight: 220, width: '100%' }}
+                <Box height="100%">
+                  <Box>
+                    <ImgBaseUrl
+                      baseUrl={imageBaseUrl}
+                      onChange={debounceImageRawUrl()}
+                    />
+                  </Box>
+                  <Box
+                    mt={3}
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      height: '100%'
+                    }}
+                  >
+                    <Fade
+                      in={!(mdDown && trigger)}
+                      timeout={{ enter: 700 }}
+                      style={{ flexGrow: 1 }}
                     >
-                      <ImgPreview
-                        position={mdDown && trigger ? 'fixed' : 'static'}
-                        previewUrl={previewUrl}
-                        {...imgPreviewProps}
-                      />
-                    </Paper>
-                  </Fade>
+                      <Paper square elevation={0} style={{ width: '100%' }}>
+                        <ImgPreview
+                          position={mdDown && trigger ? 'fixed' : 'static'}
+                          previewUrl={previewUrl}
+                          {...imgPreviewProps}
+                        />
+                      </Paper>
+                    </Fade>
+                  </Box>
                 </Box>
               </Box>
             </Box>

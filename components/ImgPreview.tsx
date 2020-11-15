@@ -89,15 +89,18 @@ export default function ImgPreview({
         if (e.target) {
           // console.log(`${img.width}x${img.height}`);
           let w = 0;
+          let h = 0;
           if (width !== undefined) {
-            w = width;
-            setImgWidth(w);
-            setImgHeight((img.height * width) / img.width);
+            if (img.width > img.height) {
+              w = width;
+              h = (img.height * width) / img.width;
+            }
           } else if (height !== undefined) {
             w = (img.width * height) / img.height;
-            setImgWidth(w);
-            setImgHeight(height);
+            h = height;
           }
+          setImgWidth(w);
+          setImgHeight(h);
           dispatch({ type: 'setWidth', payload: [`${w}`] });
           dispatch({ type: 'done', payload: [''] });
         }
@@ -116,14 +119,15 @@ export default function ImgPreview({
   }, [previewUrl, width, height]);
 
   return (
-    <Box width={'100%'} position={position} top={top}>
+    <Box width={'100%'} height={'100%'} position={position} top={top}>
       <Box
         display="flex"
         flexDirection="column"
         justifyContent="center"
         width="100%"
+        height="100%"
       >
-        <Box display="flex" justifyContent="center" width="100%">
+        <Box display="flex" justifyContent="center" width="100%" height="100%">
           <img
             src={state.previewUrl}
             width={imgWidth}
