@@ -97,12 +97,12 @@ export default function ImgPreview({
             // 横長を機体されている(width で判定はあまりよろしくない)
             w = outerWidth;
             h = (img.height * outerWidth) / img.width;
-            if (h > outerHeight) {
-              w = (w * outerHeight) / h;
-              h = outerHeight;
-            }
           } else if (height !== undefined) {
             w = (img.width * outerHeight) / img.height;
+            h = outerHeight;
+          }
+          if (h > outerHeight) {
+            w = (w * outerHeight) / h;
             h = outerHeight;
           }
           setImgWidth(w);
@@ -126,7 +126,7 @@ export default function ImgPreview({
   }, [previewUrl, width, height, outerEl]);
 
   return (
-    <Box width={'100%'} height={'100%'} position={position} top={top}>
+    <Box width={'100%'} height={height || '100%'} position={position} top={top}>
       <div
         ref={outerEl}
         style={{
@@ -150,7 +150,6 @@ export default function ImgPreview({
         </Box>
         <Box
           display="flex"
-          flexGrow="1"
           justifyContent="center"
           style={{
             position: 'relative',

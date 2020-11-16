@@ -187,7 +187,9 @@ const RenderPage = () => {
             }}
           >
             {mdDown && trigger && (
-              <ImgPreview previewUrl={previewUrl} {...imgPreviewThumbProps} />
+              <Box style={{ height: 100 }}>
+                <ImgPreview previewUrl={previewUrl} {...imgPreviewThumbProps} />
+              </Box>
             )}
           </Paper>
         </Fade>
