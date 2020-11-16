@@ -4,14 +4,14 @@ import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { decodeBase64Url, encodeBase64Url } from '../utils/base64';
+import { encodeBase64Url } from '../utils/base64';
 import ImgParams, {
   ImgUrlParamsOnChangeEvent,
   ImgParamsEnabled
 } from '../components/ImgParams';
 import {
   paramsKeyDisallowBase64,
-  paramsKeyParameters,
+  imgUrlParseParams,
   ImgParamsItems,
   imgParamsCategories,
   imgParamsInCategory
@@ -130,28 +130,10 @@ function reducer(state: previewUrlState, action: actType): previewUrlState {
       const [u, p] = action.payload[0].split('?', 2);
       newState.baseUrl = u;
       if (p) {
-        const q = new URLSearchParams(p);
-        newState.params = [];
-        q.forEach((v, k) => {
-          if (k.slice(-2) === '64') {
-            const bareKeyName = k.slice(0, -2);
-            if (paramsKeyParameters(bareKeyName)) {
-              newState.params.push({
-                enabled: true,
-                key: k.slice(0, -2),
-                value: decodeBase64Url(v)
-              });
-            }
-          } else {
-            if (paramsKeyParameters(k)) {
-              newState.params.push({
-                enabled: true,
-                key: k,
-                value: v
-              });
-            }
-          }
-        });
+        newState.params = imgUrlParseParams(p).map((v) => ({
+          enabled: true,
+          ...v
+        }));
       }
       break;
     default:
