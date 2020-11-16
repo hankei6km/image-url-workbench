@@ -134,6 +134,8 @@ function reducer(state: previewUrlState, action: actType): previewUrlState {
           enabled: true,
           ...v
         }));
+      } else {
+        newState.params = [];
       }
       break;
     default:
