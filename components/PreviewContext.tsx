@@ -47,6 +47,8 @@ export function previewContextReducer(
       newState.baseImageUrl = u;
       if (p) {
         newState.imageParams = imgUrlParseParams(p);
+      } else {
+        newState.imageParams = [];
       }
       break;
   }

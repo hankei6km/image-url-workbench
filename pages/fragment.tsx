@@ -56,13 +56,31 @@ const FragmentPage = () => {
   const [linkText, setLinkText] = useState('');
   const [newTab, setNewTab] = useState(false);
   const [imgPath, setImgPath] = useState('');
+  const [imgParameters, setImgParameters] = useState('');
+  const [imgParametersJson, setImgParametersJson] = useState('');
   const [imgHtml, setImgHtml] = useState('');
   const [imgMarkdown, setImgMarkdown] = useState('');
 
   useEffect(() => {
-    const u = new URL(previewStateContext.previewImageUrl);
-    setImgPath(`${u.pathname}${u.search ? '?' : ''}${u.search}`);
-  }, [previewStateContext.previewImageUrl]);
+    try {
+      const u = new URL(previewStateContext.previewImageUrl);
+      setImgPath(`${u.pathname}${u.search}`);
+      setImgParameters(`${u.search.slice(1)}`);
+      const p = previewStateContext.imageParams
+        //https://stackoverflow.com/questions/26264956/convert-object-array-to-hash-map-indexed-by-an-attribute-value-of-the-object
+        .reduce((m: { [key: string]: string }, v): {
+          [key: string]: string;
+        } => {
+          m[v.key] = v.value;
+          return m;
+        }, {});
+      setImgParametersJson(JSON.stringify(p, null, ' '));
+    } catch {
+      setImgPath('');
+      setImgParameters('');
+      setImgParametersJson('');
+    }
+  }, [previewStateContext.previewImageUrl, previewStateContext.imageParams]);
 
   useEffect(() => {
     const imgElement = (
@@ -109,6 +127,14 @@ const FragmentPage = () => {
             </Box>
             <Box p={1}>
               <FragmentTextField label="path" value={imgPath} />
+            </Box>
+          </FragmentPanel>
+          <FragmentPanel groupName="Parameters">
+            <Box p={1}>
+              <FragmentTextField label="query" value={imgParameters} />
+            </Box>
+            <Box p={1}>
+              <FragmentTextField label="json" value={imgParametersJson} />
             </Box>
           </FragmentPanel>
           <FragmentPanel groupName="Tag">
