@@ -1,4 +1,5 @@
 import imgixUrlParams from 'imgix-url-params/dist/parameters.json';
+import { decodeBase64Url } from '../utils/base64';
 
 export type ParamsExpect = {
   [key: string]: any;
@@ -98,6 +99,38 @@ export function expectToList(exp: ParamsExpect): string[] | undefined {
     return urlParams.fontValues;
   }
   return;
+}
+
+export type ImgParamsValue = {
+  key: string;
+  value: string;
+};
+export type ImgParamsValues = ImgParamsValue[];
+
+export function imgUrlParseParams(p: string): ImgParamsValues {
+  const ret: ImgParamsValue[] = [];
+
+  const q = new URLSearchParams(p);
+  q.forEach((v, k) => {
+    if (k.slice(-2) === '64') {
+      const bareKeyName = k.slice(0, -2);
+      if (paramsKeyParameters(bareKeyName)) {
+        ret.push({
+          key: k.slice(0, -2),
+          value: decodeBase64Url(v)
+        });
+      }
+    } else {
+      if (paramsKeyParameters(k)) {
+        ret.push({
+          key: k,
+          value: v
+        });
+      }
+    }
+  });
+
+  return ret;
 }
 
 export type ImgParamsItem = {

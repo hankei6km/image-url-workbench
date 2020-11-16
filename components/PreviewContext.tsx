@@ -1,9 +1,12 @@
 import React from 'react';
+import { ImgParamsValues, imgUrlParseParams } from '../utils/imgParamsUtils';
 
 type previewContextState = {
   validateAssets: boolean;
   assets: string[];
-  previewImageUrl: string;
+  previewImageUrl: string; // ImgUrl の reducer 持ってくる?
+  baseImageUrl: string;
+  imageParams: ImgParamsValues;
 };
 
 // type actTypeSetAssets = {
@@ -21,7 +24,9 @@ type actType = actTypeSetPreviewImageUrl;
 export const previewContextInitialState: previewContextState = {
   validateAssets: false,
   assets: [],
-  previewImageUrl: ''
+  previewImageUrl: '',
+  baseImageUrl: '',
+  imageParams: []
 };
 export function previewContextReducer(
   state: previewContextState,
@@ -38,6 +43,11 @@ export function previewContextReducer(
     //   break;
     case 'setPreviewImageUrl':
       newState.previewImageUrl = action.payload[0];
+      const [u, p] = action.payload[0].split('?', 2);
+      newState.baseImageUrl = u;
+      if (p) {
+        newState.imageParams = imgUrlParseParams(p);
+      }
       break;
   }
   return newState;
