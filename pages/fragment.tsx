@@ -55,8 +55,14 @@ const FragmentPage = () => {
   const [altText, setAltText] = useState('');
   const [linkText, setLinkText] = useState('');
   const [newTab, setNewTab] = useState(false);
+  const [imgPath, setImgPath] = useState('');
   const [imgHtml, setImgHtml] = useState('');
   const [imgMarkdown, setImgMarkdown] = useState('');
+
+  useEffect(() => {
+    const u = new URL(previewStateContext.previewImageUrl);
+    setImgPath(`${u.pathname}${u.search ? '?' : ''}${u.search}`);
+  }, [previewStateContext.previewImageUrl]);
 
   useEffect(() => {
     const imgElement = (
@@ -94,6 +100,17 @@ const FragmentPage = () => {
     <Layout title="Fragment">
       <Container maxWidth="sm">
         <Box py={1}>
+          <FragmentPanel groupName="Link">
+            <Box p={1}>
+              <FragmentTextField
+                label="url"
+                value={previewStateContext.previewImageUrl}
+              />
+            </Box>
+            <Box p={1}>
+              <FragmentTextField label="path" value={imgPath} />
+            </Box>
+          </FragmentPanel>
           <FragmentPanel groupName="Tag">
             <Box p={1}>
               <DebTextField
