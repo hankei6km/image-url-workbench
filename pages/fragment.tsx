@@ -2,9 +2,11 @@ import React, { useState, useContext, useEffect } from 'react';
 import ReactDomServer from 'react-dom/server';
 import Layout from '../components/Layout';
 import Container from '@material-ui/core/Container';
+import Paper from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
+import Typography from '@material-ui/core/Typography';
 import unified from 'unified';
 import rehypeParse from 'rehype-parse';
 import rehypeStringify from 'rehype-stringify';
@@ -27,6 +29,25 @@ const processorMarkdown = unified()
   .use(rehypeToRemark)
   .use(remarkStringify)
   .freeze();
+
+export function FragmentPanel({
+  groupName,
+  children
+}: {
+  groupName: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <Box my={1}>
+      <Paper elevation={0}>
+        <Box p={1}>
+          <Typography variant="h6">{groupName}</Typography>
+        </Box>
+        <Box pl={1}>{children}</Box>
+      </Paper>
+    </Box>
+  );
+}
 
 const FragmentPage = () => {
   const previewStateContext = useContext(PreviewContext);
@@ -72,45 +93,51 @@ const FragmentPage = () => {
   return (
     <Layout title="Fragment">
       <Container maxWidth="sm">
-        <Box p={1}>
-          <DebTextField
-            label="alt text"
-            fullWidth
-            value={altText}
-            onChangeValue={({ value }) => setAltText(value)}
-          />
-        </Box>
-        <Box p={1} display="flex" flexDirection="row">
-          <Box flexGrow={1} mr={1}>
-            <DebTextField
-              label="link"
-              fullWidth
-              value={linkText}
-              onChangeValue={({ value }) => setLinkText(value)}
-            />
-          </Box>
-          <Box>
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={newTab}
-                  onChange={(e) => {
-                    setNewTab(e.target.checked);
-                  }}
-                  color="primary"
-                  name="newTab"
-                  inputProps={{ 'aria-label': `switch open link in new tab` }}
+        <Box py={1}>
+          <FragmentPanel groupName="Tag">
+            <Box p={1}>
+              <DebTextField
+                label="alt text"
+                fullWidth
+                value={altText}
+                onChangeValue={({ value }) => setAltText(value)}
+              />
+            </Box>
+            <Box p={1} display="flex" flexDirection="row">
+              <Box flexGrow={1} mr={1}>
+                <DebTextField
+                  label="link"
+                  fullWidth
+                  value={linkText}
+                  onChangeValue={({ value }) => setLinkText(value)}
                 />
-              }
-              label="new tab"
-            />
-          </Box>
-        </Box>
-        <Box p={1}>
-          <FragmentTextField label="html" value={imgHtml} />
-        </Box>
-        <Box p={1}>
-          <FragmentTextField label="markdown" value={imgMarkdown} />
+              </Box>
+              <Box>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={newTab}
+                      onChange={(e) => {
+                        setNewTab(e.target.checked);
+                      }}
+                      color="primary"
+                      name="newTab"
+                      inputProps={{
+                        'aria-label': `switch open link in new tab`
+                      }}
+                    />
+                  }
+                  label="new tab"
+                />
+              </Box>
+            </Box>
+            <Box p={1}>
+              <FragmentTextField label="html" value={imgHtml} />
+            </Box>
+            <Box p={1}>
+              <FragmentTextField label="markdown" value={imgMarkdown} />
+            </Box>
+          </FragmentPanel>
         </Box>
       </Container>
     </Layout>
