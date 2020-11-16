@@ -177,11 +177,10 @@ function reducer(state: previewUrlState, action: actType): previewUrlState {
   return newState;
 }
 
-export type ParamsItem = ImgParamsItems;
 export type ImgUrOnChangeImageUrlEvent = { value: string };
 export type ImgUrOnChangePreviewUrlEvent = { value: string };
 type ImgUrlProps = {
-  paramsItem: ParamsItem;
+  paramsItem: ImgParamsItems;
   categorize: boolean;
   imageRawUrl: string;
   onChangeImageUrl: (e: ImgUrOnChangePreviewUrlEvent) => void;
