@@ -14,7 +14,10 @@ import { flattenParams, imgParasmItemInclude } from '../utils/imgParamsUtils';
 import DebTextField from '../components/DebTextField';
 import ImgBaseUrl, { BaseUrlOnChangeEvent } from '../components/ImgBaseUrl';
 import ImgUrl from '../components/ImgUrl';
-import ImgPreview from '../components/ImgPreview';
+import ImgPreview, {
+  ImgPreviewFitMode,
+  ImgPreviewImgGrow
+} from '../components/ImgPreview';
 
 // クライアント側で毎回リスト作るのも効率悪くない?
 // props 経由で渡すのは?
@@ -53,15 +56,26 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     minHeight: 200,
     [theme.breakpoints.up('lg')]: {
-      minHeight: 100,
+      height: '100%',
       width: theme.breakpoints.values.sm
     }
   },
   imgPreviewFixLgUp: {
+    '& MuiBox': {
+      display: 'flex',
+      flexDirection: 'column',
+      width: '100%',
+      height: 200
+    },
     [theme.breakpoints.up('lg')]: {
       position: 'fixed',
       top: 70,
-      maxWidth: theme.breakpoints.values.sm
+      bottom: 70,
+      maxWidth: theme.breakpoints.values.sm,
+      width: '100%',
+      '& MuiBox': {
+        height: '100%'
+      }
     }
   }
 }));
@@ -115,17 +129,35 @@ const RenderPage = () => {
     };
   };
 
-  const imgPreviewProps = mdDown
+  const imgPreviewProps: {
+    fitMode: ImgPreviewFitMode;
+    imgGrow: ImgPreviewImgGrow;
+    width?: number;
+    height?: number;
+  } = mdDown
     ? {
+        fitMode: 'portrait',
+        imgGrow: 'none',
         width: undefined,
         // 画像の縦横比によってははみ出る(ImgPreview側で調整)
         height: 200
       }
     : {
+        fitMode: 'landscape',
+        imgGrow: 'none',
         width: theme.breakpoints.values.sm - 50,
         height: undefined
       };
-  const imgPreviewThumbProps = {
+  const imgPreviewThumbProps: {
+    fitMode: ImgPreviewFitMode;
+    imgGrow: ImgPreviewImgGrow;
+    position: string;
+    top: number;
+    width?: number;
+    height?: number;
+  } = {
+    fitMode: 'portrait',
+    imgGrow: 'none',
     position: 'fixed',
     top: 0,
     width: undefined,
@@ -176,7 +208,9 @@ const RenderPage = () => {
             }}
           >
             {mdDown && trigger && (
-              <ImgPreview previewUrl={previewUrl} {...imgPreviewThumbProps} />
+              <Box style={{ height: 100 }}>
+                <ImgPreview previewUrl={previewUrl} {...imgPreviewThumbProps} />
+              </Box>
             )}
           </Paper>
         </Fade>
@@ -191,26 +225,43 @@ const RenderPage = () => {
               className={classes.imgPreviewOuter}
             >
               <Box className={classes.imgPreviewFixLgUp}>
-                <Box>
-                  <ImgBaseUrl
-                    baseUrl={imageBaseUrl}
-                    onChange={debounceImageRawUrl()}
-                  />
-                </Box>
-                <Box mt={3}>
-                  <Fade in={!(mdDown && trigger)} timeout={{ enter: 700 }}>
-                    <Paper
-                      square
-                      elevation={0}
-                      style={{ minHeight: 220, width: '100%' }}
+                <Box
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    width: '100%',
+                    // height: 200
+                    height: '100%'
+                  }}
+                >
+                  <Box>
+                    <ImgBaseUrl
+                      baseUrl={imageBaseUrl}
+                      onChange={debounceImageRawUrl()}
+                    />
+                  </Box>
+                  <Box
+                    mt={3}
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      height: '100%'
+                    }}
+                  >
+                    <Fade
+                      in={!(mdDown && trigger)}
+                      timeout={{ enter: 700 }}
+                      style={{ flexGrow: 1 }}
                     >
-                      <ImgPreview
-                        position={mdDown && trigger ? 'fixed' : 'static'}
-                        previewUrl={previewUrl}
-                        {...imgPreviewProps}
-                      />
-                    </Paper>
-                  </Fade>
+                      <Paper square elevation={0} style={{ width: '100%' }}>
+                        <ImgPreview
+                          position={mdDown && trigger ? 'fixed' : 'static'}
+                          previewUrl={previewUrl}
+                          {...imgPreviewProps}
+                        />
+                      </Paper>
+                    </Fade>
+                  </Box>
                 </Box>
               </Box>
             </Box>

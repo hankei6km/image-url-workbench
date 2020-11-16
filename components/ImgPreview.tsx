@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useReducer } from 'react';
+import React, { useRef, useEffect, useState, useReducer } from 'react';
 // import { makeStyles, useTheme } from '@material-ui/core/styles';
 // import Skeleton from '@material-ui/lab/Skeleton';
 import Box from '@material-ui/core/Box';
@@ -56,8 +56,12 @@ function reducer(state: previewImgState, action: actType): previewImgState {
   return newState;
 }
 
-type ImgPreviewProps = {
+export type ImgPreviewFitMode = 'landscape' | 'portrait';
+export type ImgPreviewImgGrow = 'none' | 'y';
+export type ImgPreviewProps = {
   previewUrl: string;
+  fitMode: ImgPreviewFitMode;
+  imgGrow: ImgPreviewImgGrow;
   position?: string;
   top?: number | string; // 必要なものだけ
   width?: number;
@@ -66,6 +70,8 @@ type ImgPreviewProps = {
 
 export default function ImgPreview({
   previewUrl,
+  fitMode = 'landscape',
+  imgGrow = 'none',
   position,
   top,
   width,
@@ -80,30 +86,41 @@ export default function ImgPreview({
   });
   const [imgWidth, setImgWidth] = useState<string | number>(0);
   const [imgHeight, setImgHeight] = useState<string | number>(0);
+  const outerEl = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     dispatch({ type: 'setUrl', payload: [previewUrl] });
     if (previewUrl) {
+      const { width: outerWidth = 0, height: outerHeight = 0 } =
+        outerEl.current?.getBoundingClientRect() || {};
       const img = new Image();
       const handleLoad = (e: Event) => {
         if (e.target) {
-          // console.log(`${img.width}x${img.height}`);
           let w = 0;
-          if (width !== undefined) {
-            w = width;
-            setImgWidth(w);
-            setImgHeight((img.height * width) / img.width);
-          } else if (height !== undefined) {
-            w = (img.width * height) / img.height;
-            setImgWidth(w);
-            setImgHeight(height);
+          let h = 0;
+          if (fitMode === 'landscape') {
+            w = outerWidth;
+            h = (img.height * outerWidth) / img.width;
+          } else {
+            w = (img.width * outerHeight) / img.height;
+            h = outerHeight;
           }
+          if (imgGrow === 'none' && w > outerWidth) {
+            h = (h * outerWidth) / w;
+            w = outerWidth;
+          } else if (imgGrow !== 'y' && h > outerHeight) {
+            w = (w * outerHeight) / h;
+            h = outerHeight;
+          }
+          setImgWidth(w);
+          setImgHeight(h);
           dispatch({ type: 'setWidth', payload: [`${w}`] });
           dispatch({ type: 'done', payload: [''] });
         }
       };
       img.addEventListener('load', handleLoad);
       img.src = previewUrl;
+      // 階層が深い位置にあるのが気になる
       return () => {
         img.removeEventListener('load', handleLoad);
       };
@@ -113,15 +130,19 @@ export default function ImgPreview({
       dispatch({ type: 'setWidth', payload: ['100%'] });
       dispatch({ type: 'done', payload: [''] });
     }
-  }, [previewUrl, width, height]);
+  }, [previewUrl, fitMode, imgGrow, width, height, outerEl]);
 
   return (
-    <Box width={'100%'} position={position} top={top}>
-      <Box
-        display="flex"
-        flexDirection="column"
-        justifyContent="center"
-        width="100%"
+    <Box width={'100%'} height={height || '100%'} position={position} top={top}>
+      <div
+        ref={outerEl}
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          width: '100%',
+          height: '100%'
+        }}
       >
         <Box display="flex" justifyContent="center" width="100%">
           <img
@@ -135,7 +156,6 @@ export default function ImgPreview({
           />
         </Box>
         <Box
-          flexGrow={1}
           display="flex"
           justifyContent="center"
           style={{
@@ -149,7 +169,7 @@ export default function ImgPreview({
             <LinearProgress style={{ width: state.width }} />
           )}
         </Box>
-      </Box>
+      </div>
     </Box>
   );
 }
