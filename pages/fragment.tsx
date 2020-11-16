@@ -67,8 +67,6 @@ const FragmentPage = () => {
       setImgPath(`${u.pathname}${u.search}`);
       setImgParameters(`${u.search.slice(1)}`);
       const p = previewStateContext.imageParams
-        // ソートしても必ずしもこの並びで json 文字列が出来るわけでもないよね?
-        .sort(({ key: a }, { key: b }) => a.localeCompare(b))
         //https://stackoverflow.com/questions/26264956/convert-object-array-to-hash-map-indexed-by-an-attribute-value-of-the-object
         .reduce((m: { [key: string]: string }, v): {
           [key: string]: string;

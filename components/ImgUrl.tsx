@@ -145,6 +145,7 @@ function reducer(state: previewUrlState, action: actType): previewUrlState {
   const q = new URLSearchParams('');
   newState.params
     .filter(({ enabled }) => enabled)
+    .sort(({ key: a }, { key: b }) => a.localeCompare(b))
     .forEach(({ key, value }) => {
       const disallowBase64 = paramsKeyDisallowBase64(key);
       const transformerName: paramTransformerFunc = disallowBase64
