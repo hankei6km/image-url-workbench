@@ -14,7 +14,10 @@ import { flattenParams, imgParasmItemInclude } from '../utils/imgParamsUtils';
 import DebTextField from '../components/DebTextField';
 import ImgBaseUrl, { BaseUrlOnChangeEvent } from '../components/ImgBaseUrl';
 import ImgUrl from '../components/ImgUrl';
-import ImgPreview from '../components/ImgPreview';
+import ImgPreview, {
+  ImgPreviewFitMode,
+  ImgPreviewImgGrow
+} from '../components/ImgPreview';
 
 // クライアント側で毎回リスト作るのも効率悪くない?
 // props 経由で渡すのは?
@@ -126,17 +129,35 @@ const RenderPage = () => {
     };
   };
 
-  const imgPreviewProps = mdDown
+  const imgPreviewProps: {
+    fitMode: ImgPreviewFitMode;
+    imgGrow: ImgPreviewImgGrow;
+    width?: number;
+    height?: number;
+  } = mdDown
     ? {
+        fitMode: 'portrait',
+        imgGrow: 'none',
         width: undefined,
         // 画像の縦横比によってははみ出る(ImgPreview側で調整)
         height: 200
       }
     : {
+        fitMode: 'landscape',
+        imgGrow: 'none',
         width: theme.breakpoints.values.sm - 50,
         height: undefined
       };
-  const imgPreviewThumbProps = {
+  const imgPreviewThumbProps: {
+    fitMode: ImgPreviewFitMode;
+    imgGrow: ImgPreviewImgGrow;
+    position: string;
+    top: number;
+    width?: number;
+    height?: number;
+  } = {
+    fitMode: 'portrait',
+    imgGrow: 'none',
     position: 'fixed',
     top: 0,
     width: undefined,
