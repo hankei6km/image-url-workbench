@@ -66,7 +66,17 @@ const FragmentPage = () => {
       const u = new URL(previewStateContext.previewImageUrl);
       setImgPath(`${u.pathname}${u.search}`);
       setImgParameters(`${u.search.slice(1)}`);
-      setImgParametersJson(JSON.stringify(previewStateContext.imageParams));
+      const p = previewStateContext.imageParams
+        // ソートしても必ずしもこの並びで json 文字列が出来るわけでもないよね?
+        .sort(({ key: a }, { key: b }) => a.localeCompare(b))
+        //https://stackoverflow.com/questions/26264956/convert-object-array-to-hash-map-indexed-by-an-attribute-value-of-the-object
+        .reduce((m: { [key: string]: string }, v): {
+          [key: string]: string;
+        } => {
+          m[v.key] = v.value;
+          return m;
+        }, {});
+      setImgParametersJson(JSON.stringify(p, null, ' '));
     } catch {
       setImgPath('');
       setImgParameters('');
