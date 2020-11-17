@@ -235,10 +235,10 @@ const RenderPage = () => {
                   }}
                 >
                   <Box>
-                    <ImgBaseUrl
-                      baseUrl={imageBaseUrl}
-                      onChange={debounceImageRawUrl()}
-                    />
+                      <ImgBaseUrl
+                        baseUrl={imageBaseUrl}
+                        onChange={debounceImageRawUrl()}
+                      />
                   </Box>
                   <Box
                     mt={3}

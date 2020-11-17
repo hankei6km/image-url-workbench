@@ -24,6 +24,7 @@ type PreviewContextState = {
   validateAssets: boolean;
   assets: string[];
   previewItem: PreviewItem;
+  previewSet: PreviewItem[];
 };
 
 // type actTypeSetAssets = {
@@ -46,10 +47,28 @@ type actTypeSetTagFragment = {
   payload: [string, string, boolean];
 };
 
+type actTypePushToSet = {
+  type: 'pushToSet';
+  payload: [];
+};
+
+type actTypePopFromSet = {
+  type: 'popFromSet';
+  payload: [string];
+};
+
+type actTypeRemoveFromSet = {
+  type: 'removeFromSet';
+  payload: [string];
+};
+
 type actType =
   | actTypeSetPreviewImageUrl
   | actTypeSetCard
-  | actTypeSetTagFragment;
+  | actTypeSetTagFragment
+  | actTypePushToSet
+  | actTypePopFromSet
+  | actTypeRemoveFromSet;
 
 export const previewContextInitialState: PreviewContextState = {
   validateAssets: false,
@@ -67,7 +86,8 @@ export const previewContextInitialState: PreviewContextState = {
       linkText: '',
       newTab: false
     }
-  }
+  },
+  previewSet: []
 };
 export function previewContextReducer(
   state: PreviewContextState,
@@ -100,6 +120,38 @@ export function previewContextReducer(
       newState.previewItem.tagFragment.altText = action.payload[0];
       newState.previewItem.tagFragment.linkText = action.payload[1];
       newState.previewItem.tagFragment.newTab = action.payload[2];
+      break;
+    case 'pushToSet':
+      if (state.previewItem.previewUrl) {
+        const idx = state.previewSet.findIndex(
+          (v) => v.previewUrl === state.previewItem.previewUrl
+        );
+        if (idx >= 0) {
+          newState.previewSet[idx] = { ...state.previewItem };
+        } else {
+          newState.previewSet.push({ ...state.previewItem });
+        }
+      }
+      break;
+    case 'popFromSet':
+      {
+        const idx = state.previewSet.findIndex(
+          (v) => v.previewUrl === action.payload[0]
+        );
+        if (idx >= 0) {
+          newState.previewItem = { ...state.previewSet[idx] };
+        }
+      }
+      break;
+    case 'removeFromSet':
+      {
+        const idx = state.previewSet.findIndex(
+          (v) => v.previewUrl === action.payload[0]
+        );
+        if (idx >= 0) {
+          state.previewSet.splice(idx, 1);
+        }
+      }
       break;
   }
   return newState;
