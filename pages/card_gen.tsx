@@ -51,6 +51,13 @@ const CardGenPage = ({
   }, [previewDispatch, dataImageUrlErr, data.imageUrl]);
 
   useEffect(() => {
+    previewDispatch({
+      type: 'setCard',
+      payload: [data.title, data.description]
+    });
+  }, [previewDispatch, data.title, data.description]);
+
+  useEffect(() => {
     router.push('/render');
   }, [router]);
 

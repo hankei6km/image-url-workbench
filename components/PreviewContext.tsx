@@ -1,10 +1,23 @@
 import React from 'react';
 import { ImgParamsValues, imgUrlParseParams } from '../utils/imgParamsUtils';
 
-export type PreviewItem = {
+type Card = {
+  title: string;
+  description: string;
+};
+
+type Fragment = {
+  altText: string;
+  linkText: string;
+  newTab: boolean;
+};
+
+type PreviewItem = {
   previewUrl: string;
   baseImageUrl: string;
   imageParams: ImgParamsValues;
+  card: Card;
+  fragment: Fragment;
 };
 
 type PreviewContextState = {
@@ -23,7 +36,12 @@ type actTypeSetPreviewImageUrl = {
   payload: [string];
 };
 
-type actType = actTypeSetPreviewImageUrl;
+type actTypeSetCard = {
+  type: 'setCard';
+  payload: [string, string];
+};
+
+type actType = actTypeSetPreviewImageUrl | actTypeSetCard;
 
 export const previewContextInitialState: PreviewContextState = {
   validateAssets: false,
@@ -31,7 +49,16 @@ export const previewContextInitialState: PreviewContextState = {
   previewItem: {
     previewUrl: '',
     baseImageUrl: '',
-    imageParams: []
+    imageParams: [],
+    card: {
+      title: '',
+      description: ''
+    },
+    fragment: {
+      altText: '',
+      linkText: '',
+      newTab: false
+    }
   }
 };
 export function previewContextReducer(
@@ -56,6 +83,10 @@ export function previewContextReducer(
       } else {
         newState.previewItem.imageParams = [];
       }
+      break;
+    case 'setCard':
+      newState.previewItem.card.title = action.payload[0];
+      newState.previewItem.card.description = action.payload[1];
       break;
   }
   return newState;
