@@ -13,7 +13,7 @@ import rehypeStringify from 'rehype-stringify';
 import rehypeToRemark from 'rehype-remark';
 import remarkStringify from 'remark-stringify';
 import rehypeSanitize from 'rehype-sanitize';
-import PreviewContext from '../components/PreviewContext';
+import PreviewContext, { PreviewDispatch } from '../components/PreviewContext';
 import DebTextField from '../components/DebTextField';
 import FragmentTextField from '../components/FragmentTextField';
 
@@ -51,10 +51,16 @@ export function FragmentPanel({
 
 const FragmentPage = () => {
   const previewStateContext = useContext(PreviewContext);
-  //const previewDispatch = useContext(PreviewDispatch);
-  const [altText, setAltText] = useState('');
-  const [linkText, setLinkText] = useState('');
-  const [newTab, setNewTab] = useState(false);
+  const previewDispatch = useContext(PreviewDispatch);
+  const [altText, setAltText] = useState(
+    previewStateContext.previewItem.tagFragment.altText
+  );
+  const [linkText, setLinkText] = useState(
+    previewStateContext.previewItem.tagFragment.linkText
+  );
+  const [newTab, setNewTab] = useState(
+    previewStateContext.previewItem.tagFragment.newTab
+  );
   const [imgPath, setImgPath] = useState('');
   const [imgParameters, setImgParameters] = useState('');
   const [imgParametersJson, setImgParametersJson] = useState('');
@@ -63,10 +69,10 @@ const FragmentPage = () => {
 
   useEffect(() => {
     try {
-      const u = new URL(previewStateContext.previewImageUrl);
+      const u = new URL(previewStateContext.previewItem.previewUrl);
       setImgPath(`${u.pathname}${u.search}`);
       setImgParameters(`${u.search.slice(1)}`);
-      const p = previewStateContext.imageParams
+      const p = previewStateContext.previewItem.imageParams
         //https://stackoverflow.com/questions/26264956/convert-object-array-to-hash-map-indexed-by-an-attribute-value-of-the-object
         .reduce((m: { [key: string]: string }, v): {
           [key: string]: string;
@@ -80,11 +86,14 @@ const FragmentPage = () => {
       setImgParameters('');
       setImgParametersJson('');
     }
-  }, [previewStateContext.previewImageUrl, previewStateContext.imageParams]);
+  }, [
+    previewStateContext.previewItem.previewUrl,
+    previewStateContext.previewItem.imageParams
+  ]);
 
   useEffect(() => {
     const imgElement = (
-      <img src={previewStateContext.previewImageUrl} alt={altText} />
+      <img src={previewStateContext.previewItem.previewUrl} alt={altText} />
     );
     const t = newTab
       ? {
@@ -112,7 +121,14 @@ const FragmentPage = () => {
       }
       setImgMarkdown(String(file).trimEnd());
     });
-  }, [previewStateContext.previewImageUrl, altText, linkText, newTab]);
+  }, [previewStateContext.previewItem.previewUrl, altText, linkText, newTab]);
+
+  useEffect(() => {
+    previewDispatch({
+      type: 'setTagFragment',
+      payload: [altText, linkText, newTab]
+    });
+  }, [previewDispatch, altText, linkText, newTab]);
 
   return (
     <Layout title="Fragment">
@@ -122,7 +138,7 @@ const FragmentPage = () => {
             <Box p={1}>
               <FragmentTextField
                 label="url"
-                value={previewStateContext.previewImageUrl}
+                value={previewStateContext.previewItem.previewUrl}
               />
             </Box>
             <Box p={1}>

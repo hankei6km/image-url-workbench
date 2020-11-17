@@ -92,13 +92,13 @@ const RenderPage = () => {
   // TODO: makeStyle で CSS の機能で試す
   const mdDown = useMediaQuery(theme.breakpoints.down('md'));
   const [imageRawUrl, setImageRawUrl] = useState(
-    previewStateContext.previewImageUrl
+    previewStateContext.previewItem.previewUrl
   );
   const [imageBaseUrl, setImageBaseUrl] = useState(
-    previewStateContext.previewImageUrl
+    previewStateContext.previewItem.previewUrl
   );
   const [previewUrl, setPreviewUrl] = useState(
-    previewStateContext.previewImageUrl
+    previewStateContext.previewItem.previewUrl
   );
 
   const [searchText, setSearchText] = useState('');

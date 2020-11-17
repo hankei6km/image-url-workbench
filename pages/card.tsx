@@ -15,10 +15,14 @@ const CardPage = () => {
   const previewStateContext = useContext(PreviewContext);
   const previewDispatch = useContext(PreviewDispatch);
   const [imageUrl, setImageUrl] = useState(
-    previewStateContext.previewImageUrl // assets のチェックが入らない状態になる. あとで対応
+    previewStateContext.previewItem.previewUrl // assets のチェックが入らない状態になる. あとで対応
   );
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
+  const [title, setTitle] = useState(
+    previewStateContext.previewItem.card.title
+  );
+  const [description, setDescription] = useState(
+    previewStateContext.previewItem.card.description
+  );
   const [cardPreviewUrl, setCardPreviewUrl] = useState('');
 
   const [imageUrlErrMsg, setImageUrlErrMsg] = useState('');
@@ -69,6 +73,13 @@ const CardPage = () => {
     }
   }, [previewDispatch, imageUrl, validateImageUrl]);
 
+  useEffect(() => {
+    previewDispatch({
+      type: 'setCard',
+      payload: [title, description]
+    });
+  }, [previewDispatch, title, description]);
+
   return (
     <Layout title="Card">
       <Container maxWidth="sm">
@@ -93,6 +104,7 @@ const CardPage = () => {
               label="Preview Card Title"
               // defaultValue={data.cardTitle}
               fullWidth
+              value={title}
               onChangeValue={({ value }) => {
                 setTitle(value);
               }}
@@ -104,6 +116,7 @@ const CardPage = () => {
               label="Preview Card Description"
               // defaultValue={data.cardDescription}
               fullWidth
+              value={description}
               onChangeValue={({ value }) => {
                 setDescription(value);
               }}
