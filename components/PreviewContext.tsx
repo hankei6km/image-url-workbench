@@ -1,12 +1,16 @@
 import React from 'react';
 import { ImgParamsValues, imgUrlParseParams } from '../utils/imgParamsUtils';
 
-type previewContextState = {
-  validateAssets: boolean;
-  assets: string[];
-  previewImageUrl: string; // ImgUrl の reducer 持ってくる?
+export type PreviewItem = {
+  previewUrl: string;
   baseImageUrl: string;
   imageParams: ImgParamsValues;
+};
+
+type PreviewContextState = {
+  validateAssets: boolean;
+  assets: string[];
+  previewItem: PreviewItem;
 };
 
 // type actTypeSetAssets = {
@@ -21,18 +25,20 @@ type actTypeSetPreviewImageUrl = {
 
 type actType = actTypeSetPreviewImageUrl;
 
-export const previewContextInitialState: previewContextState = {
+export const previewContextInitialState: PreviewContextState = {
   validateAssets: false,
   assets: [],
-  previewImageUrl: '',
-  baseImageUrl: '',
-  imageParams: []
+  previewItem: {
+    previewUrl: '',
+    baseImageUrl: '',
+    imageParams: []
+  }
 };
 export function previewContextReducer(
-  state: previewContextState,
+  state: PreviewContextState,
   action: actType
-): previewContextState {
-  const newState: previewContextState = { ...state };
+): PreviewContextState {
+  const newState: PreviewContextState = { ...state };
   switch (action.type) {
     // case 'setAssets':
     //   try {
@@ -42,13 +48,13 @@ export function previewContextReducer(
     //   }
     //   break;
     case 'setPreviewImageUrl':
-      newState.previewImageUrl = action.payload[0];
+      newState.previewItem.previewUrl = action.payload[0];
       const [u, p] = action.payload[0].split('?', 2);
-      newState.baseImageUrl = u;
+      newState.previewItem.baseImageUrl = u;
       if (p) {
-        newState.imageParams = imgUrlParseParams(p);
+        newState.previewItem.imageParams = imgUrlParseParams(p);
       } else {
-        newState.imageParams = [];
+        newState.previewItem.imageParams = [];
       }
       break;
   }

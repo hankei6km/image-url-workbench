@@ -15,7 +15,7 @@ const CardPage = () => {
   const previewStateContext = useContext(PreviewContext);
   const previewDispatch = useContext(PreviewDispatch);
   const [imageUrl, setImageUrl] = useState(
-    previewStateContext.previewImageUrl // assets のチェックが入らない状態になる. あとで対応
+    previewStateContext.previewItem.previewUrl // assets のチェックが入らない状態になる. あとで対応
   );
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
