@@ -13,7 +13,7 @@ import rehypeStringify from 'rehype-stringify';
 import rehypeToRemark from 'rehype-remark';
 import remarkStringify from 'remark-stringify';
 import rehypeSanitize from 'rehype-sanitize';
-import PreviewContext from '../components/PreviewContext';
+import PreviewContext, { PreviewDispatch } from '../components/PreviewContext';
 import DebTextField from '../components/DebTextField';
 import FragmentTextField from '../components/FragmentTextField';
 
@@ -51,10 +51,16 @@ export function FragmentPanel({
 
 const FragmentPage = () => {
   const previewStateContext = useContext(PreviewContext);
-  //const previewDispatch = useContext(PreviewDispatch);
-  const [altText, setAltText] = useState('');
-  const [linkText, setLinkText] = useState('');
-  const [newTab, setNewTab] = useState(false);
+  const previewDispatch = useContext(PreviewDispatch);
+  const [altText, setAltText] = useState(
+    previewStateContext.previewItem.tagFragment.altText
+  );
+  const [linkText, setLinkText] = useState(
+    previewStateContext.previewItem.tagFragment.linkText
+  );
+  const [newTab, setNewTab] = useState(
+    previewStateContext.previewItem.tagFragment.newTab
+  );
   const [imgPath, setImgPath] = useState('');
   const [imgParameters, setImgParameters] = useState('');
   const [imgParametersJson, setImgParametersJson] = useState('');
@@ -116,6 +122,13 @@ const FragmentPage = () => {
       setImgMarkdown(String(file).trimEnd());
     });
   }, [previewStateContext.previewItem.previewUrl, altText, linkText, newTab]);
+
+  useEffect(() => {
+    previewDispatch({
+      type: 'setTagFragment',
+      payload: [altText, linkText, newTab]
+    });
+  }, [previewDispatch, altText, linkText, newTab]);
 
   return (
     <Layout title="Fragment">

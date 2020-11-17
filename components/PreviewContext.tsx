@@ -6,7 +6,7 @@ type Card = {
   description: string;
 };
 
-type Fragment = {
+type TagFragment = {
   altText: string;
   linkText: string;
   newTab: boolean;
@@ -17,7 +17,7 @@ type PreviewItem = {
   baseImageUrl: string;
   imageParams: ImgParamsValues;
   card: Card;
-  fragment: Fragment;
+  tagFragment: TagFragment;
 };
 
 type PreviewContextState = {
@@ -41,7 +41,15 @@ type actTypeSetCard = {
   payload: [string, string];
 };
 
-type actType = actTypeSetPreviewImageUrl | actTypeSetCard;
+type actTypeSetTagFragment = {
+  type: 'setTagFragment';
+  payload: [string, string, boolean];
+};
+
+type actType =
+  | actTypeSetPreviewImageUrl
+  | actTypeSetCard
+  | actTypeSetTagFragment;
 
 export const previewContextInitialState: PreviewContextState = {
   validateAssets: false,
@@ -54,7 +62,7 @@ export const previewContextInitialState: PreviewContextState = {
       title: '',
       description: ''
     },
-    fragment: {
+    tagFragment: {
       altText: '',
       linkText: '',
       newTab: false
@@ -87,6 +95,11 @@ export function previewContextReducer(
     case 'setCard':
       newState.previewItem.card.title = action.payload[0];
       newState.previewItem.card.description = action.payload[1];
+      break;
+    case 'setTagFragment':
+      newState.previewItem.tagFragment.altText = action.payload[0];
+      newState.previewItem.tagFragment.linkText = action.payload[1];
+      newState.previewItem.tagFragment.newTab = action.payload[2];
       break;
   }
   return newState;
