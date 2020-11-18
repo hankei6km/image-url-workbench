@@ -57,7 +57,7 @@ function reducer(state: previewImgState, action: actType): previewImgState {
 }
 
 export type ImgPreviewFitMode = 'landscape' | 'portrait';
-export type ImgPreviewImgGrow = 'fit' | 'y';
+export type ImgPreviewImgGrow = 'none' | 'fit' | 'y';
 export type ImgPreviewProps = {
   previewUrl: string;
   fitMode: ImgPreviewFitMode;
@@ -96,21 +96,31 @@ export default function ImgPreview({
       const img = new Image();
       const handleLoad = (e: Event) => {
         if (e.target) {
-          let w = 0;
-          let h = 0;
-          if (fitMode === 'landscape') {
-            w = outerWidth;
-            h = (img.height * outerWidth) / img.width;
+          let w = outerWidth;
+          let h = outerHeight;
+          if (
+            imgGrow === 'none' &&
+            img.width <= w &&
+            img.height <= outerHeight
+          ) {
+            w = img.width;
+            h = img.height;
+            console.log(w, h);
           } else {
-            w = (img.width * outerHeight) / img.height;
-            h = outerHeight;
-          }
-          if (imgGrow === 'fit' && w > outerWidth) {
-            h = (h * outerWidth) / w;
-            w = outerWidth;
-          } else if (imgGrow !== 'y' && h > outerHeight) {
-            w = (w * outerHeight) / h;
-            h = outerHeight;
+            if (fitMode === 'landscape') {
+              w = outerWidth;
+              h = (img.height * outerWidth) / img.width;
+            } else {
+              w = (img.width * outerHeight) / img.height;
+              h = outerHeight;
+            }
+            if (imgGrow === 'fit' && w > outerWidth) {
+              h = (h * outerWidth) / w;
+              w = outerWidth;
+            } else if (imgGrow !== 'y' && h > outerHeight) {
+              w = (w * outerHeight) / h;
+              h = outerHeight;
+            }
           }
           setImgWidth(w);
           setImgHeight(h);

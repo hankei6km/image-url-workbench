@@ -56,9 +56,9 @@ const SetPage = () => {
                       previewUrl={v.previewUrl}
                       {...{
                         fitMode: 'landscape',
-                        imgGrow: 'fit',
+                        imgGrow: 'none',
                         width: undefined,
-                        height: 600
+                        height: 400
                       }}
                     />
                   </CardActionArea>
