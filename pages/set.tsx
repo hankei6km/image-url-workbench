@@ -12,6 +12,7 @@ import CardActions from '@material-ui/core/CardActions';
 import Button from '@material-ui/core/Button';
 import PreviewContext, { PreviewDispatch } from '../components/PreviewContext';
 import ImgBaseUrl, { BaseUrlOnChangeEvent } from '../components/ImgBaseUrl';
+import ImgPreview from '../components/ImgPreview';
 
 const SetPage = () => {
   const previewStateContext = useContext(PreviewContext);
@@ -21,7 +22,7 @@ const SetPage = () => {
 
   return (
     <Layout title="Set">
-      <Container>
+      <Container maxWidth="md">
         <Box display="flex">
           <Box flexGrow="1">
             <ImgBaseUrl
@@ -51,7 +52,15 @@ const SetPage = () => {
                 <Card>
                   <CardHeader title="1024x768" />
                   <CardActionArea>
-                    <img src={v.previewUrl} alt="" />;
+                    <ImgPreview
+                      previewUrl={v.previewUrl}
+                      {...{
+                        fitMode: 'landscape',
+                        imgGrow: 'none',
+                        width: undefined,
+                        height: 600
+                      }}
+                    />
                   </CardActionArea>
                   <CardActions>
                     <Button
