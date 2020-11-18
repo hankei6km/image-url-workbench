@@ -14,7 +14,10 @@ import PreviewContext, {
   PreviewDispatch,
   PreviewItem
 } from '../components/PreviewContext';
-import ImgBaseUrl, { BaseUrlOnChangeEvent } from '../components/ImgBaseUrl';
+import ImgBaseUrl, {
+  BaseUrlOnChangeEvent,
+  BaseUrlOnEnterKeyEvent
+} from '../components/ImgBaseUrl';
 import ImgPreview from '../components/ImgPreview';
 
 function SetItem({ previewItem }: { previewItem: PreviewItem }) {
@@ -86,6 +89,13 @@ const SetPage = () => {
           <Box flexGrow="1">
             <ImgBaseUrl
               baseUrl={imageBaseUrl}
+              onEnterKey={(e: BaseUrlOnEnterKeyEvent) => {
+                previewDispatch({
+                  type: 'addPreviewImageUrl',
+                  payload: [e.value]
+                });
+                setImageBaseUrl('');
+              }}
               onChange={(e: BaseUrlOnChangeEvent) => {
                 setImageBaseUrl(e.value);
               }}

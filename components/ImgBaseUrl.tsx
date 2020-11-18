@@ -7,13 +7,19 @@ import Validator from '../utils/validator';
 const validator = Validator();
 
 export type BaseUrlOnChangeEvent = { value: string };
+export type BaseUrlOnEnterKeyEvent = { value: string };
 
 type BaseUrlParamsProps = {
   baseUrl: string;
   onChange: (e: BaseUrlOnChangeEvent) => void;
+  onEnterKey?: (e: BaseUrlOnEnterKeyEvent) => void;
 };
 
-export default function ImgBaseUrl({ baseUrl, onChange }: BaseUrlParamsProps) {
+export default function ImgBaseUrl({
+  baseUrl,
+  onChange,
+  onEnterKey = (_e) => {}
+}: BaseUrlParamsProps) {
   const { validateAssets, assets } = useContext(PreviewContext);
   const [value, setValue] = useState(baseUrl);
   const [errMsg, setErrMsg] = useState('');
@@ -32,6 +38,12 @@ export default function ImgBaseUrl({ baseUrl, onChange }: BaseUrlParamsProps) {
         value={value}
         fullWidth
         helperText={errMsg}
+        onKeyPress={(e) => {
+          if (e.key === 'Enter') {
+            onEnterKey({ value: value });
+            e.preventDefault();
+          }
+        }}
         onChange={(e) => {
           const newValue = e.target.value;
           setValue(newValue);
