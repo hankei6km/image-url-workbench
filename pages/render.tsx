@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useCallback, useEffect, useState, useContext } from 'react';
 import useScrollTrigger from '@material-ui/core/useScrollTrigger';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
@@ -9,7 +9,10 @@ import Paper from '@material-ui/core/Paper';
 import Fade from '@material-ui/core/Fade';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import SearchIcon from '@material-ui/icons/Search';
-import PreviewContext, { PreviewDispatch } from '../components/PreviewContext';
+import PreviewContext, {
+  PreviewDispatch,
+  getEditTargetItemIndex
+} from '../components/PreviewContext';
 import { flattenParams, imgParasmItemInclude } from '../utils/imgParamsUtils';
 import DebTextField from '../components/DebTextField';
 import ImgUrl from '../components/ImgUrl';
@@ -90,10 +93,15 @@ const RenderPage = () => {
   // ただし、PC でも md のサイズでリロードするとちらつく。
   // TODO: makeStyle で CSS の機能で試す
   const mdDown = useMediaQuery(theme.breakpoints.down('md'));
-  const [imageRawUrl] = useState(previewStateContext.previewItem.previewUrl);
-  const [previewUrl, setPreviewUrl] = useState(
-    previewStateContext.previewItem.previewUrl
-  );
+  const getPreviewUrl = useCallback(() => {
+    const idx = getEditTargetItemIndex(
+      previewStateContext.previewSet,
+      previewStateContext.editTargetKey
+    );
+    return idx >= 0 ? previewStateContext.previewSet[idx].previewUrl : '';
+  }, [previewStateContext.previewSet, previewStateContext.editTargetKey]);
+  const [imageRawUrl] = useState(getPreviewUrl());
+  const [previewUrl, setPreviewUrl] = useState(getPreviewUrl());
 
   const [searchText, setSearchText] = useState('');
 

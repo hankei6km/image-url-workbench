@@ -35,10 +35,9 @@ const SetPage = () => {
           <Button
             onClick={() => {
               previewDispatch({
-                type: 'setPreviewImageUrl',
+                type: 'addPreviewImageUrl',
                 payload: [imageBaseUrl]
               });
-              previewDispatch({ type: 'pushToSet', payload: [] });
               setImageBaseUrl('');
             }}
           >
@@ -68,8 +67,8 @@ const SetPage = () => {
                       color="primary"
                       onClick={() => {
                         previewDispatch({
-                          type: 'popFromSet',
-                          payload: [v.previewUrl]
+                          type: 'setEditTarget',
+                          payload: [v.itemKey]
                         });
                         router.push('/render');
                       }}
@@ -82,7 +81,7 @@ const SetPage = () => {
                       onClick={() => {
                         previewDispatch({
                           type: 'removeFromSet',
-                          payload: [v.previewUrl]
+                          payload: [v.itemKey]
                         });
                       }}
                     >

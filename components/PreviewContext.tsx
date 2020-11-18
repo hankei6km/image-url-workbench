@@ -13,6 +13,7 @@ type TagFragment = {
 };
 
 type PreviewItem = {
+  itemKey: string;
   previewUrl: string;
   baseImageUrl: string;
   imageParams: ImgParamsValues;
@@ -21,7 +22,7 @@ type PreviewItem = {
 type PreviewContextState = {
   validateAssets: boolean;
   assets: string[];
-  previewItem: PreviewItem;
+  editTargetKey: string; // 編集対象の item を取得するときに selector がほしくなるよね(redux でなくても使える?)
   card: Card;
   tagFragment: TagFragment;
   previewSet: PreviewItem[];
@@ -31,6 +32,11 @@ type PreviewContextState = {
 //   type: 'setAssets';
 //   payload: [string];
 // };
+
+type actTypeAddPreviewImageUrl = {
+  type: 'addPreviewImageUrl';
+  payload: [string];
+};
 
 type actTypeSetPreviewImageUrl = {
   type: 'setPreviewImageUrl';
@@ -47,13 +53,8 @@ type actTypeSetTagFragment = {
   payload: [string, string, boolean];
 };
 
-type actTypePushToSet = {
-  type: 'pushToSet';
-  payload: [];
-};
-
-type actTypePopFromSet = {
-  type: 'popFromSet';
+type actTypeSetEditTarget = {
+  type: 'setEditTarget';
   payload: [string];
 };
 
@@ -63,21 +64,17 @@ type actTypeRemoveFromSet = {
 };
 
 type actType =
+  | actTypeAddPreviewImageUrl
   | actTypeSetPreviewImageUrl
   | actTypeSetCard
   | actTypeSetTagFragment
-  | actTypePushToSet
-  | actTypePopFromSet
+  | actTypeSetEditTarget
   | actTypeRemoveFromSet;
 
 export const previewContextInitialState: PreviewContextState = {
   validateAssets: false,
   assets: [],
-  previewItem: {
-    previewUrl: '',
-    baseImageUrl: '',
-    imageParams: []
-  },
+  editTargetKey: '',
   card: {
     title: '',
     description: ''
@@ -102,14 +99,36 @@ export function previewContextReducer(
     //     console.error(`error: assets parse error: ${err.name}`);
     //   }
     //   break;
+    case 'addPreviewImageUrl':
+      if (action.payload[0]) {
+        const [u, p] = action.payload[0].split('?', 2);
+        const previewItem = {
+          itemKey: `${Date.now()}`,
+          previewUrl: action.payload[0],
+          baseImageUrl: u,
+          imageParams: p ? imgUrlParseParams(p) : []
+        };
+        newState.editTargetKey = previewItem.itemKey;
+        newState.previewSet.push(previewItem);
+      }
+      break;
     case 'setPreviewImageUrl':
-      newState.previewItem.previewUrl = action.payload[0];
-      const [u, p] = action.payload[0].split('?', 2);
-      newState.previewItem.baseImageUrl = u;
-      if (p) {
-        newState.previewItem.imageParams = imgUrlParseParams(p);
-      } else {
-        newState.previewItem.imageParams = [];
+      if (action.payload[0]) {
+        const [u, p] = action.payload[0].split('?', 2);
+        const previewItem = {
+          itemKey: state.editTargetKey,
+          previewUrl: action.payload[0],
+          baseImageUrl: u,
+          imageParams: p ? imgUrlParseParams(p) : []
+        };
+        const idx = state.previewSet.findIndex(
+          (v) => v.itemKey === state.editTargetKey
+        );
+        if (idx >= 0) {
+          newState.previewSet[idx] = previewItem;
+        } else {
+          newState.previewSet.push(previewItem);
+        }
       }
       break;
     case 'setCard':
@@ -121,32 +140,13 @@ export function previewContextReducer(
       newState.tagFragment.linkText = action.payload[1];
       newState.tagFragment.newTab = action.payload[2];
       break;
-    case 'pushToSet':
-      if (state.previewItem.previewUrl) {
-        const idx = state.previewSet.findIndex(
-          (v) => v.previewUrl === state.previewItem.previewUrl
-        );
-        if (idx >= 0) {
-          newState.previewSet[idx] = { ...state.previewItem };
-        } else {
-          newState.previewSet.push({ ...state.previewItem });
-        }
-      }
-      break;
-    case 'popFromSet':
-      {
-        const idx = state.previewSet.findIndex(
-          (v) => v.previewUrl === action.payload[0]
-        );
-        if (idx >= 0) {
-          newState.previewItem = { ...state.previewSet[idx] };
-        }
-      }
+    case 'setEditTarget':
+      newState.editTargetKey = action.payload[0];
       break;
     case 'removeFromSet':
       {
         const idx = state.previewSet.findIndex(
-          (v) => v.previewUrl === action.payload[0]
+          (v) => v.itemKey === action.payload[0]
         );
         if (idx >= 0) {
           state.previewSet.splice(idx, 1);
@@ -156,6 +156,11 @@ export function previewContextReducer(
   }
   return newState;
 }
+
+export const getEditTargetItemIndex = (
+  previewSet: PreviewItem[],
+  editTargetKey: string
+): number => previewSet.findIndex(({ itemKey }) => itemKey === editTargetKey);
 
 export const PreviewDispatch = React.createContext<React.Dispatch<actType>>(
   (_a: actType) => {}
