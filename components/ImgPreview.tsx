@@ -71,6 +71,7 @@ export type ImgPreviewProps = {
   top?: number | string; // 必要なものだけ
   width?: number;
   height?: number;
+  onSize?: ({ w, h }: { w: number; h: number }) => void;
 };
 
 export default function ImgPreview({
@@ -80,7 +81,8 @@ export default function ImgPreview({
   position,
   top,
   width,
-  height
+  height,
+  onSize = (_e) => {}
 }: ImgPreviewProps) {
   const [state, dispatch] = useReducer(reducer, initialState, (init) => {
     const newState = { ...init };
@@ -89,8 +91,8 @@ export default function ImgPreview({
     setTimeout(() => dispatch({ type: 'setUrl', payload: [previewUrl] }), 1); // dispatch でないと即時反映されない?
     return newState;
   });
-  const [imgWidth, setImgWidth] = useState<string | number>(0);
-  const [imgHeight, setImgHeight] = useState<string | number>(0);
+  const [imgWidth, setImgWidth] = useState(0);
+  const [imgHeight, setImgHeight] = useState(0);
   const outerEl = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -145,6 +147,10 @@ export default function ImgPreview({
       dispatch({ type: 'done', payload: [''] });
     }
   }, [previewUrl, fitMode, imgGrow, width, height, outerEl]);
+
+  useEffect(() => {
+    onSize({ w: imgWidth, h: imgHeight });
+  }, [onSize, imgWidth, imgHeight]);
 
   return (
     <Box width={'100%'} height={height || '100%'} position={position} top={top}>
