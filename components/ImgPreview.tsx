@@ -8,20 +8,28 @@ type previewImgState = {
   state: 'loading' | 'done' | 'err';
   loadingUrl: string;
   previewUrl: string;
-  width: string;
+  width: number;
+  height: number;
 };
 
 const initialState: previewImgState = {
   state: 'done',
   loadingUrl: '',
   previewUrl: '',
-  width: '100%'
+  width: 0,
+  height: 0
 };
 
-type actType = {
-  type: 'setUrl' | 'setWidth' | 'loading' | 'done' | 'err';
-  payload: [string];
+type actSetSizeType = {
+  type: 'setSize';
+  payload: [number, number];
 };
+type actType =
+  | {
+      type: 'setUrl' | 'setSize' | 'loading' | 'done' | 'err';
+      payload: [string];
+    }
+  | actSetSizeType;
 function reducer(state: previewImgState, action: actType): previewImgState {
   const newState: previewImgState = { ...state };
   switch (action.type) {
@@ -31,13 +39,10 @@ function reducer(state: previewImgState, action: actType): previewImgState {
         newState.state = 'loading';
       }
       break;
-    case 'setWidth':
+    case 'setSize':
       if (newState.loadingUrl) {
-        if (action.payload[0] === '100%') {
-          newState.width = '100%';
-        } else {
-          newState.width = `${action.payload[0]}px`;
-        }
+        newState.width = action.payload[0] as number;
+        newState.height = action.payload[1] as number;
       }
       break;
     case 'loading':
@@ -105,7 +110,6 @@ export default function ImgPreview({
           ) {
             w = img.width;
             h = img.height;
-            console.log(w, h);
           } else {
             if (fitMode === 'landscape') {
               w = outerWidth;
@@ -124,7 +128,7 @@ export default function ImgPreview({
           }
           setImgWidth(w);
           setImgHeight(h);
-          dispatch({ type: 'setWidth', payload: [`${w}`] });
+          dispatch({ type: 'setSize', payload: [w, h] });
           dispatch({ type: 'done', payload: [''] });
         }
       };
@@ -137,7 +141,7 @@ export default function ImgPreview({
     } else {
       setImgWidth(width || 0);
       setImgHeight(height || 0);
-      dispatch({ type: 'setWidth', payload: ['100%'] });
+      dispatch({ type: 'setSize', payload: [0, 0] });
       dispatch({ type: 'done', payload: [''] });
     }
   }, [previewUrl, fitMode, imgGrow, width, height, outerEl]);
