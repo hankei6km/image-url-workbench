@@ -17,9 +17,7 @@ const SetPage = () => {
   const previewStateContext = useContext(PreviewContext);
   const previewDispatch = useContext(PreviewDispatch);
   const router = useRouter();
-  const [imageBaseUrl, setImageBaseUrl] = useState(
-    previewStateContext.previewItem.previewUrl
-  );
+  const [imageBaseUrl, setImageBaseUrl] = useState('');
 
   return (
     <Layout title="Set">
