@@ -21,9 +21,14 @@ import ImgBaseUrl, {
 } from '../components/ImgBaseUrl';
 import ImgPreview from '../components/ImgPreview';
 
-function SetItem({ previewItem }: { previewItem: PreviewItem }) {
+function SetItem({
+  previewItem,
+  onClick
+}: {
+  previewItem: PreviewItem;
+  onClick: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+}) {
   const previewDispatch = useContext(PreviewDispatch);
-  const router = useRouter();
   const [imgWidth, setImgWidth] = useState(0);
   const [imgHeight, setImgHeight] = useState(0);
 
@@ -31,7 +36,7 @@ function SetItem({ previewItem }: { previewItem: PreviewItem }) {
     <Box key={previewItem.previewUrl} my={1} p={1}>
       <Card>
         <CardHeader title={`${imgWidth}x${imgHeight}`} />
-        <CardActionArea>
+        <CardActionArea onClick={onClick}>
           <ImgPreview
             previewUrl={previewItem.previewUrl}
             {...{
@@ -47,19 +52,6 @@ function SetItem({ previewItem }: { previewItem: PreviewItem }) {
           />
         </CardActionArea>
         <CardActions>
-          <Button
-            size="small"
-            color="primary"
-            onClick={() => {
-              previewDispatch({
-                type: 'setEditTarget',
-                payload: [previewItem.itemKey]
-              });
-              router.push('/render');
-            }}
-          >
-            Render
-          </Button>
           <Button
             size="small"
             color="primary"
@@ -81,6 +73,7 @@ function SetItem({ previewItem }: { previewItem: PreviewItem }) {
 const SetPage = () => {
   const previewStateContext = useContext(PreviewContext);
   const previewDispatch = useContext(PreviewDispatch);
+  const router = useRouter();
   const [imageBaseUrl, setImageBaseUrl] = useState('');
 
   return (
@@ -122,7 +115,16 @@ const SetPage = () => {
         </Box>
         <Box>
           {previewStateContext.previewSet.map((v) => (
-            <SetItem previewItem={v} />
+            <SetItem
+              previewItem={v}
+              onClick={() => {
+                previewDispatch({
+                  type: 'setEditTarget',
+                  payload: [v.itemKey]
+                });
+                router.push('/render');
+              }}
+            />
           ))}
         </Box>
       </Container>
