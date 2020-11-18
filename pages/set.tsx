@@ -1,5 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { useRouter } from 'next/router';
+import { makeStyles } from '@material-ui/core/styles';
 import Layout from '../components/Layout';
 import Container from '@material-ui/core/Container';
 import Box from '@material-ui/core/Box';
@@ -21,14 +22,23 @@ import ImgBaseUrl, {
 } from '../components/ImgBaseUrl';
 import ImgPreview from '../components/ImgPreview';
 
+const useStyles = makeStyles((theme) => ({
+  targetIndicator: {
+    backgroundColor: theme.palette.primary.main
+  }
+}));
+
 function SetItem({
+  editTargetKey,
   previewItem,
   onClick
 }: {
+  editTargetKey: string;
   previewItem: PreviewItem;
   onClick: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
 }) {
   const previewDispatch = useContext(PreviewDispatch);
+  const classes = useStyles();
   const [imgWidth, setImgWidth] = useState(0);
   const [imgHeight, setImgHeight] = useState(0);
 
@@ -37,19 +47,31 @@ function SetItem({
       <Card>
         <CardHeader title={`${imgWidth}x${imgHeight}`} />
         <CardActionArea onClick={onClick}>
-          <ImgPreview
-            previewUrl={previewItem.previewUrl}
-            {...{
-              fitMode: 'landscape',
-              imgGrow: 'none',
-              width: undefined,
-              height: 400
-            }}
-            onSize={({ w, h }) => {
-              setImgWidth(w);
-              setImgHeight(h);
-            }}
-          />
+          <Box display="flex">
+            <Box flexGrow="1">
+              <ImgPreview
+                previewUrl={previewItem.previewUrl}
+                {...{
+                  fitMode: 'landscape',
+                  imgGrow: 'none',
+                  width: undefined,
+                  height: 400
+                }}
+                onSize={({ w, h }) => {
+                  setImgWidth(w);
+                  setImgHeight(h);
+                }}
+              />
+            </Box>
+            <Box
+              width={2}
+              className={
+                editTargetKey === previewItem.itemKey
+                  ? classes.targetIndicator
+                  : undefined
+              }
+            />
+          </Box>
         </CardActionArea>
         <CardActions>
           <Button
@@ -116,6 +138,7 @@ const SetPage = () => {
         <Box>
           {previewStateContext.previewSet.map((v) => (
             <SetItem
+              editTargetKey={previewStateContext.editTargetKey}
               previewItem={v}
               onClick={() => {
                 previewDispatch({
