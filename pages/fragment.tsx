@@ -53,14 +53,12 @@ const FragmentPage = () => {
   const previewStateContext = useContext(PreviewContext);
   const previewDispatch = useContext(PreviewDispatch);
   const [altText, setAltText] = useState(
-    previewStateContext.previewItem.tagFragment.altText
+    previewStateContext.tagFragment.altText
   );
   const [linkText, setLinkText] = useState(
-    previewStateContext.previewItem.tagFragment.linkText
+    previewStateContext.tagFragment.linkText
   );
-  const [newTab, setNewTab] = useState(
-    previewStateContext.previewItem.tagFragment.newTab
-  );
+  const [newTab, setNewTab] = useState(previewStateContext.tagFragment.newTab);
   const [imgPath, setImgPath] = useState('');
   const [imgParameters, setImgParameters] = useState('');
   const [imgParametersJson, setImgParametersJson] = useState('');

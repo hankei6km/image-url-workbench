@@ -12,7 +12,6 @@ import SearchIcon from '@material-ui/icons/Search';
 import PreviewContext, { PreviewDispatch } from '../components/PreviewContext';
 import { flattenParams, imgParasmItemInclude } from '../utils/imgParamsUtils';
 import DebTextField from '../components/DebTextField';
-import ImgBaseUrl, { BaseUrlOnChangeEvent } from '../components/ImgBaseUrl';
 import ImgUrl from '../components/ImgUrl';
 import ImgPreview, {
   ImgPreviewFitMode,
@@ -91,12 +90,7 @@ const RenderPage = () => {
   // ただし、PC でも md のサイズでリロードするとちらつく。
   // TODO: makeStyle で CSS の機能で試す
   const mdDown = useMediaQuery(theme.breakpoints.down('md'));
-  const [imageRawUrl, setImageRawUrl] = useState(
-    previewStateContext.previewItem.previewUrl
-  );
-  const [imageBaseUrl, setImageBaseUrl] = useState(
-    previewStateContext.previewItem.previewUrl
-  );
+  const [imageRawUrl] = useState(previewStateContext.previewItem.previewUrl);
   const [previewUrl, setPreviewUrl] = useState(
     previewStateContext.previewItem.previewUrl
   );
@@ -110,25 +104,6 @@ const RenderPage = () => {
     });
   }, [previewDispatch, previewUrl]);
 
-  const debounceImageRawUrl = () => {
-    // 汎用化できないか？
-    let id: any = 0;
-    return (e: BaseUrlOnChangeEvent) => {
-      if (id !== 0) {
-        clearTimeout(id);
-      }
-      id = setTimeout(
-        (newValue) => {
-          // set系をコールバックの中で呼んでも大丈夫?
-          setImageRawUrl(newValue);
-          id = 0;
-        },
-        100,
-        e.value
-      );
-    };
-  };
-
   const imgPreviewProps: {
     fitMode: ImgPreviewFitMode;
     imgGrow: ImgPreviewImgGrow;
@@ -137,14 +112,14 @@ const RenderPage = () => {
   } = mdDown
     ? {
         fitMode: 'portrait',
-        imgGrow: 'none',
+        imgGrow: 'fit',
         width: undefined,
         // 画像の縦横比によってははみ出る(ImgPreview側で調整)
         height: 200
       }
     : {
         fitMode: 'landscape',
-        imgGrow: 'none',
+        imgGrow: 'fit',
         width: theme.breakpoints.values.sm - 50,
         height: undefined
       };
@@ -157,7 +132,7 @@ const RenderPage = () => {
     height?: number;
   } = {
     fitMode: 'portrait',
-    imgGrow: 'none',
+    imgGrow: 'fit',
     position: 'fixed',
     top: 0,
     width: undefined,
@@ -234,12 +209,6 @@ const RenderPage = () => {
                     height: '100%'
                   }}
                 >
-                  <Box>
-                    <ImgBaseUrl
-                      baseUrl={imageBaseUrl}
-                      onChange={debounceImageRawUrl()}
-                    />
-                  </Box>
                   <Box
                     mt={3}
                     style={{
@@ -298,10 +267,6 @@ const RenderPage = () => {
                 }
                 categorize={searchText ? false : true}
                 imageRawUrl={imageRawUrl}
-                onChangeImageUrl={({ value }) => {
-                  // console.log(value);
-                  setImageBaseUrl(value);
-                }}
                 onChangePreviewUrl={({ value }) => {
                   // console.log(value);
                   setPreviewUrl(value);

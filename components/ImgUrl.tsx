@@ -168,7 +168,7 @@ type ImgUrlProps = {
   paramsItem: ImgParamsItems;
   categorize: boolean;
   imageRawUrl: string;
-  onChangeImageUrl: (e: ImgUrOnChangePreviewUrlEvent) => void;
+  onChangeImageUrl?: (e: ImgUrOnChangePreviewUrlEvent) => void;
   onChangePreviewUrl: (e: ImgUrOnChangePreviewUrlEvent) => void;
 };
 
@@ -176,7 +176,7 @@ export default function ImgUrl({
   paramsItem,
   categorize,
   imageRawUrl: baseUrl,
-  onChangeImageUrl,
+  onChangeImageUrl = (_e) => {},
   onChangePreviewUrl
 }: ImgUrlProps) {
   const [state, dispatch] = useReducer(reducer, initialState, (init) => {
