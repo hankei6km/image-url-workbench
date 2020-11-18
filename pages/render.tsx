@@ -112,14 +112,14 @@ const RenderPage = () => {
   } = mdDown
     ? {
         fitMode: 'portrait',
-        imgGrow: 'none',
+        imgGrow: 'fit',
         width: undefined,
         // 画像の縦横比によってははみ出る(ImgPreview側で調整)
         height: 200
       }
     : {
         fitMode: 'landscape',
-        imgGrow: 'none',
+        imgGrow: 'fit',
         width: theme.breakpoints.values.sm - 50,
         height: undefined
       };
@@ -132,7 +132,7 @@ const RenderPage = () => {
     height?: number;
   } = {
     fitMode: 'portrait',
-    imgGrow: 'none',
+    imgGrow: 'fit',
     position: 'fixed',
     top: 0,
     width: undefined,

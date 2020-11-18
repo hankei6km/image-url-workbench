@@ -57,7 +57,7 @@ function reducer(state: previewImgState, action: actType): previewImgState {
 }
 
 export type ImgPreviewFitMode = 'landscape' | 'portrait';
-export type ImgPreviewImgGrow = 'none' | 'y';
+export type ImgPreviewImgGrow = 'fit' | 'y';
 export type ImgPreviewProps = {
   previewUrl: string;
   fitMode: ImgPreviewFitMode;
@@ -71,7 +71,7 @@ export type ImgPreviewProps = {
 export default function ImgPreview({
   previewUrl,
   fitMode = 'landscape',
-  imgGrow = 'none',
+  imgGrow = 'fit',
   position,
   top,
   width,
@@ -105,7 +105,7 @@ export default function ImgPreview({
             w = (img.width * outerHeight) / img.height;
             h = outerHeight;
           }
-          if (imgGrow === 'none' && w > outerWidth) {
+          if (imgGrow === 'fit' && w > outerWidth) {
             h = (h * outerWidth) / w;
             w = outerWidth;
           } else if (imgGrow !== 'y' && h > outerHeight) {

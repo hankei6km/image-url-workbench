@@ -56,7 +56,7 @@ const SetPage = () => {
                       previewUrl={v.previewUrl}
                       {...{
                         fitMode: 'landscape',
-                        imgGrow: 'none',
+                        imgGrow: 'fit',
                         width: undefined,
                         height: 600
                       }}
