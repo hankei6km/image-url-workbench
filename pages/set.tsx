@@ -10,6 +10,7 @@ import CardActions from '@material-ui/core/CardActions';
 // import CardContent from '@material-ui/core/CardContent';
 // import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
+import AddPhotoAlternateIcon from '@material-ui/icons/AddPhotoAlternate';
 import PreviewContext, {
   PreviewDispatch,
   PreviewItem
@@ -85,7 +86,7 @@ const SetPage = () => {
   return (
     <Layout title="Set">
       <Container maxWidth="md">
-        <Box display="flex">
+        <Box display="flex" alignItems="flex-end" my={1}>
           <Box flexGrow="1">
             <ImgBaseUrl
               baseUrl={imageBaseUrl}
@@ -101,17 +102,23 @@ const SetPage = () => {
               }}
             />
           </Box>
-          <Button
-            onClick={() => {
-              previewDispatch({
-                type: 'addPreviewImageUrl',
-                payload: [imageBaseUrl]
-              });
-              setImageBaseUrl('');
-            }}
-          >
-            Add
-          </Button>
+          <Box p={1}>
+            <Button
+              color="primary"
+              variant="contained"
+              size="small"
+              startIcon={<AddPhotoAlternateIcon fontSize="small" />}
+              onClick={() => {
+                previewDispatch({
+                  type: 'addPreviewImageUrl',
+                  payload: [imageBaseUrl]
+                });
+                setImageBaseUrl('');
+              }}
+            >
+              Add
+            </Button>
+          </Box>
         </Box>
         <Box>
           {previewStateContext.previewSet.map((v) => (
