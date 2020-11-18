@@ -13,9 +13,13 @@ import rehypeStringify from 'rehype-stringify';
 import rehypeToRemark from 'rehype-remark';
 import remarkStringify from 'remark-stringify';
 import rehypeSanitize from 'rehype-sanitize';
-import PreviewContext, { PreviewDispatch } from '../components/PreviewContext';
+import PreviewContext, {
+  PreviewDispatch,
+  getEditTargetItemIndex
+} from '../components/PreviewContext';
 import DebTextField from '../components/DebTextField';
 import FragmentTextField from '../components/FragmentTextField';
+import { ImgParamsValues } from '../utils/imgParamsUtils';
 
 const processorHtml = unified()
   .use(rehypeParse, { fragment: true })
@@ -52,6 +56,13 @@ export function FragmentPanel({
 const FragmentPage = () => {
   const previewStateContext = useContext(PreviewContext);
   const previewDispatch = useContext(PreviewDispatch);
+  const [editItem, setEditItem] = useState<{
+    previewUrl: string;
+    imageParams: ImgParamsValues;
+  }>({
+    previewUrl: '',
+    imageParams: []
+  });
   const [altText, setAltText] = useState(
     previewStateContext.tagFragment.altText
   );
@@ -66,11 +77,24 @@ const FragmentPage = () => {
   const [imgMarkdown, setImgMarkdown] = useState('');
 
   useEffect(() => {
+    const idx = getEditTargetItemIndex(
+      previewStateContext.previewSet,
+      previewStateContext.editTargetKey
+    );
+    if (idx >= 0) {
+      setEditItem({
+        previewUrl: previewStateContext.previewSet[idx].previewUrl,
+        imageParams: previewStateContext.previewSet[idx].imageParams
+      });
+    }
+  }, [previewStateContext.previewSet, previewStateContext.editTargetKey]);
+
+  useEffect(() => {
     try {
-      const u = new URL(previewStateContext.previewItem.previewUrl);
+      const u = new URL(editItem.previewUrl);
       setImgPath(`${u.pathname}${u.search}`);
       setImgParameters(`${u.search.slice(1)}`);
-      const p = previewStateContext.previewItem.imageParams
+      const p = editItem.imageParams
         //https://stackoverflow.com/questions/26264956/convert-object-array-to-hash-map-indexed-by-an-attribute-value-of-the-object
         .reduce((m: { [key: string]: string }, v): {
           [key: string]: string;
@@ -84,15 +108,10 @@ const FragmentPage = () => {
       setImgParameters('');
       setImgParametersJson('');
     }
-  }, [
-    previewStateContext.previewItem.previewUrl,
-    previewStateContext.previewItem.imageParams
-  ]);
+  }, [editItem]);
 
   useEffect(() => {
-    const imgElement = (
-      <img src={previewStateContext.previewItem.previewUrl} alt={altText} />
-    );
+    const imgElement = <img src={editItem.previewUrl} alt={altText} />;
     const t = newTab
       ? {
           target: '_blank',
@@ -119,7 +138,7 @@ const FragmentPage = () => {
       }
       setImgMarkdown(String(file).trimEnd());
     });
-  }, [previewStateContext.previewItem.previewUrl, altText, linkText, newTab]);
+  }, [editItem, altText, linkText, newTab]);
 
   useEffect(() => {
     previewDispatch({
@@ -134,10 +153,7 @@ const FragmentPage = () => {
         <Box py={1}>
           <FragmentPanel groupName="Link">
             <Box p={1}>
-              <FragmentTextField
-                label="url"
-                value={previewStateContext.previewItem.previewUrl}
-              />
+              <FragmentTextField label="url" value={editItem.previewUrl} />
             </Box>
             <Box p={1}>
               <FragmentTextField label="path" value={imgPath} />

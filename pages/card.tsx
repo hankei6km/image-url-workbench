@@ -4,7 +4,10 @@ import Container from '@material-ui/core/Container';
 import Box from '@material-ui/core/Box';
 import { encodeBase64Url } from '../utils/base64';
 import Validator from '../utils/validator';
-import PreviewContext, { PreviewDispatch } from '../components/PreviewContext';
+import PreviewContext, {
+  PreviewDispatch,
+  getEditTargetItemIndex
+} from '../components/PreviewContext';
 import DebTextField from '../components/DebTextField';
 import FragmentTextField from '../components/FragmentTextField';
 
@@ -14,8 +17,15 @@ const CardPage = () => {
   //const router = useRouter();
   const previewStateContext = useContext(PreviewContext);
   const previewDispatch = useContext(PreviewDispatch);
+  const getPreviewUrl = useCallback(() => {
+    const idx = getEditTargetItemIndex(
+      previewStateContext.previewSet,
+      previewStateContext.editTargetKey
+    );
+    return idx >= 0 ? previewStateContext.previewSet[idx].previewUrl : '';
+  }, [previewStateContext.previewSet, previewStateContext.editTargetKey]);
   const [imageUrl, setImageUrl] = useState(
-    previewStateContext.previewItem.previewUrl // assets のチェックが入らない状態になる. あとで対応
+    getPreviewUrl() // assets のチェックが入らない状態になる. あとで対応
   );
   const [title, setTitle] = useState(previewStateContext.card.title);
   const [description, setDescription] = useState(
