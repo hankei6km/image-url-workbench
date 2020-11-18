@@ -12,7 +12,7 @@ type TagFragment = {
   newTab: boolean;
 };
 
-type PreviewItem = {
+export type PreviewItem = {
   itemKey: string;
   previewUrl: string;
   baseImageUrl: string;

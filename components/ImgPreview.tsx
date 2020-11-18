@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, useReducer } from 'react';
+import React, { useRef, useEffect, useReducer } from 'react';
 // import { makeStyles, useTheme } from '@material-ui/core/styles';
 // import Skeleton from '@material-ui/lab/Skeleton';
 import Box from '@material-ui/core/Box';
@@ -8,6 +8,8 @@ type previewImgState = {
   state: 'loading' | 'done' | 'err';
   loadingUrl: string;
   previewUrl: string;
+  imgWidth: number;
+  imgHeight: number;
   width: number;
   height: number;
 };
@@ -16,12 +18,14 @@ const initialState: previewImgState = {
   state: 'done',
   loadingUrl: '',
   previewUrl: '',
+  imgWidth: 0,
+  imgHeight: 0,
   width: 0,
   height: 0
 };
 
 type actSetSizeType = {
-  type: 'setSize';
+  type: 'setImgSize' | 'setSize';
   payload: [number, number];
 };
 type actType =
@@ -39,11 +43,13 @@ function reducer(state: previewImgState, action: actType): previewImgState {
         newState.state = 'loading';
       }
       break;
+    case 'setImgSize':
+      newState.imgWidth = action.payload[0] as number;
+      newState.imgHeight = action.payload[1] as number;
+      break;
     case 'setSize':
-      if (newState.loadingUrl) {
-        newState.width = action.payload[0] as number;
-        newState.height = action.payload[1] as number;
-      }
+      newState.width = action.payload[0] as number;
+      newState.height = action.payload[1] as number;
       break;
     case 'loading':
       if (newState.loadingUrl) {
@@ -91,8 +97,6 @@ export default function ImgPreview({
     setTimeout(() => dispatch({ type: 'setUrl', payload: [previewUrl] }), 1); // dispatch でないと即時反映されない?
     return newState;
   });
-  const [imgWidth, setImgWidth] = useState(0);
-  const [imgHeight, setImgHeight] = useState(0);
   const outerEl = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -128,8 +132,7 @@ export default function ImgPreview({
               h = outerHeight;
             }
           }
-          setImgWidth(w);
-          setImgHeight(h);
+          dispatch({ type: 'setImgSize', payload: [img.width, img.height] });
           dispatch({ type: 'setSize', payload: [w, h] });
           dispatch({ type: 'done', payload: [''] });
         }
@@ -141,16 +144,15 @@ export default function ImgPreview({
         img.removeEventListener('load', handleLoad);
       };
     } else {
-      setImgWidth(width || 0);
-      setImgHeight(height || 0);
+      dispatch({ type: 'setImgSize', payload: [0, 0] });
       dispatch({ type: 'setSize', payload: [0, 0] });
       dispatch({ type: 'done', payload: [''] });
     }
   }, [previewUrl, fitMode, imgGrow, width, height, outerEl]);
 
   useEffect(() => {
-    onSize({ w: imgWidth, h: imgHeight });
-  }, [onSize, imgWidth, imgHeight]);
+    onSize({ w: state.imgWidth, h: state.imgHeight });
+  }, [onSize, state.imgWidth, state.imgHeight]);
 
   return (
     <Box width={'100%'} height={height || '100%'} position={position} top={top}>
@@ -167,8 +169,8 @@ export default function ImgPreview({
         <Box display="flex" justifyContent="center" width="100%">
           <img
             src={state.previewUrl}
-            width={imgWidth}
-            height={imgHeight}
+            width={state.width}
+            height={state.height}
             alt=""
             onError={() => {
               dispatch({ type: 'err', payload: [''] });
