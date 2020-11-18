@@ -17,11 +17,9 @@ const CardPage = () => {
   const [imageUrl, setImageUrl] = useState(
     previewStateContext.previewItem.previewUrl // assets のチェックが入らない状態になる. あとで対応
   );
-  const [title, setTitle] = useState(
-    previewStateContext.previewItem.card.title
-  );
+  const [title, setTitle] = useState(previewStateContext.card.title);
   const [description, setDescription] = useState(
-    previewStateContext.previewItem.card.description
+    previewStateContext.card.description
   );
   const [cardPreviewUrl, setCardPreviewUrl] = useState('');
 

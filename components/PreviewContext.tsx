@@ -16,14 +16,14 @@ type PreviewItem = {
   previewUrl: string;
   baseImageUrl: string;
   imageParams: ImgParamsValues;
-  card: Card;
-  tagFragment: TagFragment;
 };
 
 type PreviewContextState = {
   validateAssets: boolean;
   assets: string[];
   previewItem: PreviewItem;
+  card: Card;
+  tagFragment: TagFragment;
   previewSet: PreviewItem[];
 };
 
@@ -76,16 +76,16 @@ export const previewContextInitialState: PreviewContextState = {
   previewItem: {
     previewUrl: '',
     baseImageUrl: '',
-    imageParams: [],
-    card: {
-      title: '',
-      description: ''
-    },
-    tagFragment: {
-      altText: '',
-      linkText: '',
-      newTab: false
-    }
+    imageParams: []
+  },
+  card: {
+    title: '',
+    description: ''
+  },
+  tagFragment: {
+    altText: '',
+    linkText: '',
+    newTab: false
   },
   previewSet: []
 };
@@ -113,13 +113,13 @@ export function previewContextReducer(
       }
       break;
     case 'setCard':
-      newState.previewItem.card.title = action.payload[0];
-      newState.previewItem.card.description = action.payload[1];
+      newState.card.title = action.payload[0];
+      newState.card.description = action.payload[1];
       break;
     case 'setTagFragment':
-      newState.previewItem.tagFragment.altText = action.payload[0];
-      newState.previewItem.tagFragment.linkText = action.payload[1];
-      newState.previewItem.tagFragment.newTab = action.payload[2];
+      newState.tagFragment.altText = action.payload[0];
+      newState.tagFragment.linkText = action.payload[1];
+      newState.tagFragment.newTab = action.payload[2];
       break;
     case 'pushToSet':
       if (state.previewItem.previewUrl) {
