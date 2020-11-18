@@ -10,14 +10,73 @@ import CardActions from '@material-ui/core/CardActions';
 // import CardContent from '@material-ui/core/CardContent';
 // import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
-import PreviewContext, { PreviewDispatch } from '../components/PreviewContext';
+import PreviewContext, {
+  PreviewDispatch,
+  PreviewItem
+} from '../components/PreviewContext';
 import ImgBaseUrl, { BaseUrlOnChangeEvent } from '../components/ImgBaseUrl';
 import ImgPreview from '../components/ImgPreview';
+
+function SetItem({ previewItem }: { previewItem: PreviewItem }) {
+  const previewDispatch = useContext(PreviewDispatch);
+  const router = useRouter();
+  const [imgWidth, setImgWidth] = useState(0);
+  const [imgHeight, setImgHeight] = useState(0);
+
+  return (
+    <Box key={previewItem.previewUrl} my={1} p={1}>
+      <Card>
+        <CardHeader title={`${imgWidth}x${imgHeight}`} />
+        <CardActionArea>
+          <ImgPreview
+            previewUrl={previewItem.previewUrl}
+            {...{
+              fitMode: 'landscape',
+              imgGrow: 'none',
+              width: undefined,
+              height: 400
+            }}
+            onSize={({ w, h }) => {
+              setImgWidth(w);
+              setImgHeight(h);
+            }}
+          />
+        </CardActionArea>
+        <CardActions>
+          <Button
+            size="small"
+            color="primary"
+            onClick={() => {
+              previewDispatch({
+                type: 'setEditTarget',
+                payload: [previewItem.itemKey]
+              });
+              router.push('/render');
+            }}
+          >
+            Render
+          </Button>
+          <Button
+            size="small"
+            color="primary"
+            onClick={() => {
+              previewDispatch({
+                type: 'removeFromSet',
+                payload: [previewItem.itemKey]
+              });
+            }}
+          >
+            Remove
+          </Button>
+        </CardActions>
+      </Card>
+    </Box>
+  );
+}
 
 const SetPage = () => {
   const previewStateContext = useContext(PreviewContext);
   const previewDispatch = useContext(PreviewDispatch);
-  const router = useRouter();
   const [imageBaseUrl, setImageBaseUrl] = useState('');
 
   return (
@@ -45,53 +104,9 @@ const SetPage = () => {
           </Button>
         </Box>
         <Box>
-          {previewStateContext.previewSet.map((v) => {
-            return (
-              <Box key={v.previewUrl} my={1} p={1}>
-                <Card>
-                  <CardHeader title="1024x768" />
-                  <CardActionArea>
-                    <ImgPreview
-                      previewUrl={v.previewUrl}
-                      {...{
-                        fitMode: 'landscape',
-                        imgGrow: 'none',
-                        width: undefined,
-                        height: 400
-                      }}
-                    />
-                  </CardActionArea>
-                  <CardActions>
-                    <Button
-                      size="small"
-                      color="primary"
-                      onClick={() => {
-                        previewDispatch({
-                          type: 'setEditTarget',
-                          payload: [v.itemKey]
-                        });
-                        router.push('/render');
-                      }}
-                    >
-                      Render
-                    </Button>
-                    <Button
-                      size="small"
-                      color="primary"
-                      onClick={() => {
-                        previewDispatch({
-                          type: 'removeFromSet',
-                          payload: [v.itemKey]
-                        });
-                      }}
-                    >
-                      Remove
-                    </Button>
-                  </CardActions>
-                </Card>
-              </Box>
-            );
-          })}
+          {previewStateContext.previewSet.map((v) => (
+            <SetItem previewItem={v} />
+          ))}
         </Box>
       </Container>
     </Layout>
