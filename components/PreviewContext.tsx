@@ -17,6 +17,8 @@ export type PreviewItem = {
   previewUrl: string;
   baseImageUrl: string;
   imageParams: ImgParamsValues;
+  imgWidth: number;
+  imgHeight: number;
 };
 
 type PreviewContextState = {
@@ -43,6 +45,11 @@ type actTypeSetPreviewImageUrl = {
   payload: [string];
 };
 
+type actTypeSetPreviewImageSize = {
+  type: 'setPreviewImageSize';
+  payload: [string, number, number];
+};
+
 type actTypeSetCard = {
   type: 'setCard';
   payload: [string, string];
@@ -63,13 +70,20 @@ type actTypeRemoveFromSet = {
   payload: [string];
 };
 
+type actTypeSortSet = {
+  type: 'sortSet';
+  payload: []; //order key 等はここで指定(必要になったら)
+};
+
 type actType =
   | actTypeAddPreviewImageUrl
   | actTypeSetPreviewImageUrl
+  | actTypeSetPreviewImageSize
   | actTypeSetCard
   | actTypeSetTagFragment
   | actTypeSetEditTarget
-  | actTypeRemoveFromSet;
+  | actTypeRemoveFromSet
+  | actTypeSortSet;
 
 export const previewContextInitialState: PreviewContextState = {
   validateAssets: false,
@@ -106,7 +120,9 @@ export function previewContextReducer(
           itemKey: `${Date.now()}`,
           previewUrl: action.payload[0],
           baseImageUrl: u,
-          imageParams: p ? imgUrlParseParams(p) : []
+          imageParams: p ? imgUrlParseParams(p) : [],
+          imgWidth: 0,
+          imgHeight: 0
         };
         newState.editTargetKey = previewItem.itemKey;
         newState.previewSet.push(previewItem);
@@ -119,7 +135,9 @@ export function previewContextReducer(
           itemKey: state.editTargetKey,
           previewUrl: action.payload[0],
           baseImageUrl: u,
-          imageParams: p ? imgUrlParseParams(p) : []
+          imageParams: p ? imgUrlParseParams(p) : [],
+          imgWidth: 0,
+          imgHeight: 0
         };
         const idx = state.previewSet.findIndex(
           (v) => v.itemKey === state.editTargetKey
@@ -128,6 +146,17 @@ export function previewContextReducer(
           newState.previewSet[idx] = previewItem;
         } else {
           newState.previewSet.push(previewItem);
+        }
+      }
+      break;
+    case 'setPreviewImageSize':
+      if (action.payload[0]) {
+        const idx = state.previewSet.findIndex(
+          (v) => v.itemKey === state.editTargetKey
+        );
+        if (idx >= 0) {
+          newState.previewSet[idx].imgWidth = action.payload[1];
+          newState.previewSet[idx].imgHeight = action.payload[2];
         }
       }
       break;
@@ -152,6 +181,9 @@ export function previewContextReducer(
           state.previewSet.splice(idx, 1);
         }
       }
+      break;
+    case 'sortSet':
+      newState.previewSet.sort(({ imgWidth: a }, { imgWidth: b }) => b - a);
       break;
   }
   return newState;

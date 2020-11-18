@@ -60,6 +60,16 @@ function SetItem({
                 onSize={({ w, h }) => {
                   setImgWidth(w);
                   setImgHeight(h);
+                  if (previewItem.imgWidth === 0 && w !== 0) {
+                    previewDispatch({
+                      type: 'setPreviewImageSize',
+                      payload: [previewItem.itemKey, w, h]
+                    });
+                    previewDispatch({
+                      type: 'sortSet',
+                      payload: []
+                    });
+                  }
                 }}
               />
             </Box>
@@ -138,6 +148,7 @@ const SetPage = () => {
         <Box>
           {previewStateContext.previewSet.map((v) => (
             <SetItem
+              key={v.itemKey}
               editTargetKey={previewStateContext.editTargetKey}
               previewItem={v}
               onClick={() => {
