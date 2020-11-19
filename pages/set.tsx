@@ -86,7 +86,17 @@ function SetItem({
         <CardActions>
           <Button
             size="small"
-            color="primary"
+            onClick={() => {
+              previewDispatch({
+                type: 'clonePreviewImageUrl',
+                payload: [previewItem.itemKey]
+              });
+            }}
+          >
+            Clone
+          </Button>
+          <Button
+            size="small"
             onClick={() => {
               previewDispatch({
                 type: 'removeFromSet',

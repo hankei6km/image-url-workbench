@@ -50,6 +50,11 @@ type actTypeSetPreviewImageSize = {
   payload: [string, number, number];
 };
 
+type actTypeClonePreviewImageUrl = {
+  type: 'clonePreviewImageUrl';
+  payload: [string];
+};
+
 type actTypeSetCard = {
   type: 'setCard';
   payload: [string, string];
@@ -79,6 +84,7 @@ type actType =
   | actTypeAddPreviewImageUrl
   | actTypeSetPreviewImageUrl
   | actTypeSetPreviewImageSize
+  | actTypeClonePreviewImageUrl
   | actTypeSetCard
   | actTypeSetTagFragment
   | actTypeSetEditTarget
@@ -157,6 +163,27 @@ export function previewContextReducer(
         if (idx >= 0) {
           newState.previewSet[idx].imgWidth = action.payload[1];
           newState.previewSet[idx].imgHeight = action.payload[2];
+        }
+      }
+      break;
+    case 'clonePreviewImageUrl':
+      if (action.payload[0]) {
+        const idx = state.previewSet.findIndex(
+          (v) => v.itemKey === action.payload[0]
+        );
+        if (idx >= 0) {
+          //array の clone 代わりに再作成
+          const [u, p] = state.previewSet[idx].previewUrl.split('?', 2);
+          const previewItem = {
+            itemKey: `${Date.now()}`,
+            previewUrl: state.previewSet[idx].previewUrl,
+            baseImageUrl: u,
+            imageParams: p ? imgUrlParseParams(p) : [],
+            imgWidth: state.previewSet[idx].imgWidth,
+            imgHeight: state.previewSet[idx].imgHeight
+          };
+          newState.previewSet.splice(idx + 1, 0, previewItem);
+          newState.editTargetKey = previewItem.itemKey;
         }
       }
       break;
