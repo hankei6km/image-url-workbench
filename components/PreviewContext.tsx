@@ -149,6 +149,10 @@ export function previewContextReducer(
           (v) => v.itemKey === state.editTargetKey
         );
         if (idx >= 0) {
+          if (previewItem.previewUrl === state.previewSet[idx].previewUrl) {
+            previewItem.imgWidth = state.previewSet[idx].imgWidth;
+            previewItem.imgHeight = state.previewSet[idx].imgHeight;
+          }
           newState.previewSet[idx] = previewItem;
         } else {
           newState.previewSet.push(previewItem);
@@ -158,7 +162,7 @@ export function previewContextReducer(
     case 'setPreviewImageSize':
       if (action.payload[0]) {
         const idx = state.previewSet.findIndex(
-          (v) => v.itemKey === state.editTargetKey
+          (v) => v.itemKey === action.payload[0]
         );
         if (idx >= 0) {
           newState.previewSet[idx].imgWidth = action.payload[1];

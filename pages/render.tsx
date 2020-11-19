@@ -102,6 +102,8 @@ const RenderPage = () => {
   }, [previewStateContext.previewSet, previewStateContext.editTargetKey]);
   const [imageRawUrl] = useState(getPreviewUrl());
   const [previewUrl, setPreviewUrl] = useState(getPreviewUrl());
+  const [imgWidth, setImgWidth] = useState(0);
+  const [imgHeight, setImgHeight] = useState(0);
 
   const [searchText, setSearchText] = useState('');
 
@@ -110,7 +112,21 @@ const RenderPage = () => {
       type: 'setPreviewImageUrl',
       payload: [previewUrl]
     });
-  }, [previewDispatch, previewUrl]);
+    previewDispatch({
+      type: 'setPreviewImageSize',
+      payload: [previewStateContext.editTargetKey, imgWidth, imgHeight]
+    });
+    previewDispatch({
+      type: 'sortSet',
+      payload: []
+    });
+  }, [
+    previewDispatch,
+    previewStateContext.editTargetKey,
+    previewUrl,
+    imgWidth,
+    imgHeight
+  ]);
 
   const imgPreviewProps: {
     fitMode: ImgPreviewFitMode;
@@ -192,7 +208,14 @@ const RenderPage = () => {
           >
             {mdDown && trigger && (
               <Box style={{ height: 100 }}>
-                <ImgPreview previewUrl={previewUrl} {...imgPreviewThumbProps} />
+                <ImgPreview
+                  previewUrl={previewUrl}
+                  {...imgPreviewThumbProps}
+                  onSize={({ w, h }) => {
+                    setImgWidth(w);
+                    setImgHeight(h);
+                  }}
+                />
               </Box>
             )}
           </Paper>
@@ -235,6 +258,10 @@ const RenderPage = () => {
                           position={mdDown && trigger ? 'fixed' : 'static'}
                           previewUrl={previewUrl}
                           {...imgPreviewProps}
+                          onSize={({ w, h }) => {
+                            setImgWidth(w);
+                            setImgHeight(h);
+                          }}
                         />
                       </Paper>
                     </Fade>
