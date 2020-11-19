@@ -13,6 +13,8 @@
     "@material-ui/lab": "^4.0.0-alpha.56",
     "@types/react-color": "^3.0.4",
     "@types/unist": "^2.0.3",
+    "deepmerge": "^4.2.2",
+    "hast-util-sanitize": "^3.0.1",
     "imgix-url-params": "^11.10.1",
     "next": "latest",
     "react": "^16.12.0",

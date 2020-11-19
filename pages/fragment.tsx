@@ -20,10 +20,14 @@ import PreviewContext, {
 import DebTextField from '../components/DebTextField';
 import FragmentTextField from '../components/FragmentTextField';
 import { ImgParamsValues } from '../utils/imgParamsUtils';
+import merge from 'deepmerge';
+import gh from 'hast-util-sanitize/lib/github.json';
+import { Schema } from 'hast-util-sanitize';
 
+const schema = merge(gh, { attributes: { img: ['srcSet'] } });
 const processorHtml = unified()
   .use(rehypeParse, { fragment: true })
-  .use(rehypeSanitize)
+  .use(rehypeSanitize, (schema as unknown) as Schema)
   .use(rehypeStringify)
   .freeze();
 
@@ -124,7 +128,16 @@ const FragmentPage = () => {
   }, [previewStateContext.previewSet]);
 
   useEffect(() => {
-    const imgElement = <img src={editItem.previewUrl} alt={altText} />;
+    const srcSet: string[] = previewStateContext.previewSet.map(
+      ({ previewUrl, imgWidth }) => `${previewUrl} ${imgWidth}w`
+    );
+    const imgElement = (
+      <img
+        src={editItem.previewUrl}
+        srcSet={srcSet.length > 1 ? srcSet.join(',\n') : undefined}
+        alt={altText}
+      />
+    );
     const t = newTab
       ? {
           target: '_blank',
@@ -151,7 +164,7 @@ const FragmentPage = () => {
       }
       setImgMarkdown(String(file).trimEnd());
     });
-  }, [editItem, altText, linkText, newTab]);
+  }, [previewStateContext.previewSet, editItem, altText, linkText, newTab]);
 
   useEffect(() => {
     previewDispatch({
