@@ -70,6 +70,7 @@ const FragmentPage = () => {
     previewStateContext.tagFragment.linkText
   );
   const [newTab, setNewTab] = useState(previewStateContext.tagFragment.newTab);
+  const [imgUrl, setImgUrl] = useState('');
   const [imgPath, setImgPath] = useState('');
   const [imgParameters, setImgParameters] = useState('');
   const [imgParametersJson, setImgParametersJson] = useState('');
@@ -91,24 +92,36 @@ const FragmentPage = () => {
 
   useEffect(() => {
     try {
-      const u = new URL(editItem.previewUrl);
-      setImgPath(`${u.pathname}${u.search}`);
-      setImgParameters(`${u.search.slice(1)}`);
-      const p = editItem.imageParams
-        //https://stackoverflow.com/questions/26264956/convert-object-array-to-hash-map-indexed-by-an-attribute-value-of-the-object
-        .reduce((m: { [key: string]: string }, v): {
-          [key: string]: string;
-        } => {
-          m[v.key] = v.value;
-          return m;
-        }, {});
-      setImgParametersJson(JSON.stringify(p, null, ' '));
+      const tmpImgUrl: string[] = [];
+      const tmpImgPath: string[] = [];
+      const tmpImgParameters: string[] = [];
+      const tmpImgParametersJson: { [key: string]: string }[] = [];
+      previewStateContext.previewSet.forEach((v) => {
+        tmpImgUrl.push(v.previewUrl);
+        const u = new URL(v.previewUrl);
+        tmpImgPath.push(`${u.pathname}${u.search}`);
+        tmpImgParameters.push(`${u.search.slice(1)}`);
+        const p = v.imageParams
+          //https://stackoverflow.com/questions/26264956/convert-object-array-to-hash-map-indexed-by-an-attribute-value-of-the-object
+          .reduce((m: { [key: string]: string }, v): {
+            [key: string]: string;
+          } => {
+            m[v.key] = v.value;
+            return m;
+          }, {});
+        tmpImgParametersJson.push(p);
+      });
+      setImgUrl(JSON.stringify(tmpImgUrl, null, ' '));
+      setImgPath(JSON.stringify(tmpImgPath, null, ' '));
+      setImgParameters(JSON.stringify(tmpImgParameters, null, ' '));
+      setImgParametersJson(JSON.stringify(tmpImgParametersJson, null, ' '));
     } catch {
+      setImgUrl('');
       setImgPath('');
       setImgParameters('');
       setImgParametersJson('');
     }
-  }, [editItem]);
+  }, [previewStateContext.previewSet]);
 
   useEffect(() => {
     const imgElement = <img src={editItem.previewUrl} alt={altText} />;
@@ -153,7 +166,7 @@ const FragmentPage = () => {
         <Box py={1}>
           <FragmentPanel groupName="Link">
             <Box p={1}>
-              <FragmentTextField label="url" value={editItem.previewUrl} />
+              <FragmentTextField label="url" value={imgUrl} />
             </Box>
             <Box p={1}>
               <FragmentTextField label="path" value={imgPath} />
