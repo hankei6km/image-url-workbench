@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { makeStyles } from '@material-ui/core/styles';
 import Layout from '../components/Layout';
@@ -11,16 +11,13 @@ import CardActions from '@material-ui/core/CardActions';
 // import CardContent from '@material-ui/core/CardContent';
 // import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
-import AddPhotoAlternateIcon from '@material-ui/icons/AddPhotoAlternate';
 import PreviewContext, {
   PreviewDispatch,
   PreviewItem
 } from '../components/PreviewContext';
-import ImgBaseUrl, {
-  BaseUrlOnChangeEvent,
-  BaseUrlOnEnterKeyEvent
-} from '../components/ImgBaseUrl';
+import ImportPanel from '../components/ImportPanel';
 import ImgPreview from '../components/ImgPreview';
+import { ImportTemplateParametersSet } from '../src/template';
 
 const useStyles = makeStyles((theme) => ({
   targetIndicator: {
@@ -116,45 +113,67 @@ const SetPage = () => {
   const previewStateContext = useContext(PreviewContext);
   const previewDispatch = useContext(PreviewDispatch);
   const router = useRouter();
+
   const [imageBaseUrl, setImageBaseUrl] = useState('');
+  const [sampleImageBaseUrl, setSampleImageBaseUrl] = useState('');
+  const [parametersSet, setParametersSet] = useState<
+    ImportTemplateParametersSet
+  >([]);
+
+  useEffect(() => {
+    if (imageBaseUrl) {
+      console.log(imageBaseUrl);
+      if (parametersSet.length === 0) {
+        previewDispatch({
+          type: 'addPreviewImageUrl',
+          payload: [imageBaseUrl]
+        });
+      } else {
+        previewDispatch({
+          type: 'resetPreviewSet',
+          payload: []
+        });
+        previewDispatch({
+          type: 'importPreviewSet',
+          payload: [imageBaseUrl, parametersSet]
+        });
+      }
+      setImageBaseUrl('');
+    }
+  }, [previewDispatch, imageBaseUrl, parametersSet]);
+
+  useEffect(() => {
+    if (sampleImageBaseUrl) {
+      if (parametersSet.length === 0) {
+        previewDispatch({
+          type: 'addPreviewImageUrl',
+          payload: [sampleImageBaseUrl]
+        });
+      } else {
+        previewDispatch({
+          type: 'resetPreviewSet',
+          payload: []
+        });
+        previewDispatch({
+          type: 'importPreviewSet',
+          payload: [sampleImageBaseUrl, parametersSet]
+        });
+      }
+    }
+  }, [previewDispatch, sampleImageBaseUrl, parametersSet]);
 
   return (
     <Layout title="Set">
       <Container maxWidth="md">
-        <Box display="flex" alignItems="flex-end" my={1}>
-          <Box flexGrow="1">
-            <ImgBaseUrl
-              baseUrl={imageBaseUrl}
-              onEnterKey={(e: BaseUrlOnEnterKeyEvent) => {
-                previewDispatch({
-                  type: 'addPreviewImageUrl',
-                  payload: [e.value]
-                });
-                setImageBaseUrl('');
-              }}
-              onChange={(e: BaseUrlOnChangeEvent) => {
-                setImageBaseUrl(e.value);
-              }}
-            />
-          </Box>
-          <Box p={1}>
-            <Button
-              color="primary"
-              variant="contained"
-              size="small"
-              startIcon={<AddPhotoAlternateIcon fontSize="small" />}
-              onClick={() => {
-                previewDispatch({
-                  type: 'addPreviewImageUrl',
-                  payload: [imageBaseUrl]
-                });
-                setImageBaseUrl('');
-              }}
-            >
-              Add
-            </Button>
-          </Box>
-        </Box>
+        <ImportPanel
+          onImport={({ value }) => {
+            setImageBaseUrl(value);
+          }}
+          onSample={({ imageBaseUrl, parametersSet }) => {
+            setSampleImageBaseUrl(imageBaseUrl);
+            setParametersSet(parametersSet);
+          }}
+        />
         <Box>
           {previewStateContext.previewSet.map((v) => (
             <SetItem
