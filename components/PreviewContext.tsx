@@ -27,12 +27,15 @@ export type PreviewItem = {
   imgHeight: number;
 };
 
+export type PreviewSetKind = '' | 'sample' | 'data';
+
 type PreviewContextState = {
   validateAssets: boolean;
   assets: string[];
   editTargetKey: string; // 編集対象の item を取得するときに selector がほしくなるよね(redux でなくても使える?)
   card: Card;
   tagFragment: TagFragment;
+  setKind: PreviewSetKind;
   previewSet: PreviewItem[];
 };
 
@@ -48,7 +51,7 @@ type actTypeResetPreviewSet = {
 
 type actTypeImportPreviewSet = {
   type: 'importPreviewSet';
-  payload: [string, ImportTemplateParametersSet];
+  payload: [PreviewSetKind, string, ImportTemplateParametersSet];
 };
 
 type actTypeAddPreviewImageUrl = {
@@ -122,6 +125,7 @@ export const previewContextInitialState: PreviewContextState = {
     linkText: '',
     newTab: false
   },
+  setKind: '',
   previewSet: []
 };
 export function previewContextReducer(
@@ -139,11 +143,13 @@ export function previewContextReducer(
     //   break;
     case 'resetPreviewSet':
       newState.editTargetKey = '';
+      newState.setKind = '';
       newState.previewSet = [];
       break;
     case 'importPreviewSet':
-      newState.previewSet = action.payload[1].map((v, i) => {
-        const [u, p] = action.payload[0].split('?', 2);
+      newState.setKind = action.payload[0];
+      newState.previewSet = action.payload[2].map((v, i) => {
+        const [u, p] = action.payload[1].split('?', 2);
         const q = imgUrlParamsMergeObject(
           p ? imgUrlParamsParseString(p) : [],
           v
@@ -152,7 +158,7 @@ export function previewContextReducer(
         const paramsString = s ? `?${s}` : '';
         const previewItem = {
           itemKey: `${Date.now()}-${i}`,
-          previewUrl: `${action.payload[0]}${paramsString}`,
+          previewUrl: `${u}${paramsString}`,
           baseImageUrl: u,
           imageParams: q,
           imgWidth: 0,

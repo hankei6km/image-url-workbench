@@ -116,64 +116,84 @@ const SetPage = () => {
 
   const [imageBaseUrl, setImageBaseUrl] = useState('');
   const [sampleImageBaseUrl, setSampleImageBaseUrl] = useState('');
+  const [templateIdx, seTtemplateIdx] = useState(-1);
   const [parametersSet, setParametersSet] = useState<
     ImportTemplateParametersSet
   >([]);
 
   useEffect(() => {
-    if (imageBaseUrl) {
-      console.log(imageBaseUrl);
-      if (parametersSet.length === 0) {
-        previewDispatch({
-          type: 'addPreviewImageUrl',
-          payload: [imageBaseUrl]
-        });
-      } else {
-        previewDispatch({
-          type: 'resetPreviewSet',
-          payload: []
-        });
-        previewDispatch({
-          type: 'importPreviewSet',
-          payload: [imageBaseUrl, parametersSet]
-        });
-      }
+    if (previewStateContext.setKind !== 'data' && imageBaseUrl) {
+      previewDispatch({
+        type: 'resetPreviewSet',
+        payload: []
+      });
+      previewDispatch({
+        type: 'importPreviewSet',
+        payload: ['data', imageBaseUrl, parametersSet]
+      });
       setImageBaseUrl('');
     }
-  }, [previewDispatch, imageBaseUrl, parametersSet]);
+  }, [
+    previewStateContext.setKind,
+    previewDispatch,
+    imageBaseUrl,
+    parametersSet
+  ]);
 
   useEffect(() => {
-    if (sampleImageBaseUrl) {
-      if (parametersSet.length === 0) {
-        previewDispatch({
-          type: 'addPreviewImageUrl',
-          payload: [sampleImageBaseUrl]
-        });
-      } else {
-        previewDispatch({
-          type: 'resetPreviewSet',
-          payload: []
-        });
-        previewDispatch({
-          type: 'importPreviewSet',
-          payload: [sampleImageBaseUrl, parametersSet]
-        });
-      }
+    if (
+      (previewStateContext.setKind === '' ||
+        previewStateContext.setKind === 'sample') &&
+      sampleImageBaseUrl
+    ) {
+      console.log(sampleImageBaseUrl);
+      previewDispatch({
+        type: 'resetPreviewSet',
+        payload: []
+      });
+      previewDispatch({
+        type: 'importPreviewSet',
+        payload: ['sample', sampleImageBaseUrl, parametersSet]
+      });
     }
-  }, [previewDispatch, sampleImageBaseUrl, parametersSet]);
+  }, [
+    previewStateContext.setKind,
+    previewDispatch,
+    sampleImageBaseUrl,
+    parametersSet
+  ]);
 
   return (
     <Layout title="Set">
       <Container maxWidth="md">
-        <ImportPanel
-          onImport={({ value }) => {
-            setImageBaseUrl(value);
-          }}
-          onSample={({ imageBaseUrl, parametersSet }) => {
-            setSampleImageBaseUrl(imageBaseUrl);
-            setParametersSet(parametersSet);
-          }}
-        />
+        {previewStateContext.setKind !== 'data' ? (
+          <ImportPanel
+            onImport={({ value }) => {
+              setImageBaseUrl(value);
+            }}
+            onSample={({ templateIdx: idx, imageBaseUrl, parametersSet }) => {
+              if (
+                previewStateContext.setKind !== 'data' &&
+                templateIdx !== idx
+              ) {
+                seTtemplateIdx(idx);
+                setSampleImageBaseUrl(imageBaseUrl);
+                setParametersSet(parametersSet);
+              }
+            }}
+          />
+        ) : (
+          <Button
+            onClick={() => {
+              previewDispatch({
+                type: 'resetPreviewSet',
+                payload: []
+              });
+            }}
+          >
+            Reset
+          </Button>
+        )}
         <Box>
           {previewStateContext.previewSet.map((v) => (
             <SetItem

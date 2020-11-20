@@ -35,9 +35,11 @@ const useStyles = makeStyles((theme) => ({
 type Props = {
   onImport: ({ value }: { value: string }) => void;
   onSample: ({
+    templateIdx,
     imageBaseUrl,
     parametersSet
   }: {
+    templateIdx: number;
     imageBaseUrl: string;
     parametersSet: ImportTemplateParametersSet;
   }) => void;
@@ -50,6 +52,7 @@ const ImportPanel = ({ onImport, onSample }: Props) => {
 
   useEffect(() => {
     onSample({
+      templateIdx: templateIdx,
       imageBaseUrl: BuiltinImportTemplate[templateIdx].imageBaseUrl,
       parametersSet: BuiltinImportTemplate[templateIdx].sample
     });
@@ -90,7 +93,7 @@ const ImportPanel = ({ onImport, onSample }: Props) => {
             startIcon={<AddPhotoAlternateIcon fontSize="small" />}
             onClick={() => onImport({ value: imageBaseUrl })}
           >
-            Add
+            Apply
           </Button>
         </Box>
       </Box>
