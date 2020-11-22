@@ -43,7 +43,7 @@ const ImportPanel = ({ onImport }: Props) => {
             startIcon={<AddPhotoAlternateIcon fontSize="small" />}
             onClick={() => onImport({ value: imageBaseUrl })}
           >
-            Apply
+            New
           </Button>
         </Box>
       </Box>
@@ -59,7 +59,7 @@ const ImportPanel = ({ onImport }: Props) => {
             <Box key={idx}>
               <Button
                 onClick={() => {
-                  setImageBaseUrl(v.imageUrl);
+                  // setImageBaseUrl(v.imageUrl);
                   onImport({ value: v.imageUrl });
                 }}
               >

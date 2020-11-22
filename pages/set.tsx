@@ -12,6 +12,7 @@ import CardActions from '@material-ui/core/CardActions';
 // import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Collapse from '@material-ui/core/Collapse';
+import ClearAllIcon from '@material-ui/icons/ClearAll';
 import PreviewContext, {
   PreviewDispatch,
   PreviewItem
@@ -117,15 +118,13 @@ const SetPage = () => {
   const router = useRouter();
 
   const [imageBaseUrl, setImageBaseUrl] = useState('');
-  const [sampleImageBaseUrl, setSampleImageBaseUrl] = useState('');
   const [templateIdx, seTtemplateIdx] = useState(-1);
   const [parametersSet, setParametersSet] = useState<
     ImportTemplateParametersSet
   >([]);
 
   useEffect(() => {
-    console.log(imageBaseUrl);
-    if (imageBaseUrl) {
+    if (imageBaseUrl !== '') {
       previewDispatch({
         type: 'resetPreviewSet',
         payload: []
@@ -137,45 +136,57 @@ const SetPage = () => {
     }
   }, [previewDispatch, imageBaseUrl, parametersSet]);
 
-  useEffect(() => {
-    if (
-      (previewStateContext.previewSetKind === '' ||
-        previewStateContext.previewSetKind === 'sample') &&
-      sampleImageBaseUrl
-    ) {
-    }
-  }, [
-    previewStateContext.previewSetKind,
-    previewDispatch,
-    sampleImageBaseUrl,
-    parametersSet
-  ]);
-
   return (
     <Layout title="Set">
       <Container maxWidth="md">
         <Box>
-          <ImportPanel
-            onImport={({ value }) => {
-              setImageBaseUrl(value);
-            }}
-          />
           <Collapse
-            in={
-              imageBaseUrl !== '' &&
-              previewStateContext.previewSetState !== 'edited'
-            }
+            in={previewStateContext.previewSetState === ''}
+            style={{ transitionDelay: '500ms' }}
           >
-            <TemplatePanel
-              disabled={previewStateContext.previewSetState === 'edited'}
-              onSample={({ templateIdx: idx, imageBaseUrl, parametersSet }) => {
-                if (templateIdx !== idx) {
-                  seTtemplateIdx(idx);
-                  setSampleImageBaseUrl(imageBaseUrl);
-                  setParametersSet(parametersSet);
-                }
+            <ImportPanel
+              onImport={({ value }) => {
+                setImageBaseUrl(value);
               }}
             />
+          </Collapse>
+          <Collapse
+            in={previewStateContext.previewSetState !== ''}
+            style={{ transitionDelay: '500ms' }}
+          >
+            <Box display="flex" flexDirection="row" my={1}>
+              <Box flexGrow={1}>
+                <TemplatePanel
+                  disabled={
+                    previewStateContext.previewSetState === 'edited' ||
+                    imageBaseUrl === ''
+                  }
+                  onSample={({ templateIdx: idx, parametersSet }) => {
+                    if (templateIdx !== idx) {
+                      seTtemplateIdx(idx);
+                      setParametersSet(parametersSet);
+                    }
+                  }}
+                />
+              </Box>
+              <Box p={1}>
+                <Button
+                  color="default"
+                  variant="contained"
+                  size="small"
+                  startIcon={<ClearAllIcon fontSize="small" />}
+                  onClick={() => {
+                    previewDispatch({
+                      type: 'resetPreviewSet',
+                      payload: []
+                    });
+                    setImageBaseUrl('');
+                  }}
+                >
+                  Reset
+                </Button>
+              </Box>
+            </Box>
           </Collapse>
         </Box>
         <Box>
