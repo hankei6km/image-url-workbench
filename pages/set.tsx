@@ -11,6 +11,7 @@ import CardActions from '@material-ui/core/CardActions';
 // import CardContent from '@material-ui/core/CardContent';
 // import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
+import Collapse from '@material-ui/core/Collapse';
 import PreviewContext, {
   PreviewDispatch,
   PreviewItem
@@ -159,8 +160,14 @@ const SetPage = () => {
               setImageBaseUrl(value);
             }}
           />
-          {(imageBaseUrl && previewStateContext.previewSetState !== 'edited') && (
+          <Collapse
+            in={
+              imageBaseUrl !== '' &&
+              previewStateContext.previewSetState !== 'edited'
+            }
+          >
             <TemplatePanel
+              disabled={previewStateContext.previewSetState === 'edited'}
               onSample={({ templateIdx: idx, imageBaseUrl, parametersSet }) => {
                 if (templateIdx !== idx) {
                   seTtemplateIdx(idx);
@@ -169,7 +176,7 @@ const SetPage = () => {
                 }
               }}
             />
-          )}
+          </Collapse>
         </Box>
         <Box>
           {previewStateContext.previewSet.map((v) => (

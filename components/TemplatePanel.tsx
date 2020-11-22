@@ -27,6 +27,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type Props = {
+  disabled?: boolean;
   onSample: ({
     templateIdx,
     imageBaseUrl,
@@ -38,7 +39,7 @@ type Props = {
   }) => void;
 };
 
-const TemplatePanel = ({ onSample }: Props) => {
+const TemplatePanel = ({ disabled = false, onSample }: Props) => {
   const classes = useStyles();
   const [templateIdx, setTemplateIdx] = useState(0);
 
@@ -51,7 +52,7 @@ const TemplatePanel = ({ onSample }: Props) => {
   }, [onSample, templateIdx]);
 
   return (
-    <Box className={classes.root}>
+    <Box className={classes.root} borderBottom={0}>
       <Paper square elevation={0}>
         <Tabs
           indicatorColor="primary"
@@ -62,7 +63,7 @@ const TemplatePanel = ({ onSample }: Props) => {
           //onChange=((_e,value)=>{setTemplateIdx(value)}}
         >
           {BuiltinImportTemplate.map(({ label }, i) => (
-            <Tab label={label} key={i} />
+            <Tab disabled={disabled} label={label} key={i} />
           ))}
         </Tabs>
       </Paper>
