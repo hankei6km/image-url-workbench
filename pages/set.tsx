@@ -159,7 +159,7 @@ const SetPage = () => {
               setImageBaseUrl(value);
             }}
           />
-          {imageBaseUrl !== '' && (
+          {(imageBaseUrl && previewStateContext.previewSetState !== 'edited') && (
             <TemplatePanel
               onSample={({ templateIdx: idx, imageBaseUrl, parametersSet }) => {
                 if (templateIdx !== idx) {

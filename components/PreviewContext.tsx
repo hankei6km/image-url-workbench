@@ -28,6 +28,7 @@ export type PreviewItem = {
 };
 
 export type PreviewSetKind = '' | 'sample' | 'data';
+export type PreviewSetState = '' | 'init' | 'edited';
 
 type PreviewContextState = {
   validateAssets: boolean;
@@ -35,6 +36,7 @@ type PreviewContextState = {
   editTargetKey: string; // 編集対象の item を取得するときに selector がほしくなるよね(redux でなくても使える?)
   card: Card;
   tagFragment: TagFragment;
+  previewSetState: PreviewSetState;
   previewSetKind: PreviewSetKind;
   previewSet: PreviewItem[];
 };
@@ -125,9 +127,54 @@ export const previewContextInitialState: PreviewContextState = {
     linkText: '',
     newTab: false
   },
+  previewSetState: '',
   previewSetKind: '',
   previewSet: []
 };
+
+function nextPreviewSetState(
+  state: PreviewContextState,
+  action: actType
+): PreviewSetState {
+      let ret=state.previewSetState
+  switch (action.type) {
+    case 'resetPreviewSet':
+      ret = '';
+      break;
+    case 'importPreviewSet':
+      ret = 'init'
+      break;
+    case 'addPreviewImageUrl':
+      ret= 'edited'
+      break;
+    case 'setPreviewImageUrl':
+      ret= 'edited'
+      break;
+    case 'setPreviewImageSize':
+      ret=state.previewSetState
+      break;
+    case 'clonePreviewImageUrl':
+      ret= 'edited'
+      break;
+    case 'setCard':
+      ret=state.previewSetState
+      break;
+    case 'setTagFragment':
+      ret=state.previewSetState
+      break;
+    case 'setEditTarget':
+      ret='edited'
+      break
+    case 'removeFromSet':
+      ret='edited'
+      break;
+    case 'sortSet':
+      ret=state.previewSetState
+      break;
+  }
+  return ret
+}
+
 export function previewContextReducer(
   state: PreviewContextState,
   action: actType
@@ -268,6 +315,7 @@ export function previewContextReducer(
       newState.previewSet.sort(({ imgWidth: a }, { imgWidth: b }) => b - a);
       break;
   }
+  newState.previewSetState=nextPreviewSetState(state, action)
   return newState;
 }
 
