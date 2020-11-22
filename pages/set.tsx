@@ -209,6 +209,7 @@ const SetPage = () => {
                       payload: []
                     });
                     setImageBaseUrl('');
+                    setSampleImageBaseUrl('');
                   }}
                 >
                   Reset
