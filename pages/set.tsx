@@ -119,7 +119,11 @@ const SetPage = () => {
   const router = useRouter();
 
   const [imageBaseUrl, setImageBaseUrl] = useState('');
+  const [sampleImageBaseUrl, setSampleImageBaseUrl] = useState('');
   const [templateIdx, seTtemplateIdx] = useState(-1);
+  const [sampleParametersSet, setSampleParametersSet] = useState<
+    ImportTemplateParametersSet
+  >([]);
   const [parametersSet, setParametersSet] = useState<
     ImportTemplateParametersSet
   >([]);
@@ -137,6 +141,19 @@ const SetPage = () => {
     }
   }, [previewDispatch, imageBaseUrl, parametersSet]);
 
+  useEffect(() => {
+    if (sampleImageBaseUrl !== '') {
+      previewDispatch({
+        type: 'resetPreviewSet',
+        payload: []
+      });
+      previewDispatch({
+        type: 'importPreviewSet',
+        payload: ['sample', sampleImageBaseUrl, sampleParametersSet]
+      });
+    }
+  }, [previewDispatch, sampleImageBaseUrl, sampleParametersSet]);
+
   return (
     <Layout title="Set">
       <Container maxWidth="md">
@@ -152,7 +169,7 @@ const SetPage = () => {
             />
             <SamplePanel
               onSelect={({ value }) => {
-                setImageBaseUrl(value);
+                setSampleImageBaseUrl(value);
               }}
             />
           </Collapse>
@@ -165,11 +182,16 @@ const SetPage = () => {
                 <TemplatePanel
                   disabled={
                     previewStateContext.previewSetState === 'edited' ||
-                    imageBaseUrl === ''
+                    (sampleImageBaseUrl === '' && imageBaseUrl === '')
                   }
-                  onSample={({ templateIdx: idx, parametersSet }) => {
+                  onSample={({
+                    templateIdx: idx,
+                    sampleParametersSet,
+                    parametersSet
+                  }) => {
                     if (templateIdx !== idx) {
                       seTtemplateIdx(idx);
+                      setSampleParametersSet(sampleParametersSet);
                       setParametersSet(parametersSet);
                     }
                   }}

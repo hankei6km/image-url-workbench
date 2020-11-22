@@ -35,6 +35,7 @@ type Props = {
   }: {
     templateIdx: number;
     imageBaseUrl: string;
+    sampleParametersSet: ImportTemplateParametersSet;
     parametersSet: ImportTemplateParametersSet;
   }) => void;
 };
@@ -47,7 +48,8 @@ const TemplatePanel = ({ disabled = false, onSample }: Props) => {
     onSample({
       templateIdx: templateIdx,
       imageBaseUrl: BuiltinImportTemplate[templateIdx].imageBaseUrl,
-      parametersSet: BuiltinImportTemplate[templateIdx].sample
+      sampleParametersSet: BuiltinImportTemplate[templateIdx].sampleParameters,
+      parametersSet: BuiltinImportTemplate[templateIdx].parameters
     });
   }, [onSample, templateIdx]);
 

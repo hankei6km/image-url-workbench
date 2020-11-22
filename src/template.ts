@@ -3,7 +3,7 @@ export type ImportTemplateParametersSet = ImportTemplateParameters[];
 export type ImportTemplate = {
   label: string;
   imageBaseUrl: string;
-  sample: ImportTemplateParametersSet;
+  sampleParameters: ImportTemplateParametersSet;
   parameters: ImportTemplateParametersSet;
 };
 
@@ -14,7 +14,7 @@ export const BuiltinImportTemplate: ImportTemplateList = [
     label: 'responsive',
     imageBaseUrl:
       'https://images.microcms-assets.io/protected/ap-northeast-1:9063452c-019d-4ffe-a96f-1a4524853eda/service/re-plotter/media/2020-10-24-jog1.jpg',
-    sample: [
+    sampleParameters: [
       {
         txt: 'sample image',
         'txt-color': 'efffffff',
@@ -73,7 +73,7 @@ export const BuiltinImportTemplate: ImportTemplateList = [
     label: 'card(twitter)',
     imageBaseUrl:
       'https://images.microcms-assets.io/protected/ap-northeast-1:9063452c-019d-4ffe-a96f-1a4524853eda/service/re-plotter/media/2020-10-24-jog1.jpg',
-    sample: [
+    sampleParameters: [
       {
         ar: '1.91:1',
         crop: 'entropy',
