@@ -18,6 +18,7 @@ import PreviewContext, {
   PreviewItem
 } from '../components/PreviewContext';
 import ImportPanel from '../components/ImportPanel';
+import SamplePanel from '../components/SamplePanel';
 import TemplatePanel from '../components/TemplatePanel';
 import ImgPreview from '../components/ImgPreview';
 import { ImportTemplateParametersSet } from '../src/template';
@@ -145,7 +146,12 @@ const SetPage = () => {
             style={{ transitionDelay: '500ms' }}
           >
             <ImportPanel
-              onImport={({ value }) => {
+              onSelect={({ value }) => {
+                setImageBaseUrl(value);
+              }}
+            />
+            <SamplePanel
+              onSelect={({ value }) => {
                 setImageBaseUrl(value);
               }}
             />
