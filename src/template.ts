@@ -2,7 +2,6 @@ export type ImportTemplateParameters = { [key: string]: string };
 export type ImportTemplateParametersSet = ImportTemplateParameters[];
 export type ImportTemplate = {
   label: string;
-  imageBaseUrl: string;
   sampleParameters: ImportTemplateParametersSet;
   parameters: ImportTemplateParametersSet;
 };
@@ -12,8 +11,6 @@ export type ImportTemplateList = ImportTemplate[];
 export const BuiltinImportTemplate: ImportTemplateList = [
   {
     label: 'responsive',
-    imageBaseUrl:
-      'https://images.microcms-assets.io/protected/ap-northeast-1:9063452c-019d-4ffe-a96f-1a4524853eda/service/re-plotter/media/2020-10-24-jog1.jpg',
     sampleParameters: [
       {
         auto: 'compress',
@@ -79,8 +76,6 @@ export const BuiltinImportTemplate: ImportTemplateList = [
   },
   {
     label: 'card(twitter)',
-    imageBaseUrl:
-      'https://images.microcms-assets.io/protected/ap-northeast-1:9063452c-019d-4ffe-a96f-1a4524853eda/service/re-plotter/media/2020-10-24-jog1.jpg',
     sampleParameters: [
       {
         ar: '1.91:1',

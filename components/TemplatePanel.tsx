@@ -30,11 +30,10 @@ type Props = {
   disabled?: boolean;
   onSample: ({
     templateIdx,
-    imageBaseUrl,
+    sampleParametersSet,
     parametersSet
   }: {
     templateIdx: number;
-    imageBaseUrl: string;
     sampleParametersSet: ImportTemplateParametersSet;
     parametersSet: ImportTemplateParametersSet;
   }) => void;
@@ -47,7 +46,6 @@ const TemplatePanel = ({ disabled = false, onSample }: Props) => {
   useEffect(() => {
     onSample({
       templateIdx: templateIdx,
-      imageBaseUrl: BuiltinImportTemplate[templateIdx].imageBaseUrl,
       sampleParametersSet: BuiltinImportTemplate[templateIdx].sampleParameters,
       parametersSet: BuiltinImportTemplate[templateIdx].parameters
     });
