@@ -16,6 +16,7 @@ export const BuiltinImportTemplate: ImportTemplateList = [
       'https://images.microcms-assets.io/protected/ap-northeast-1:9063452c-019d-4ffe-a96f-1a4524853eda/service/re-plotter/media/2020-10-24-jog1.jpg',
     sampleParameters: [
       {
+        auto: 'compress',
         txt: 'sample image',
         'txt-color': 'efffffff',
         'txt-pad': '80',
@@ -24,6 +25,7 @@ export const BuiltinImportTemplate: ImportTemplateList = [
         w: '1024'
       },
       {
+        auto: 'compress',
         txt: 'sample image',
         'txt-color': 'efffffff',
         'txt-pad': '62',
@@ -32,6 +34,7 @@ export const BuiltinImportTemplate: ImportTemplateList = [
         w: '800'
       },
       {
+        auto: 'compress',
         txt: 'sample image',
         'txt-color': 'efffffff',
         'txt-pad': '46',
@@ -40,6 +43,7 @@ export const BuiltinImportTemplate: ImportTemplateList = [
         w: '600'
       },
       {
+        auto: 'compress',
         crop: 'entropy',
         fit: 'crop',
         'max-h': '400',
@@ -53,15 +57,19 @@ export const BuiltinImportTemplate: ImportTemplateList = [
     ],
     parameters: [
       {
+        auto: 'compress',
         w: '1024'
       },
       {
+        auto: 'compress',
         w: '800'
       },
       {
+        auto: 'compress',
         w: '600'
       },
       {
+        auto: 'compress',
         crop: 'entropy',
         fit: 'crop',
         'max-h': '400',
@@ -76,26 +84,26 @@ export const BuiltinImportTemplate: ImportTemplateList = [
     sampleParameters: [
       {
         ar: '1.91:1',
+        auto: 'compress',
         crop: 'entropy',
         fit: 'crop',
         txt: 'sample card',
         'txt-align': 'center',
         'txt-color': 'efffffff',
         'txt-font': 'American Typewriter Condensed,Bold',
-        'txt-pad': '60',
         'txt-shad': '1',
         'txt-size': '50',
         w: '600'
       },
       {
         ar: '1:1.91',
+        auto: 'compress',
         crop: 'entropy',
         fit: 'crop',
         txt: 'sample card',
         'txt-align': 'center,middle',
         'txt-color': 'efffffff',
         'txt-font': 'American Typewriter Condensed,Bold',
-        'txt-pad': '60',
         'txt-shad': '1',
         'txt-size': '40',
         w: '314'
@@ -104,12 +112,14 @@ export const BuiltinImportTemplate: ImportTemplateList = [
     parameters: [
       {
         ar: '1.91:1',
+        auto: 'compress',
         crop: 'entropy',
         fit: 'crop',
         w: '600'
       },
       {
         ar: '1:1.91',
+        auto: 'compress',
         crop: 'entropy',
         fit: 'crop',
         w: '314'
