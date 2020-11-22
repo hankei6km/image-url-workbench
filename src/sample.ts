@@ -13,8 +13,8 @@ export const SampleImageBuildParametersSet: SampleImageParametersSet = [
       auto: 'compress',
       crop: 'entropy',
       fit: 'crop',
-      'max-h': '80',
-      'max-w': '160'
+      h: '80',
+      w: '160'
     }
   }
 ];

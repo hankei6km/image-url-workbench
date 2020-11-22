@@ -27,7 +27,7 @@ export type SampleImage = {
   // クレジット表示用(項目は暫定 、icense にSPDX はいる?)
   author?: string[];
   license?: string;
-  homePage?: string;
+  webPage?: string;
 };
 
 export type SampleImageList = SampleImage[];
@@ -68,8 +68,8 @@ export const SampleImageBuildParametersSet: SampleImageParametersSet = [
       auto: 'compress',
       crop: 'entropy',
       fit: 'crop',
-      'max-h': '80',
-      'max-w': '160'
+      h: '80',
+      w: '160'
     }
   }
 ];
@@ -106,4 +106,4 @@ export const BuiltinSampleImages: SampleImageList = [
     imagePaths: []
   }
 ];
->>>>>>> a89629b... *** rename
+>>>>>>> 6b37215... Apply style for sm layout

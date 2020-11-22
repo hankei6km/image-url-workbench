@@ -16,7 +16,7 @@ type Props = {
 
 const SamplePanel = ({ onSelect }: Props) => {
   return (
-    <Box display="flex" flexDirection="row">
+    <Box display="flex" flexDirection="row" overflow="auto">
       {BuiltinSampleImages.map((v, idx) => {
         const q = imgUrlParamsMergeObject(
           [],
@@ -32,7 +32,12 @@ const SamplePanel = ({ onSelect }: Props) => {
                 onSelect({ value: v.imageUrl });
               }}
             >
-              <img src={`${v.imageUrl}${paramsString}`} alt="sample" />
+              <img
+                src={`${v.imageUrl}${paramsString}`}
+                alt="sample"
+                width={160}
+                height={90}
+              />
             </Button>
           </Box>
         );
