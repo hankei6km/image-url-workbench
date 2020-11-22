@@ -1,86 +1,36 @@
-import React, { useState, useEffect } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import React, { useState } from 'react';
 import Box from '@material-ui/core/Box';
-import Paper from '@material-ui/core/Paper';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
 import Button from '@material-ui/core/Button';
 import AddPhotoAlternateIcon from '@material-ui/icons/AddPhotoAlternate';
-import {
-  BuiltinImportTemplate,
-  ImportTemplateParametersSet
-} from '../src/template';
 import ImgBaseUrl, {
   BaseUrlOnChangeEvent,
   BaseUrlOnEnterKeyEvent
 } from '../components/ImgBaseUrl';
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    '& > .MuiPaper-root': {
-      position: 'static',
-      // flexGrow: 1,
-      width: '100%',
-      display: 'flex',
-      '& .MuiTab-root': {
-        textTransform: 'none',
-        [theme.breakpoints.up('sm')]: {
-          minWidth: 120
-        }
-      }
-    }
-  }
-}));
+import {
+  BuiltinSampleImages,
+  SampleImageBuildParametersSet
+} from '../src/sample';
+import {
+  imgUrlParamsMergeObject,
+  imgUrlParamsToString
+} from '../utils/imgParamsUtils';
 
 type Props = {
   onImport: ({ value }: { value: string }) => void;
-  onSample: ({
-    templateIdx,
-    imageBaseUrl,
-    parametersSet
-  }: {
-    templateIdx: number;
-    imageBaseUrl: string;
-    parametersSet: ImportTemplateParametersSet;
-  }) => void;
 };
 
-const ImportPanel = ({ onImport, onSample }: Props) => {
-  const classes = useStyles();
-  const [templateIdx, setTemplateIdx] = useState(0);
+const ImportPanel = ({ onImport }: Props) => {
   const [imageBaseUrl, setImageBaseUrl] = useState('');
 
-  useEffect(() => {
-    onSample({
-      templateIdx: templateIdx,
-      imageBaseUrl: BuiltinImportTemplate[templateIdx].imageBaseUrl,
-      parametersSet: BuiltinImportTemplate[templateIdx].sample
-    });
-  }, [onSample, templateIdx]);
-
   return (
-    <Box className={classes.root}>
-      <Paper square elevation={0}>
-        <Tabs
-          indicatorColor="primary"
-          textColor="primary"
-          variant="scrollable"
-          value={templateIdx}
-          onChange={(_e, value) => setTemplateIdx(value)}
-          //onChange=((_e,value)=>{setTemplateIdx(value)}}
-        >
-          {BuiltinImportTemplate.map(({ label }, i) => (
-            <Tab label={label} key={i} />
-          ))}
-        </Tabs>
-      </Paper>
+    <Box>
       <Box display="flex" alignItems="flex-end" my={1}>
         <Box flexGrow="1">
           <ImgBaseUrl
             baseUrl={imageBaseUrl}
             onEnterKey={(e: BaseUrlOnEnterKeyEvent) => {
               onImport({ value: e.value });
-              setImageBaseUrl('');
+              // setImageBaseUrl('');
             }}
             onChange={(e: BaseUrlOnChangeEvent) => setImageBaseUrl(e.value)}
           />
@@ -96,6 +46,28 @@ const ImportPanel = ({ onImport, onSample }: Props) => {
             Apply
           </Button>
         </Box>
+      </Box>
+      <Box display="flex" flexDirection="row">
+        {BuiltinSampleImages.map((v, idx) => {
+          const q = imgUrlParamsMergeObject(
+            [],
+            SampleImageBuildParametersSet[0].parameters
+          );
+          const s = imgUrlParamsToString(q);
+          const paramsString = s ? `?${s}` : '';
+          return (
+            <Box key={idx}>
+              <Button
+                onClick={() => {
+                  setImageBaseUrl(v.imageUrl);
+                  onImport({ value: v.imageUrl });
+                }}
+              >
+                <img src={`${v.imageUrl}${paramsString}`} alt="sample" />
+              </Button>
+            </Box>
+          );
+        })}
       </Box>
     </Box>
   );

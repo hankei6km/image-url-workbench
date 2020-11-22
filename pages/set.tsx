@@ -16,6 +16,7 @@ import PreviewContext, {
   PreviewItem
 } from '../components/PreviewContext';
 import ImportPanel from '../components/ImportPanel';
+import TemplatePanel from '../components/TemplatePanel';
 import ImgPreview from '../components/ImgPreview';
 import { ImportTemplateParametersSet } from '../src/template';
 
@@ -122,7 +123,8 @@ const SetPage = () => {
   >([]);
 
   useEffect(() => {
-    if (previewStateContext.setKind !== 'data' && imageBaseUrl) {
+    console.log(imageBaseUrl);
+    if (imageBaseUrl) {
       previewDispatch({
         type: 'resetPreviewSet',
         payload: []
@@ -131,33 +133,18 @@ const SetPage = () => {
         type: 'importPreviewSet',
         payload: ['data', imageBaseUrl, parametersSet]
       });
-      setImageBaseUrl('');
     }
-  }, [
-    previewStateContext.setKind,
-    previewDispatch,
-    imageBaseUrl,
-    parametersSet
-  ]);
+  }, [previewDispatch, imageBaseUrl, parametersSet]);
 
   useEffect(() => {
     if (
-      (previewStateContext.setKind === '' ||
-        previewStateContext.setKind === 'sample') &&
+      (previewStateContext.previewSetKind === '' ||
+        previewStateContext.previewSetKind === 'sample') &&
       sampleImageBaseUrl
     ) {
-      console.log(sampleImageBaseUrl);
-      previewDispatch({
-        type: 'resetPreviewSet',
-        payload: []
-      });
-      previewDispatch({
-        type: 'importPreviewSet',
-        payload: ['sample', sampleImageBaseUrl, parametersSet]
-      });
     }
   }, [
-    previewStateContext.setKind,
+    previewStateContext.previewSetKind,
     previewDispatch,
     sampleImageBaseUrl,
     parametersSet
@@ -166,34 +153,24 @@ const SetPage = () => {
   return (
     <Layout title="Set">
       <Container maxWidth="md">
-        {previewStateContext.setKind !== 'data' ? (
+        <Box>
           <ImportPanel
             onImport={({ value }) => {
               setImageBaseUrl(value);
             }}
-            onSample={({ templateIdx: idx, imageBaseUrl, parametersSet }) => {
-              if (
-                previewStateContext.setKind !== 'data' &&
-                templateIdx !== idx
-              ) {
-                seTtemplateIdx(idx);
-                setSampleImageBaseUrl(imageBaseUrl);
-                setParametersSet(parametersSet);
-              }
-            }}
           />
-        ) : (
-          <Button
-            onClick={() => {
-              previewDispatch({
-                type: 'resetPreviewSet',
-                payload: []
-              });
-            }}
-          >
-            Reset
-          </Button>
-        )}
+          {imageBaseUrl !== '' && (
+            <TemplatePanel
+              onSample={({ templateIdx: idx, imageBaseUrl, parametersSet }) => {
+                if (templateIdx !== idx) {
+                  seTtemplateIdx(idx);
+                  setSampleImageBaseUrl(imageBaseUrl);
+                  setParametersSet(parametersSet);
+                }
+              }}
+            />
+          )}
+        </Box>
         <Box>
           {previewStateContext.previewSet.map((v) => (
             <SetItem

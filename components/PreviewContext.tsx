@@ -35,7 +35,7 @@ type PreviewContextState = {
   editTargetKey: string; // 編集対象の item を取得するときに selector がほしくなるよね(redux でなくても使える?)
   card: Card;
   tagFragment: TagFragment;
-  setKind: PreviewSetKind;
+  previewSetKind: PreviewSetKind;
   previewSet: PreviewItem[];
 };
 
@@ -125,7 +125,7 @@ export const previewContextInitialState: PreviewContextState = {
     linkText: '',
     newTab: false
   },
-  setKind: '',
+  previewSetKind: '',
   previewSet: []
 };
 export function previewContextReducer(
@@ -143,11 +143,11 @@ export function previewContextReducer(
     //   break;
     case 'resetPreviewSet':
       newState.editTargetKey = '';
-      newState.setKind = '';
+      newState.previewSetKind = '';
       newState.previewSet = [];
       break;
     case 'importPreviewSet':
-      newState.setKind = action.payload[0];
+      newState.previewSetKind = action.payload[0];
       newState.previewSet = action.payload[2].map((v, i) => {
         const [u, p] = action.payload[1].split('?', 2);
         const q = imgUrlParamsMergeObject(
