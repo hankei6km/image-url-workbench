@@ -4,17 +4,16 @@ import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { encodeBase64Url } from '../utils/base64';
 import ImgParams, {
   ImgUrlParamsOnChangeEvent,
   ImgParamsEnabled
 } from '../components/ImgParams';
 import {
-  paramsKeyDisallowBase64,
-  imgUrlParseParams,
+  imgUrlParamsParseString,
   ImgParamsItems,
   imgParamsCategories,
-  imgParamsInCategory
+  imgParamsInCategory,
+  imgUrlParamsToString
 } from '../utils/imgParamsUtils';
 
 type CategoryPanelProps = {
@@ -89,16 +88,6 @@ type actTypeEnabled = {
 };
 type actType = actTypeInput | actTypeEnabled;
 
-type paramTransformerFunc = (v: string | number) => string;
-const transformer64Name: paramTransformerFunc = (v: string | number) =>
-  `${v}64`;
-const transformer64Value: paramTransformerFunc = (v: string | number) =>
-  encodeBase64Url(v as string);
-
-const transformerPassthru: paramTransformerFunc = (
-  v: string | number
-): string => `${v}`;
-
 function reducer(state: previewUrlState, action: actType): previewUrlState {
   const newState: previewUrlState = { ...state };
   switch (action.type) {
@@ -130,7 +119,7 @@ function reducer(state: previewUrlState, action: actType): previewUrlState {
       const [u, p] = action.payload[0].split('?', 2);
       newState.baseUrl = u;
       if (p) {
-        newState.params = imgUrlParseParams(p).map((v) => ({
+        newState.params = imgUrlParamsParseString(p).map((v) => ({
           enabled: true,
           ...v
         }));
@@ -142,21 +131,11 @@ function reducer(state: previewUrlState, action: actType): previewUrlState {
       throw new Error();
   }
 
-  const q = new URLSearchParams('');
-  newState.params
-    .filter(({ enabled }) => enabled)
-    .sort(({ key: a }, { key: b }) => a.localeCompare(b))
-    .forEach(({ key, value }) => {
-      const disallowBase64 = paramsKeyDisallowBase64(key);
-      const transformerName: paramTransformerFunc = disallowBase64
-        ? transformerPassthru
-        : transformer64Name; // https://github.com/imgix/imgix-url-params disallow_base64
-      const transformerValue: paramTransformerFunc = disallowBase64
-        ? transformerPassthru
-        : transformer64Value;
-      q.append(transformerName(key), transformerValue(value));
-    });
-  const s = q.toString();
+  const s = imgUrlParamsToString(
+    newState.params
+      .filter(({ enabled }) => enabled)
+      .map(({ key, value }) => ({ key, value }))
+  );
   const paramsString = newState.baseUrl && s ? `?${s}` : '';
   newState.previewUrl = `${newState.baseUrl}${paramsString}`;
   return newState;

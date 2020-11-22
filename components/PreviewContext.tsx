@@ -1,5 +1,11 @@
 import React from 'react';
-import { ImgParamsValues, imgUrlParseParams } from '../utils/imgParamsUtils';
+import {
+  ImgParamsValues,
+  imgUrlParamsParseString,
+  imgUrlParamsMergeObject,
+  imgUrlParamsToString
+} from '../utils/imgParamsUtils';
+import { ImportTemplateParametersSet } from '../src/template';
 
 type Card = {
   title: string;
@@ -21,12 +27,17 @@ export type PreviewItem = {
   imgHeight: number;
 };
 
+export type PreviewSetKind = '' | 'sample' | 'data';
+export type PreviewSetState = '' | 'init' | 'edited';
+
 type PreviewContextState = {
   validateAssets: boolean;
   assets: string[];
   editTargetKey: string; // 編集対象の item を取得するときに selector がほしくなるよね(redux でなくても使える?)
   card: Card;
   tagFragment: TagFragment;
+  previewSetState: PreviewSetState;
+  previewSetKind: PreviewSetKind;
   previewSet: PreviewItem[];
 };
 
@@ -34,6 +45,16 @@ type PreviewContextState = {
 //   type: 'setAssets';
 //   payload: [string];
 // };
+
+type actTypeResetPreviewSet = {
+  type: 'resetPreviewSet';
+  payload: [];
+};
+
+type actTypeImportPreviewSet = {
+  type: 'importPreviewSet';
+  payload: [PreviewSetKind, string, ImportTemplateParametersSet];
+};
 
 type actTypeAddPreviewImageUrl = {
   type: 'addPreviewImageUrl';
@@ -81,6 +102,8 @@ type actTypeSortSet = {
 };
 
 type actType =
+  | actTypeResetPreviewSet
+  | actTypeImportPreviewSet
   | actTypeAddPreviewImageUrl
   | actTypeSetPreviewImageUrl
   | actTypeSetPreviewImageSize
@@ -104,8 +127,54 @@ export const previewContextInitialState: PreviewContextState = {
     linkText: '',
     newTab: false
   },
+  previewSetState: '',
+  previewSetKind: '',
   previewSet: []
 };
+
+function nextPreviewSetState(
+  state: PreviewContextState,
+  action: actType
+): PreviewSetState {
+      let ret=state.previewSetState
+  switch (action.type) {
+    case 'resetPreviewSet':
+      ret = '';
+      break;
+    case 'importPreviewSet':
+      ret = 'init'
+      break;
+    case 'addPreviewImageUrl':
+      ret= 'edited'
+      break;
+    case 'setPreviewImageUrl':
+      ret= 'edited'
+      break;
+    case 'setPreviewImageSize':
+      ret=state.previewSetState
+      break;
+    case 'clonePreviewImageUrl':
+      ret= 'edited'
+      break;
+    case 'setCard':
+      ret=state.previewSetState
+      break;
+    case 'setTagFragment':
+      ret=state.previewSetState
+      break;
+    case 'setEditTarget':
+      ret='edited'
+      break
+    case 'removeFromSet':
+      ret='edited'
+      break;
+    case 'sortSet':
+      ret=state.previewSetState
+      break;
+  }
+  return ret
+}
+
 export function previewContextReducer(
   state: PreviewContextState,
   action: actType
@@ -119,6 +188,35 @@ export function previewContextReducer(
     //     console.error(`error: assets parse error: ${err.name}`);
     //   }
     //   break;
+    case 'resetPreviewSet':
+      newState.editTargetKey = '';
+      newState.previewSetKind = '';
+      newState.previewSet = [];
+      break;
+    case 'importPreviewSet':
+      newState.previewSetKind = action.payload[0];
+      newState.previewSet = action.payload[2].map((v, i) => {
+        const [u, p] = action.payload[1].split('?', 2);
+        const q = imgUrlParamsMergeObject(
+          p ? imgUrlParamsParseString(p) : [],
+          v
+        );
+        const s = imgUrlParamsToString(q);
+        const paramsString = s ? `?${s}` : '';
+        const previewItem = {
+          itemKey: `${Date.now()}-${i}`,
+          previewUrl: `${u}${paramsString}`,
+          baseImageUrl: u,
+          imageParams: q,
+          imgWidth: 0,
+          imgHeight: 0
+        };
+        return previewItem;
+      });
+      if (newState.previewSet.length > 0) {
+        newState.editTargetKey = newState.previewSet[0].itemKey;
+      }
+      break;
     case 'addPreviewImageUrl':
       if (action.payload[0]) {
         const [u, p] = action.payload[0].split('?', 2);
@@ -126,7 +224,7 @@ export function previewContextReducer(
           itemKey: `${Date.now()}`,
           previewUrl: action.payload[0],
           baseImageUrl: u,
-          imageParams: p ? imgUrlParseParams(p) : [],
+          imageParams: p ? imgUrlParamsParseString(p) : [],
           imgWidth: 0,
           imgHeight: 0
         };
@@ -141,7 +239,7 @@ export function previewContextReducer(
           itemKey: state.editTargetKey,
           previewUrl: action.payload[0],
           baseImageUrl: u,
-          imageParams: p ? imgUrlParseParams(p) : [],
+          imageParams: p ? imgUrlParamsParseString(p) : [],
           imgWidth: 0,
           imgHeight: 0
         };
@@ -182,7 +280,7 @@ export function previewContextReducer(
             itemKey: `${Date.now()}`,
             previewUrl: state.previewSet[idx].previewUrl,
             baseImageUrl: u,
-            imageParams: p ? imgUrlParseParams(p) : [],
+            imageParams: p ? imgUrlParamsParseString(p) : [],
             imgWidth: state.previewSet[idx].imgWidth,
             imgHeight: state.previewSet[idx].imgHeight
           };
@@ -217,6 +315,7 @@ export function previewContextReducer(
       newState.previewSet.sort(({ imgWidth: a }, { imgWidth: b }) => b - a);
       break;
   }
+  newState.previewSetState=nextPreviewSetState(state, action)
   return newState;
 }
 

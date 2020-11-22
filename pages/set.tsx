@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { makeStyles } from '@material-ui/core/styles';
 import Layout from '../components/Layout';
@@ -11,16 +11,17 @@ import CardActions from '@material-ui/core/CardActions';
 // import CardContent from '@material-ui/core/CardContent';
 // import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
-import AddPhotoAlternateIcon from '@material-ui/icons/AddPhotoAlternate';
+import Collapse from '@material-ui/core/Collapse';
+import ClearAllIcon from '@material-ui/icons/ClearAll';
 import PreviewContext, {
   PreviewDispatch,
   PreviewItem
 } from '../components/PreviewContext';
-import ImgBaseUrl, {
-  BaseUrlOnChangeEvent,
-  BaseUrlOnEnterKeyEvent
-} from '../components/ImgBaseUrl';
+import ImportPanel from '../components/ImportPanel';
+import SamplePanel from '../components/SamplePanel';
+import TemplatePanel from '../components/TemplatePanel';
 import ImgPreview from '../components/ImgPreview';
+import { ImportTemplateParametersSet } from '../src/template';
 
 const useStyles = makeStyles((theme) => ({
   targetIndicator: {
@@ -116,44 +117,106 @@ const SetPage = () => {
   const previewStateContext = useContext(PreviewContext);
   const previewDispatch = useContext(PreviewDispatch);
   const router = useRouter();
+
   const [imageBaseUrl, setImageBaseUrl] = useState('');
+  const [sampleImageBaseUrl, setSampleImageBaseUrl] = useState('');
+  const [templateIdx, seTtemplateIdx] = useState(-1);
+  const [sampleParametersSet, setSampleParametersSet] = useState<
+    ImportTemplateParametersSet
+  >([]);
+  const [parametersSet, setParametersSet] = useState<
+    ImportTemplateParametersSet
+  >([]);
+
+  useEffect(() => {
+    if (imageBaseUrl !== '') {
+      previewDispatch({
+        type: 'resetPreviewSet',
+        payload: []
+      });
+      previewDispatch({
+        type: 'importPreviewSet',
+        payload: ['data', imageBaseUrl, parametersSet]
+      });
+    }
+  }, [previewDispatch, imageBaseUrl, parametersSet]);
+
+  useEffect(() => {
+    if (sampleImageBaseUrl !== '') {
+      previewDispatch({
+        type: 'resetPreviewSet',
+        payload: []
+      });
+      previewDispatch({
+        type: 'importPreviewSet',
+        payload: ['sample', sampleImageBaseUrl, sampleParametersSet]
+      });
+    }
+  }, [previewDispatch, sampleImageBaseUrl, sampleParametersSet]);
 
   return (
     <Layout title="Set">
       <Container maxWidth="md">
-        <Box display="flex" alignItems="flex-end" my={1}>
-          <Box flexGrow="1">
-            <ImgBaseUrl
-              baseUrl={imageBaseUrl}
-              onEnterKey={(e: BaseUrlOnEnterKeyEvent) => {
-                previewDispatch({
-                  type: 'addPreviewImageUrl',
-                  payload: [e.value]
-                });
-                setImageBaseUrl('');
-              }}
-              onChange={(e: BaseUrlOnChangeEvent) => {
-                setImageBaseUrl(e.value);
+        <Box>
+          <Collapse
+            in={previewStateContext.previewSetState === ''}
+            style={{ transitionDelay: '500ms' }}
+          >
+            <ImportPanel
+              onSelect={({ value }) => {
+                setImageBaseUrl(value);
               }}
             />
-          </Box>
-          <Box p={1}>
-            <Button
-              color="primary"
-              variant="contained"
-              size="small"
-              startIcon={<AddPhotoAlternateIcon fontSize="small" />}
-              onClick={() => {
-                previewDispatch({
-                  type: 'addPreviewImageUrl',
-                  payload: [imageBaseUrl]
-                });
-                setImageBaseUrl('');
+            <SamplePanel
+              onSelect={({ value }) => {
+                setSampleImageBaseUrl(value);
               }}
-            >
-              Add
-            </Button>
-          </Box>
+            />
+          </Collapse>
+          <Collapse
+            in={previewStateContext.previewSetState !== ''}
+            style={{ transitionDelay: '500ms' }}
+          >
+            <Box display="flex" flexDirection="row" my={1}>
+              <Box flexGrow={1}>
+                <TemplatePanel
+                  disabled={
+                    previewStateContext.previewSetState === 'edited' ||
+                    (sampleImageBaseUrl === '' && imageBaseUrl === '')
+                  }
+                  onSample={({
+                    templateIdx: idx,
+                    sampleParametersSet,
+                    parametersSet
+                  }) => {
+                    if (templateIdx !== idx) {
+                      seTtemplateIdx(idx);
+                      setSampleParametersSet(sampleParametersSet);
+                      setParametersSet(parametersSet);
+                    }
+                  }}
+                />
+              </Box>
+              <Box p={1}>
+                <Button
+                  color="default"
+                  variant="contained"
+                  size="small"
+                  startIcon={<ClearAllIcon fontSize="small" />}
+                  onClick={() => {
+                    previewDispatch({
+                      type: 'resetPreviewSet',
+                      payload: []
+                    });
+                    setImageBaseUrl('');
+                    setSampleImageBaseUrl('');
+                  }}
+                >
+                  Reset
+                </Button>
+              </Box>
+            </Box>
+          </Collapse>
         </Box>
         <Box>
           {previewStateContext.previewSet.map((v) => (

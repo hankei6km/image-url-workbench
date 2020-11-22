@@ -1,5 +1,5 @@
 import imgixUrlParams from 'imgix-url-params/dist/parameters.json';
-import { decodeBase64Url } from '../utils/base64';
+import { decodeBase64Url, encodeBase64Url } from '../utils/base64';
 
 export type ParamsExpect = {
   [key: string]: any;
@@ -107,7 +107,34 @@ export type ImgParamsValue = {
 };
 export type ImgParamsValues = ImgParamsValue[];
 
-export function imgUrlParseParams(p: string): ImgParamsValues {
+type paramTransformerFunc = (v: string | number) => string;
+const transformer64Name: paramTransformerFunc = (v: string | number) =>
+  `${v}64`;
+const transformer64Value: paramTransformerFunc = (v: string | number) =>
+  encodeBase64Url(v as string);
+
+const transformerPassthru: paramTransformerFunc = (
+  v: string | number
+): string => `${v}`;
+
+export function imgUrlParamsToString(p: ImgParamsValues): string {
+  const q = new URLSearchParams('');
+  p.sort(({ key: a }, { key: b }) => a.localeCompare(b)).forEach(
+    ({ key, value }) => {
+      const disallowBase64 = paramsKeyDisallowBase64(key);
+      const transformerName: paramTransformerFunc = disallowBase64
+        ? transformerPassthru
+        : transformer64Name; // https://github.com/imgix/imgix-url-params disallow_base64
+      const transformerValue: paramTransformerFunc = disallowBase64
+        ? transformerPassthru
+        : transformer64Value;
+      q.append(transformerName(key), transformerValue(value));
+    }
+  );
+  return q.toString();
+}
+
+export function imgUrlParamsParseString(p: string): ImgParamsValues {
   const ret: ImgParamsValue[] = [];
 
   const q = new URLSearchParams(p);
@@ -130,6 +157,22 @@ export function imgUrlParseParams(p: string): ImgParamsValues {
     }
   });
 
+  return ret;
+}
+
+export function imgUrlParamsMergeObject(
+  p: ImgParamsValues,
+  o: { [key: string]: string }
+): ImgParamsValues {
+  const ret = [...p];
+  Object.keys(o).forEach((k) => {
+    const idx = p.findIndex(({ key }) => k === key);
+    if (idx >= 0) {
+      ret[idx].value = o[k];
+    } else {
+      ret.push({ key: k, value: o[k] });
+    }
+  });
   return ret;
 }
 
