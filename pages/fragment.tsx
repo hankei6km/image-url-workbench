@@ -32,11 +32,11 @@ const FragmentPage = () => {
     <Layout title="Fragment">
       <Container maxWidth="sm">
         <Box py={1}>
-          <FragmentPanel groupName="Link">
-            <FragmentLink />
-          </FragmentPanel>
           <FragmentPanel groupName="Parameters">
             <FragmentParams />
+          </FragmentPanel>
+          <FragmentPanel groupName="Link">
+            <FragmentLink />
           </FragmentPanel>
           <FragmentPanel groupName="Tag">
             <FragmentTag />
