@@ -11,7 +11,7 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import SearchIcon from '@material-ui/icons/Search';
 import PreviewContext, {
   PreviewDispatch,
-  getEditTargetItemIndex
+  getTargetItemIndex
 } from '../components/PreviewContext';
 import { flattenParams, imgParasmItemInclude } from '../utils/imgParamsUtils';
 import DebTextField from '../components/DebTextField';
@@ -94,7 +94,7 @@ const RenderPage = () => {
   // TODO: makeStyle で CSS の機能で試す
   const mdDown = useMediaQuery(theme.breakpoints.down('md'));
   const getPreviewUrl = useCallback(() => {
-    const idx = getEditTargetItemIndex(
+    const idx = getTargetItemIndex(
       previewStateContext.previewSet,
       previewStateContext.editTargetKey
     );

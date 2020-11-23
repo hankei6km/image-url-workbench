@@ -6,7 +6,7 @@ import { encodeBase64Url } from '../utils/base64';
 import Validator from '../utils/validator';
 import PreviewContext, {
   PreviewDispatch,
-  getEditTargetItemIndex
+  getTargetItemIndex
 } from '../components/PreviewContext';
 import DebTextField from '../components/DebTextField';
 import FragmentTextField from '../components/FragmentTextField';
@@ -18,7 +18,7 @@ const CardPage = () => {
   const previewStateContext = useContext(PreviewContext);
   const previewDispatch = useContext(PreviewDispatch);
   const getPreviewUrl = useCallback(() => {
-    const idx = getEditTargetItemIndex(
+    const idx = getTargetItemIndex(
       previewStateContext.previewSet,
       previewStateContext.editTargetKey
     );

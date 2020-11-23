@@ -34,6 +34,7 @@ type PreviewContextState = {
   validateAssets: boolean;
   assets: string[];
   editTargetKey: string; // 編集対象の item を取得するときに selector がほしくなるよね(redux でなくても使える?)
+  defaultTargetKey: string;
   card: Card;
   tagFragment: TagFragment;
   previewSetState: PreviewSetState;
@@ -91,6 +92,11 @@ type actTypeSetEditTarget = {
   payload: [string];
 };
 
+type actTypeSetDefaultTarget = {
+  type: 'setDefaultTarget';
+  payload: [string];
+};
+
 type actTypeRemoveFromSet = {
   type: 'removeFromSet';
   payload: [string];
@@ -111,6 +117,7 @@ type actType =
   | actTypeSetCard
   | actTypeSetTagFragment
   | actTypeSetEditTarget
+  | actTypeSetDefaultTarget
   | actTypeRemoveFromSet
   | actTypeSortSet;
 
@@ -118,6 +125,7 @@ export const previewContextInitialState: PreviewContextState = {
   validateAssets: false,
   assets: [],
   editTargetKey: '',
+  defaultTargetKey: '',
   card: {
     title: '',
     description: ''
@@ -136,43 +144,46 @@ function nextPreviewSetState(
   state: PreviewContextState,
   action: actType
 ): PreviewSetState {
-      let ret=state.previewSetState
+  let ret = state.previewSetState;
   switch (action.type) {
     case 'resetPreviewSet':
       ret = '';
       break;
     case 'importPreviewSet':
-      ret = 'init'
+      ret = 'init';
       break;
     case 'addPreviewImageUrl':
-      ret= 'edited'
+      ret = 'edited';
       break;
     case 'setPreviewImageUrl':
-      ret= 'edited'
+      ret = 'edited';
       break;
     case 'setPreviewImageSize':
-      ret=state.previewSetState
+      ret = state.previewSetState;
       break;
     case 'clonePreviewImageUrl':
-      ret= 'edited'
+      ret = 'edited';
       break;
     case 'setCard':
-      ret=state.previewSetState
+      ret = state.previewSetState;
       break;
     case 'setTagFragment':
-      ret=state.previewSetState
+      ret = state.previewSetState;
       break;
     case 'setEditTarget':
-      ret='edited'
-      break
+      ret = 'edited';
+      break;
+    case 'setDefaultTarget':
+      ret = 'edited';
+      break;
     case 'removeFromSet':
-      ret='edited'
+      ret = 'edited';
       break;
     case 'sortSet':
-      ret=state.previewSetState
+      ret = state.previewSetState;
       break;
   }
-  return ret
+  return ret;
 }
 
 export function previewContextReducer(
@@ -190,6 +201,7 @@ export function previewContextReducer(
     //   break;
     case 'resetPreviewSet':
       newState.editTargetKey = '';
+      newState.defaultTargetKey = '';
       newState.previewSetKind = '';
       newState.previewSet = [];
       break;
@@ -215,6 +227,7 @@ export function previewContextReducer(
       });
       if (newState.previewSet.length > 0) {
         newState.editTargetKey = newState.previewSet[0].itemKey;
+        newState.defaultTargetKey = newState.previewSet[0].itemKey;
       }
       break;
     case 'addPreviewImageUrl':
@@ -301,6 +314,9 @@ export function previewContextReducer(
     case 'setEditTarget':
       newState.editTargetKey = action.payload[0];
       break;
+    case 'setDefaultTarget':
+      newState.defaultTargetKey = action.payload[0];
+      break;
     case 'removeFromSet':
       {
         const idx = state.previewSet.findIndex(
@@ -315,14 +331,14 @@ export function previewContextReducer(
       newState.previewSet.sort(({ imgWidth: a }, { imgWidth: b }) => b - a);
       break;
   }
-  newState.previewSetState=nextPreviewSetState(state, action)
+  newState.previewSetState = nextPreviewSetState(state, action);
   return newState;
 }
 
-export const getEditTargetItemIndex = (
+export const getTargetItemIndex = (
   previewSet: PreviewItem[],
-  editTargetKey: string
-): number => previewSet.findIndex(({ itemKey }) => itemKey === editTargetKey);
+  targetKey: string
+): number => previewSet.findIndex(({ itemKey }) => itemKey === targetKey);
 
 export const PreviewDispatch = React.createContext<React.Dispatch<actType>>(
   (_a: actType) => {}

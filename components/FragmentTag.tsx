@@ -11,7 +11,7 @@ import remarkStringify from 'remark-stringify';
 import rehypeSanitize from 'rehype-sanitize';
 import PreviewContext, {
   PreviewDispatch,
-  getEditTargetItemIndex
+  getTargetItemIndex
 } from '../components/PreviewContext';
 import DebTextField from '../components/DebTextField';
 import FragmentTextField from '../components/FragmentTextField';
@@ -57,9 +57,9 @@ const FragmentTag = () => {
   const [imgMarkdown, setImgMarkdown] = useState('');
 
   useEffect(() => {
-    const idx = getEditTargetItemIndex(
+    const idx = getTargetItemIndex(
       previewStateContext.previewSet,
-      previewStateContext.editTargetKey
+      previewStateContext.defaultTargetKey
     );
     if (idx >= 0) {
       setEditItem({
