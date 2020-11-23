@@ -18,36 +18,60 @@ export const SampleImageBuildParametersSet: SampleImageParametersSet = [
     }
   }
 ];
+export type SampleImageCredit = {
+  author: string[];
+  license?: { fullName?: string; id: string; url: string };
+  webPage?: string;
+};
 
 export type SampleImage = {
-  label: string;
+  title: string;
   imageUrl: string;
   imagePaths: string[]; // 静的サイトとしてビルドした場合は表示用の画像をローカルに置く予定(たぶん)
-  // クレジット表示用(項目は暫定 、icense にSPDX はいる?)
-  author?: string[];
-  license?: string;
-  webPage?: string;
+  credit?: SampleImageCredit;
 };
 
 export type SampleImageList = SampleImage[];
 
 export const BuiltinSampleImages: SampleImageList = [
   {
-    label: 'river',
+    title: 'river',
     imageUrl:
       'https://images.microcms-assets.io/protected/ap-northeast-1:9063452c-019d-4ffe-a96f-1a4524853eda/service/re-plotter/media/2020-10-24-jog1.jpg',
-    imagePaths: []
+    imagePaths: [],
+    credit: {
+      author: ['hankei6km'],
+      license: {
+        id: 'CC-BY-4.0',
+        url: 'https://spdx.org/licenses/CC-BY-4.0.html#licenseText'
+      }
+    }
   },
   {
-    label: 'river',
+    title: 'river',
     imageUrl:
       'https://images.microcms-assets.io/protected/ap-northeast-1:9063452c-019d-4ffe-a96f-1a4524853eda/service/re-plotter/media/2020-10-18-kaze.jpg',
     imagePaths: []
+    // credit: {
+    //   author: ['hankei6km'],
+    //   license: {
+    //     id: 'CC-BY-4.0',
+    //     url: 'https://spdx.org/licenses/CC-BY-4.0.html#licenseText'
+    //   }
+    // }
   },
   {
-    label: 'river',
+    title: 'railway bridge',
     imageUrl:
       'https://images.microcms-assets.io/protected/ap-northeast-1:9063452c-019d-4ffe-a96f-1a4524853eda/service/re-plotter/media/2020-11-03-yoko2.jpg',
-    imagePaths: []
+    imagePaths: [],
+    credit: {
+      author: ['hankei6km'],
+      license: {
+        id: 'CC-BY-4.0',
+        url: 'https://spdx.org/licenses/CC-BY-4.0.html#licenseText'
+      },
+      webPage: 'https://hankei6km.github.io/'
+    }
   }
 ];
