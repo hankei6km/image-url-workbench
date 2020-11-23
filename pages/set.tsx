@@ -162,16 +162,21 @@ const SetPage = () => {
             in={previewStateContext.previewSetState === ''}
             style={{ transitionDelay: '500ms' }}
           >
-            <ImportPanel
-              onSelect={({ value }) => {
-                setImageBaseUrl(value);
-              }}
-            />
-            <SamplePanel
-              onSelect={({ value }) => {
-                setSampleImageBaseUrl(value);
-              }}
-            />
+            <Box mt={1}>
+              <ImportPanel
+                label="Enter image url or select sample"
+                onSelect={({ value }) => {
+                  setImageBaseUrl(value);
+                }}
+              />
+            </Box>
+            <Box mt={1}>
+              <SamplePanel
+                onSelect={({ value }) => {
+                  setSampleImageBaseUrl(value);
+                }}
+              />
+            </Box>
           </Collapse>
           <Collapse
             in={previewStateContext.previewSetState !== ''}

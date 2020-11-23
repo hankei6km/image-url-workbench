@@ -8,16 +8,18 @@ import ImgBaseUrl, {
 } from '../components/ImgBaseUrl';
 
 type Props = {
+  label: string;
   onSelect: ({ value }: { value: string }) => void;
 };
 
-const ImportPanel = ({ onSelect }: Props) => {
+const ImportPanel = ({ label, onSelect }: Props) => {
   const [imageBaseUrl, setImageBaseUrl] = useState('');
 
   return (
-    <Box display="flex" alignItems="flex-end" my={1}>
+    <Box display="flex" alignItems="flex-end">
       <Box flexGrow="1">
         <ImgBaseUrl
+          label={label}
           baseUrl={imageBaseUrl}
           onEnterKey={(e: BaseUrlOnEnterKeyEvent) => {
             onSelect({ value: e.value });

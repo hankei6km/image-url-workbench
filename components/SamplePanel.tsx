@@ -162,14 +162,12 @@ function SampleItem({
 
 const SamplePanel = ({ onSelect }: Props) => {
   return (
-    <Box>
-      <Box display="flex" flexDirection="row" overflow="auto">
-        {BuiltinSampleImages.map((v, idx) => (
-          <Box key={idx}>
-            <SampleItem sampleImage={v} onSelect={(e) => onSelect(e)} />
-          </Box>
-        ))}
-      </Box>
+    <Box display="flex" flexDirection="row" overflow="auto">
+      {BuiltinSampleImages.map((v, idx) => (
+        <Box key={idx}>
+          <SampleItem sampleImage={v} onSelect={(e) => onSelect(e)} />
+        </Box>
+      ))}
     </Box>
   );
 };
