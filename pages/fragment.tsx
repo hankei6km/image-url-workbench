@@ -6,6 +6,7 @@ import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import PreviewContext from '../components/PreviewContext';
 import FragmentTextField from '../components/FragmentTextField';
+import FragmentParams from '../components/FragmentParams';
 import FragmentTag from '../components/FragmentTag';
 
 export function FragmentPanel({
@@ -31,39 +32,21 @@ const FragmentPage = () => {
   const previewStateContext = useContext(PreviewContext);
   const [imgUrl, setImgUrl] = useState('');
   const [imgPath, setImgPath] = useState('');
-  const [imgParameters, setImgParameters] = useState('');
-  const [imgParametersJson, setImgParametersJson] = useState('');
 
   useEffect(() => {
     try {
       const tmpImgUrl: string[] = [];
       const tmpImgPath: string[] = [];
-      const tmpImgParameters: string[] = [];
-      const tmpImgParametersJson: { [key: string]: string }[] = [];
       previewStateContext.previewSet.forEach((v) => {
         tmpImgUrl.push(v.previewUrl);
         const u = new URL(v.previewUrl);
         tmpImgPath.push(`${u.pathname}${u.search}`);
-        tmpImgParameters.push(`${u.search.slice(1)}`);
-        const p = v.imageParams
-          //https://stackoverflow.com/questions/26264956/convert-object-array-to-hash-map-indexed-by-an-attribute-value-of-the-object
-          .reduce((m: { [key: string]: string }, v): {
-            [key: string]: string;
-          } => {
-            m[v.key] = v.value;
-            return m;
-          }, {});
-        tmpImgParametersJson.push(p);
       });
       setImgUrl(JSON.stringify(tmpImgUrl, null, ' '));
       setImgPath(JSON.stringify(tmpImgPath, null, ' '));
-      setImgParameters(JSON.stringify(tmpImgParameters, null, ' '));
-      setImgParametersJson(JSON.stringify(tmpImgParametersJson, null, ' '));
     } catch {
       setImgUrl('');
       setImgPath('');
-      setImgParameters('');
-      setImgParametersJson('');
     }
   }, [previewStateContext.previewSet]);
 
@@ -80,12 +63,7 @@ const FragmentPage = () => {
             </Box>
           </FragmentPanel>
           <FragmentPanel groupName="Parameters">
-            <Box p={1}>
-              <FragmentTextField label="query" value={imgParameters} />
-            </Box>
-            <Box p={1}>
-              <FragmentTextField label="json" value={imgParametersJson} />
-            </Box>
+            <FragmentParams />
           </FragmentPanel>
           <FragmentPanel groupName="Tag">
             <FragmentTag />
