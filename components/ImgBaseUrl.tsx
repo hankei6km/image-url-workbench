@@ -10,12 +10,14 @@ export type BaseUrlOnChangeEvent = { value: string };
 export type BaseUrlOnEnterKeyEvent = { value: string };
 
 type BaseUrlParamsProps = {
+  label: string;
   baseUrl: string;
   onChange: (e: BaseUrlOnChangeEvent) => void;
   onEnterKey?: (e: BaseUrlOnEnterKeyEvent) => void;
 };
 
 export default function ImgBaseUrl({
+  label,
   baseUrl,
   onChange,
   onEnterKey = (_e) => {}
@@ -33,7 +35,7 @@ export default function ImgBaseUrl({
       <TextField
         error={errMsg ? true : false}
         id="image-base-url"
-        label="Image Base URL"
+        label={label}
         // defaultValue={''}
         value={value}
         fullWidth
