@@ -30,11 +30,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function SetItem({
-  editTargetKey,
+  defaultTargetKey,
   previewItem,
   onClick
 }: {
-  editTargetKey: string;
+  defaultTargetKey: string;
   previewItem: PreviewItem;
   onClick: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
 }) {
@@ -77,7 +77,7 @@ function SetItem({
             <Box
               width={2}
               className={
-                editTargetKey === previewItem.itemKey
+                defaultTargetKey === previewItem.itemKey
                   ? classes.targetIndicator
                   : undefined
               }
@@ -85,6 +85,17 @@ function SetItem({
           </Box>
         </CardActionArea>
         <CardActions>
+          <Button
+            size="small"
+            onClick={() => {
+              previewDispatch({
+                type: 'setDefaultTarget',
+                payload: [previewItem.itemKey]
+              });
+            }}
+          >
+            Default
+          </Button>
           <Button
             size="small"
             onClick={() => {
@@ -227,7 +238,7 @@ const SetPage = () => {
           {previewStateContext.previewSet.map((v) => (
             <SetItem
               key={v.itemKey}
-              editTargetKey={previewStateContext.editTargetKey}
+              defaultTargetKey={previewStateContext.defaultTargetKey}
               previewItem={v}
               onClick={() => {
                 previewDispatch({
