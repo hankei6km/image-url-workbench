@@ -41,10 +41,12 @@ const FragmentTag = () => {
   const previewStateContext = useContext(PreviewContext);
   const previewDispatch = useContext(PreviewDispatch);
 
-  const [editItem, setEditItem] = useState<{
+  const [defaultItem, setDefaultItem] = useState<{
+    itemKey: string;
     previewUrl: string;
     imageParams: ImgParamsValues;
   }>({
+    itemKey: '',
     previewUrl: '',
     imageParams: []
   });
@@ -66,7 +68,8 @@ const FragmentTag = () => {
       previewStateContext.defaultTargetKey
     );
     if (idx >= 0) {
-      setEditItem({
+      setDefaultItem({
+        itemKey: previewStateContext.defaultTargetKey,
         previewUrl: previewStateContext.previewSet[idx].previewUrl,
         imageParams: previewStateContext.previewSet[idx].imageParams
       });
@@ -76,10 +79,12 @@ const FragmentTag = () => {
   useEffect(() => {
     const pictureElement = (
       <picture>
-        {previewStateContext.previewSet.map(({ previewUrl, imgWidth }) => (
-          <source srcSet={previewUrl} media={`(min-width: ${imgWidth}px)`} />
-        ))}
-        <img src={editItem.previewUrl} alt={altText} />
+        {previewStateContext.previewSet
+          .filter(({ itemKey }) => itemKey !== defaultItem.itemKey)
+          .map(({ previewUrl, imgWidth }) => (
+            <source srcSet={previewUrl} media={`(min-width: ${imgWidth}px)`} />
+          ))}
+        <img src={defaultItem.previewUrl} alt={altText} />
       </picture>
     );
     const t = newTab
@@ -102,7 +107,7 @@ const FragmentTag = () => {
       }
       setPictureHtml(String(file));
     });
-  }, [previewStateContext.previewSet, editItem, altText, linkText, newTab]);
+  }, [previewStateContext.previewSet, defaultItem, altText, linkText, newTab]);
 
   useEffect(() => {
     const srcSet: string[] = previewStateContext.previewSet.map(
@@ -110,7 +115,7 @@ const FragmentTag = () => {
     );
     const imgElement = (
       <img
-        src={editItem.previewUrl}
+        src={defaultItem.previewUrl}
         srcSet={srcSet.length > 1 ? srcSet.join(',\n') : undefined}
         alt={altText}
       />
@@ -141,7 +146,7 @@ const FragmentTag = () => {
       }
       setImgMarkdown(String(file).trimEnd());
     });
-  }, [previewStateContext.previewSet, editItem, altText, linkText, newTab]);
+  }, [previewStateContext.previewSet, defaultItem, altText, linkText, newTab]);
 
   useEffect(() => {
     previewDispatch({
