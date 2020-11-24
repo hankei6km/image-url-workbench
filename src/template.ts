@@ -86,6 +86,7 @@ export const BuiltinImportTemplate: ImportTemplateList = [
         'txt-align': 'center',
         'txt-color': 'efffffff',
         'txt-font': 'American Typewriter Condensed,Bold',
+        'txt-pad': '40',
         'txt-shad': '1',
         'txt-size': '50',
         w: '600'
