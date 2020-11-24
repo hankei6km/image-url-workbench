@@ -66,10 +66,6 @@ function SetItem({
                       type: 'setPreviewImageSize',
                       payload: [previewItem.itemKey, w, h]
                     });
-                    previewDispatch({
-                      type: 'sortSet',
-                      payload: []
-                    });
                   }
                 }}
               />
@@ -164,6 +160,19 @@ const SetPage = () => {
       });
     }
   }, [previewDispatch, sampleImageBaseUrl, sampleParametersSet]);
+
+  useEffect(() => {
+    if (
+      previewStateContext.previewSet.every(
+        ({ imgWidth, imgHeight }) => imgWidth > 0 && imgHeight > 0
+      )
+    ) {
+      previewDispatch({
+        type: 'sortSet',
+        payload: []
+      });
+    }
+  }, [previewDispatch, previewStateContext.previewSet]);
 
   return (
     <Layout title="Set">
