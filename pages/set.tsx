@@ -68,6 +68,7 @@ function SetItem({
                   width: undefined,
                   height: 400
                 }}
+                skeleton={true}
                 onSize={({ w, h }) => {
                   setImgWidth(w);
                   setImgHeight(h);

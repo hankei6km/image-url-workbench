@@ -3,6 +3,7 @@ import React, { useRef, useEffect, useReducer } from 'react';
 // import Skeleton from '@material-ui/lab/Skeleton';
 import Box from '@material-ui/core/Box';
 import LinearProgress from '@material-ui/core/LinearProgress';
+import Skeleton from '@material-ui/lab/Skeleton';
 
 type previewImgState = {
   state: 'loading' | 'done' | 'err';
@@ -77,6 +78,7 @@ export type ImgPreviewProps = {
   top?: number | string; // 必要なものだけ
   width?: number;
   height?: number;
+  skeleton?: boolean;
   onSize?: ({ w, h }: { w: number; h: number }) => void;
 };
 
@@ -88,6 +90,7 @@ export default function ImgPreview({
   top,
   width,
   height,
+  skeleton,
   onSize = (_e) => {}
 }: ImgPreviewProps) {
   const [state, dispatch] = useReducer(reducer, initialState, (init) => {
@@ -166,31 +169,37 @@ export default function ImgPreview({
           height: '100%'
         }}
       >
-        <Box display="flex" justifyContent="center" width="100%">
-          <img
-            src={state.previewUrl}
-            width={state.width}
-            height={state.height}
-            alt=""
-            onError={() => {
-              dispatch({ type: 'err', payload: [''] });
-            }}
-          />
-        </Box>
-        <Box
-          display="flex"
-          justifyContent="center"
-          style={{
-            position: 'relative',
-            bottom: 4,
-            marginBottom: state.state === 'loading' ? -4 : 0,
-            opacity: 0.5
-          }}
-        >
-          {state.state === 'loading' && (
-            <LinearProgress style={{ width: state.width }} />
-          )}
-        </Box>
+        {skeleton && state.state === 'loading' ? (
+          <Skeleton variant="rect" width="100%" height="100%" />
+        ) : (
+          <Box>
+            <Box display="flex" justifyContent="center" width="100%">
+              <img
+                src={state.previewUrl}
+                width={state.width}
+                height={state.height}
+                alt=""
+                onError={() => {
+                  dispatch({ type: 'err', payload: [''] });
+                }}
+              />
+            </Box>
+            <Box
+              display="flex"
+              justifyContent="center"
+              style={{
+                position: 'relative',
+                bottom: 4,
+                marginBottom: state.state === 'loading' ? -4 : 0,
+                opacity: 0.5
+              }}
+            >
+              {state.state === 'loading' && (
+                <LinearProgress style={{ width: state.width }} />
+              )}
+            </Box>
+          </Box>
+        )}
       </div>
     </Box>
   );
