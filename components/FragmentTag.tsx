@@ -22,7 +22,7 @@ import { Schema } from 'hast-util-sanitize';
 
 const schema = merge(gh, {
   tagNames: ['picture', 'source'],
-  attributes: { source: ['srcSet', 'sizes'], img: ['srcSet'] }
+  attributes: { source: ['srcSet', 'sizes'], img: ['srcSet', 'sizes'] }
 });
 const processorHtml = unified()
   .use(rehypeParse, { fragment: true })
@@ -127,13 +127,21 @@ const FragmentTag = () => {
   }, [previewStateContext.previewSet, defaultItem, altText, linkText, newTab]);
 
   useEffect(() => {
+    // const withoutDefault = previewStateContext.previewSet.filter(
+    //   ({ itemKey }) => itemKey !== defaultItem.itemKey
+    // );
     const srcSet: string[] = previewStateContext.previewSet.map(
       ({ previewUrl, imgWidth }) => `${previewUrl} ${imgWidth}w`
+    );
+    const sizes: string[] = previewStateContext.previewSet.map(
+      ({ imgWidth }) =>
+        `(min-width: ${mediaBreakPoint(imgWidth)}px) ${imgWidth}px`
     );
     const imgElement = (
       <img
         src={defaultItem.previewUrl}
-        srcSet={srcSet.length > 1 ? srcSet.join(',\n') : undefined}
+        srcSet={srcSet.length > 1 ? srcSet.join(', ') : undefined}
+        sizes={sizes.length > 1 ? sizes.join(', ') : undefined}
         alt={altText}
       />
     );
