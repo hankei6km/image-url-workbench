@@ -20,7 +20,10 @@ import merge from 'deepmerge';
 import gh from 'hast-util-sanitize/lib/github.json';
 import { Schema } from 'hast-util-sanitize';
 
-const schema = merge(gh, { attributes: { img: ['srcSet'] } });
+const schema = merge(gh, {
+  tagNames: ['picture', 'source'],
+  attributes: { source: ['srcSet'], img: ['srcSet'] }
+});
 const processorHtml = unified()
   .use(rehypeParse, { fragment: true })
   .use(rehypeSanitize, (schema as unknown) as Schema)
@@ -53,6 +56,7 @@ const FragmentTag = () => {
     previewStateContext.tagFragment.linkText
   );
   const [newTab, setNewTab] = useState(previewStateContext.tagFragment.newTab);
+  const [pictureHtml, setPictureHtml] = useState('');
   const [imgHtml, setImgHtml] = useState('');
   const [imgMarkdown, setImgMarkdown] = useState('');
 
@@ -67,7 +71,38 @@ const FragmentTag = () => {
         imageParams: previewStateContext.previewSet[idx].imageParams
       });
     }
-  }, [previewStateContext.previewSet, previewStateContext.editTargetKey]);
+  }, [previewStateContext.previewSet, previewStateContext.defaultTargetKey]);
+
+  useEffect(() => {
+    const pictureElement = (
+      <picture>
+        {previewStateContext.previewSet.map(({ previewUrl, imgWidth }) => (
+          <source srcSet={previewUrl} media={`(min-width: ${imgWidth}px)`} />
+        ))}
+        <img src={editItem.previewUrl} alt={altText} />
+      </picture>
+    );
+    const t = newTab
+      ? {
+          target: '_blank',
+          rel: 'noopener noreferrer'
+        }
+      : {};
+    const elm = linkText ? (
+      <a href={linkText} {...t}>
+        {pictureElement}
+      </a>
+    ) : (
+      pictureElement
+    );
+    const html = ReactDomServer.renderToStaticMarkup(elm);
+    processorHtml.process(html, (err, file) => {
+      if (err) {
+        console.error(err);
+      }
+      setPictureHtml(String(file));
+    });
+  }, [previewStateContext.previewSet, editItem, altText, linkText, newTab]);
 
   useEffect(() => {
     const srcSet: string[] = previewStateContext.previewSet.map(
@@ -154,7 +189,10 @@ const FragmentTag = () => {
         </Box>
       </Box>
       <Box p={1}>
-        <FragmentTextField label="html" value={imgHtml} />
+        <FragmentTextField label="picture" value={pictureHtml} />
+      </Box>
+      <Box p={1}>
+        <FragmentTextField label="img" value={imgHtml} />
       </Box>
       <Box p={1}>
         <FragmentTextField label="markdown" value={imgMarkdown} />
