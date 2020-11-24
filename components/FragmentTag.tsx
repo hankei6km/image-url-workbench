@@ -22,7 +22,7 @@ import { Schema } from 'hast-util-sanitize';
 
 const schema = merge(gh, {
   tagNames: ['picture', 'source'],
-  attributes: { source: ['srcSet'], img: ['srcSet'] }
+  attributes: { source: ['srcSet', 'sizes'], img: ['srcSet'] }
 });
 const processorHtml = unified()
   .use(rehypeParse, { fragment: true })
@@ -36,6 +36,15 @@ const processorMarkdown = unified()
   .use(rehypeToRemark)
   .use(remarkStringify)
   .freeze();
+
+const breakPointValues: number[] = [/* 240, */ 320, 600, 960, 1280, 1920];
+function mediaBreakPoint(imgWidth: number): number {
+  const idx = breakPointValues.findIndex((v) => v >= imgWidth);
+  if (idx >= 0) {
+    return breakPointValues[idx];
+  }
+  return 160;
+}
 
 const FragmentTag = () => {
   const previewStateContext = useContext(PreviewContext);
@@ -81,9 +90,17 @@ const FragmentTag = () => {
       <picture>
         {previewStateContext.previewSet
           .filter(({ itemKey }) => itemKey !== defaultItem.itemKey)
-          .map(({ previewUrl, imgWidth }) => (
-            <source srcSet={previewUrl} media={`(min-width: ${imgWidth}px)`} />
-          ))}
+          .map(({ previewUrl, imgWidth }) => {
+            const mw = mediaBreakPoint(imgWidth);
+            return (
+              <source
+                // src={`${previewUrl}`}
+                srcSet={`${previewUrl} ${imgWidth}w`}
+                sizes={`(min-width: ${mw}px) ${imgWidth}px`}
+                media={`(min-width: ${mw}px)`}
+              />
+            );
+          })}
         <img src={defaultItem.previewUrl} alt={altText} />
       </picture>
     );
