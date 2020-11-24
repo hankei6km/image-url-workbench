@@ -14,7 +14,7 @@ export const BuiltinImportTemplate: ImportTemplateList = [
     sampleParameters: [
       {
         auto: 'compress',
-        txt: 'sample image',
+        txt: 'sample image 1024',
         'txt-color': 'efffffff',
         'txt-pad': '80',
         'txt-shad': '1',
@@ -23,7 +23,7 @@ export const BuiltinImportTemplate: ImportTemplateList = [
       },
       {
         auto: 'compress',
-        txt: 'sample image',
+        txt: 'sample image 800',
         'txt-color': 'efffffff',
         'txt-pad': '62',
         'txt-shad': '1',
@@ -32,24 +32,24 @@ export const BuiltinImportTemplate: ImportTemplateList = [
       },
       {
         auto: 'compress',
-        txt: 'sample image',
+        txt: 'sample image 500',
         'txt-color': 'efffffff',
-        'txt-pad': '46',
+        'txt-pad': '38',
         'txt-shad': '1',
-        'txt-size': '41',
-        w: '600'
+        'txt-size': '33',
+        w: '500'
       },
       {
         auto: 'compress',
         crop: 'entropy',
         fit: 'crop',
         'max-h': '400',
-        'max-w': '480',
-        txt: 'sample image',
+        'max-w': '300',
+        txt: 'sample image 300',
         'txt-color': 'efffffff',
-        'txt-pad': '37',
+        'txt-pad': '24',
         'txt-shad': '1',
-        'txt-size': '32'
+        'txt-size': '21'
       }
     ],
     parameters: [
@@ -63,14 +63,14 @@ export const BuiltinImportTemplate: ImportTemplateList = [
       },
       {
         auto: 'compress',
-        w: '600'
+        w: '500'
       },
       {
         auto: 'compress',
         crop: 'entropy',
         fit: 'crop',
         'max-h': '400',
-        'max-w': '480'
+        'max-w': '300'
       }
     ]
   },

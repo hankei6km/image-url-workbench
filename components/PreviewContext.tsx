@@ -225,9 +225,10 @@ export function previewContextReducer(
         };
         return previewItem;
       });
-      if (newState.previewSet.length > 0) {
+      const l=  newState.previewSet.length
+      if (l > 0) {
         newState.editTargetKey = newState.previewSet[0].itemKey;
-        newState.defaultTargetKey = newState.previewSet[0].itemKey;
+        newState.defaultTargetKey = newState.previewSet[l-1].itemKey;
       }
       break;
     case 'addPreviewImageUrl':

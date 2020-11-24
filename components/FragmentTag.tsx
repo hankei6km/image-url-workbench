@@ -20,7 +20,10 @@ import merge from 'deepmerge';
 import gh from 'hast-util-sanitize/lib/github.json';
 import { Schema } from 'hast-util-sanitize';
 
-const schema = merge(gh, { attributes: { img: ['srcSet'] } });
+const schema = merge(gh, {
+  tagNames: ['picture', 'source'],
+  attributes: { source: ['srcSet', 'sizes'], img: ['srcSet', 'sizes'] }
+});
 const processorHtml = unified()
   .use(rehypeParse, { fragment: true })
   .use(rehypeSanitize, (schema as unknown) as Schema)
@@ -34,14 +37,25 @@ const processorMarkdown = unified()
   .use(remarkStringify)
   .freeze();
 
+const breakPointValues: number[] = [/* 240, */ 320, 600, 960, 1280, 1920];
+function mediaBreakPoint(imgWidth: number): number {
+  const idx = breakPointValues.findIndex((v) => v >= imgWidth);
+  if (idx >= 0) {
+    return breakPointValues[idx];
+  }
+  return 160;
+}
+
 const FragmentTag = () => {
   const previewStateContext = useContext(PreviewContext);
   const previewDispatch = useContext(PreviewDispatch);
 
-  const [editItem, setEditItem] = useState<{
+  const [defaultItem, setDefaultItem] = useState<{
+    itemKey: string;
     previewUrl: string;
     imageParams: ImgParamsValues;
   }>({
+    itemKey: '',
     previewUrl: '',
     imageParams: []
   });
@@ -53,6 +67,7 @@ const FragmentTag = () => {
     previewStateContext.tagFragment.linkText
   );
   const [newTab, setNewTab] = useState(previewStateContext.tagFragment.newTab);
+  const [pictureHtml, setPictureHtml] = useState('');
   const [imgHtml, setImgHtml] = useState('');
   const [imgMarkdown, setImgMarkdown] = useState('');
 
@@ -62,21 +77,71 @@ const FragmentTag = () => {
       previewStateContext.defaultTargetKey
     );
     if (idx >= 0) {
-      setEditItem({
+      setDefaultItem({
+        itemKey: previewStateContext.defaultTargetKey,
         previewUrl: previewStateContext.previewSet[idx].previewUrl,
         imageParams: previewStateContext.previewSet[idx].imageParams
       });
     }
-  }, [previewStateContext.previewSet, previewStateContext.editTargetKey]);
+  }, [previewStateContext.previewSet, previewStateContext.defaultTargetKey]);
 
   useEffect(() => {
+    const pictureElement = (
+      <picture>
+        {previewStateContext.previewSet
+          .filter(({ itemKey }) => itemKey !== defaultItem.itemKey)
+          .map(({ previewUrl, imgWidth }) => {
+            const mw = mediaBreakPoint(imgWidth);
+            return (
+              <source
+                // src={`${previewUrl}`}
+                srcSet={`${previewUrl} ${imgWidth}w`}
+                sizes={`(min-width: ${mw}px) ${imgWidth}px`}
+                media={`(min-width: ${mw}px)`}
+              />
+            );
+          })}
+        <img src={defaultItem.previewUrl} alt={altText} />
+      </picture>
+    );
+    const t = newTab
+      ? {
+          target: '_blank',
+          rel: 'noopener noreferrer'
+        }
+      : {};
+    const elm = linkText ? (
+      <a href={linkText} {...t}>
+        {pictureElement}
+      </a>
+    ) : (
+      pictureElement
+    );
+    const html = ReactDomServer.renderToStaticMarkup(elm);
+    processorHtml.process(html, (err, file) => {
+      if (err) {
+        console.error(err);
+      }
+      setPictureHtml(String(file));
+    });
+  }, [previewStateContext.previewSet, defaultItem, altText, linkText, newTab]);
+
+  useEffect(() => {
+    // const withoutDefault = previewStateContext.previewSet.filter(
+    //   ({ itemKey }) => itemKey !== defaultItem.itemKey
+    // );
     const srcSet: string[] = previewStateContext.previewSet.map(
       ({ previewUrl, imgWidth }) => `${previewUrl} ${imgWidth}w`
     );
+    const sizes: string[] = previewStateContext.previewSet.map(
+      ({ imgWidth }) =>
+        `(min-width: ${mediaBreakPoint(imgWidth)}px) ${imgWidth}px`
+    );
     const imgElement = (
       <img
-        src={editItem.previewUrl}
-        srcSet={srcSet.length > 1 ? srcSet.join(',\n') : undefined}
+        src={defaultItem.previewUrl}
+        srcSet={srcSet.length > 1 ? srcSet.join(', ') : undefined}
+        sizes={sizes.length > 1 ? sizes.join(', ') : undefined}
         alt={altText}
       />
     );
@@ -106,7 +171,7 @@ const FragmentTag = () => {
       }
       setImgMarkdown(String(file).trimEnd());
     });
-  }, [previewStateContext.previewSet, editItem, altText, linkText, newTab]);
+  }, [previewStateContext.previewSet, defaultItem, altText, linkText, newTab]);
 
   useEffect(() => {
     previewDispatch({
@@ -154,7 +219,10 @@ const FragmentTag = () => {
         </Box>
       </Box>
       <Box p={1}>
-        <FragmentTextField label="html" value={imgHtml} />
+        <FragmentTextField label="picture" value={pictureHtml} />
+      </Box>
+      <Box p={1}>
+        <FragmentTextField label="img" value={imgHtml} />
       </Box>
       <Box p={1}>
         <FragmentTextField label="markdown" value={imgMarkdown} />
