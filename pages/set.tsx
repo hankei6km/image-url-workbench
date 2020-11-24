@@ -12,6 +12,7 @@ import CardActions from '@material-ui/core/CardActions';
 // import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Collapse from '@material-ui/core/Collapse';
+import Skeleton from '@material-ui/lab/Skeleton';
 import ClearAllIcon from '@material-ui/icons/ClearAll';
 import PreviewContext, {
   PreviewDispatch,
@@ -46,7 +47,16 @@ function SetItem({
   return (
     <Box key={previewItem.previewUrl} my={1} p={1}>
       <Card>
-        <CardHeader title={`${imgWidth}x${imgHeight}`} />
+        <CardHeader
+          titleTypographyProps={{ variant: 'h5' }}
+          title={
+            imgWidth === 0 ? (
+              <Skeleton variant="rect" width="10em" />
+            ) : (
+              `${imgWidth}x${imgHeight}`
+            )
+          }
+        />
         <CardActionArea onClick={onClick}>
           <Box display="flex">
             <Box flexGrow="1">
@@ -58,6 +68,7 @@ function SetItem({
                   width: undefined,
                   height: 400
                 }}
+                skeleton={true}
                 onSize={({ w, h }) => {
                   setImgWidth(w);
                   setImgHeight(h);
