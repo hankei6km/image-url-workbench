@@ -225,10 +225,10 @@ export function previewContextReducer(
         };
         return previewItem;
       });
-      const l=  newState.previewSet.length
+      const l = newState.previewSet.length;
       if (l > 0) {
         newState.editTargetKey = newState.previewSet[0].itemKey;
-        newState.defaultTargetKey = newState.previewSet[l-1].itemKey;
+        newState.defaultTargetKey = newState.previewSet[l - 1].itemKey;
       }
       break;
     case 'addPreviewImageUrl':
@@ -243,6 +243,9 @@ export function previewContextReducer(
           imgHeight: 0
         };
         newState.editTargetKey = previewItem.itemKey;
+        if (newState.defaultTargetKey === '') {
+          newState.defaultTargetKey = previewItem.itemKey;
+        }
         newState.previewSet.push(previewItem);
       }
       break;
