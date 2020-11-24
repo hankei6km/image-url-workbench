@@ -44,7 +44,11 @@ const CardGenPage = ({
   useEffect(() => {
     if (dataImageUrlErr === undefined) {
       previewDispatch({
-        type: 'setPreviewImageUrl',
+        type: 'resetPreviewSet',
+        payload: []
+      });
+      previewDispatch({
+        type: 'addPreviewImageUrl',
         payload: [data.imageUrl]
       });
     }
