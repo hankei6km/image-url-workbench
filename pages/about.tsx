@@ -18,7 +18,7 @@ const [licenseName, cpoyright, licenseLines] = ((): [
 })();
 
 const AboutPage = () => (
-  <Layout title="About | Next.js + TypeScript Example">
+  <Layout title="About | Test Next.js Typescript Material UI">
     <Container maxWidth="sm">
       <Box py={1} width="100%">
         <Box py={1}>
