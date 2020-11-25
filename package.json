@@ -4,6 +4,9 @@
   "scripts": {
     "dev": "next",
     "build": "next build",
+    "build:vercel": "yum install zip -y && sh scripts/open_source_license.sh && next build",
+    "build:license": "sh scripts/open_source_licenses.sh",
+    "build:about": "sh scripts/about_license.sh",
     "start": "next start",
     "type-check": "tsc"
   },
