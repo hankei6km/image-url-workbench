@@ -22,3 +22,5 @@ yarn-error.log*
 
 .vercel
 /tmp
+/open_source_licenses.*
+/public/open_source_licenses.*
