@@ -28,11 +28,12 @@ export type PreviewItem = {
 };
 
 export type PreviewSetKind = '' | 'sample' | 'data';
-export type PreviewSetState = '' | 'init' | 'edited';
+export type PreviewSetState = '' | 'pre-init' | 'init' | 'edited';
 
 type PreviewContextState = {
   validateAssets: boolean;
   assets: string[];
+  imageBaseUrl: string;
   editTargetKey: string; // 編集対象の item を取得するときに selector がほしくなるよね(redux でなくても使える?)
   defaultTargetKey: string;
   card: Card;
@@ -50,6 +51,11 @@ type PreviewContextState = {
 type actTypeResetPreviewSet = {
   type: 'resetPreviewSet';
   payload: [];
+};
+
+type actTypeSetImageBaseUrl = {
+  type: 'setImageBaseUrl';
+  payload: [PreviewSetKind, string];
 };
 
 type actTypeImportPreviewSet = {
@@ -109,6 +115,7 @@ type actTypeSortSet = {
 
 type actType =
   | actTypeResetPreviewSet
+  | actTypeSetImageBaseUrl
   | actTypeImportPreviewSet
   | actTypeAddPreviewImageUrl
   | actTypeSetPreviewImageUrl
@@ -124,6 +131,7 @@ type actType =
 export const previewContextInitialState: PreviewContextState = {
   validateAssets: false,
   assets: [],
+  imageBaseUrl: '',
   editTargetKey: '',
   defaultTargetKey: '',
   card: {
@@ -148,6 +156,9 @@ function nextPreviewSetState(
   switch (action.type) {
     case 'resetPreviewSet':
       ret = '';
+      break;
+    case 'setImageBaseUrl':
+      ret = 'pre-init';
       break;
     case 'importPreviewSet':
       ret = 'init';
@@ -204,6 +215,10 @@ export function previewContextReducer(
       newState.defaultTargetKey = '';
       newState.previewSetKind = '';
       newState.previewSet = [];
+      break;
+    case 'setImageBaseUrl':
+      newState.previewSetKind = action.payload[0];
+      newState.imageBaseUrl = action.payload[1];
       break;
     case 'importPreviewSet':
       newState.previewSetKind = action.payload[0];
