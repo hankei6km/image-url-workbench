@@ -21,14 +21,14 @@ const useStyles = makeStyles((theme) => ({
       margin: '0rem auto 0rem'
     },
     '& > .stickyImageTabPanel': {
-      [theme.breakpoints.up('lg')]: {
+      [theme.breakpoints.up('sm')]: {
         position: 'sticky',
-        top: -50,
+        top: -40,
         zIndex: theme.zIndex.appBar
       }
     },
     '& > .stickyPath': {
-      [theme.breakpoints.up('lg')]: {
+      [theme.breakpoints.up('sm')]: {
         position: 'sticky',
         top: 0,
         zIndex: theme.zIndex.appBar
@@ -74,10 +74,7 @@ const useStyles = makeStyles((theme) => ({
         alignItems: 'flex-end',
         width: '100%',
         [theme.breakpoints.up('lg')]: {
-          position: 'sticky',
-          top: 10,
-          minHeight: 40,
-          zIndex: theme.zIndex.appBar
+          minHeight: 40
         },
         '& > .MuiBox-root': {
           width: '100%',
@@ -91,7 +88,10 @@ const useStyles = makeStyles((theme) => ({
                 padding: 0,
                 textTransform: 'none',
                 [theme.breakpoints.up('sm')]: {
-                  padding: theme.spacing(1),
+                  paddingTop: theme.spacing(1),
+                  paddingBottom: theme.spacing(2),
+                  paddingLeft: theme.spacing(1),
+                  paddingRight: theme.spacing(1),
                   minWidth: 100
                 }
               }
