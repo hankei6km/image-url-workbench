@@ -42,6 +42,18 @@ const useStyles = makeStyles((theme) => ({
         width: '100%',
         display: 'flex',
         justifyContent: 'center',
+        '& > .homeHeader': {
+          justifyContent: 'center',
+          '& .MuiBox-root': {
+            width: '100%',
+            maxWidth: theme.breakpoints.values.md,
+            display: 'flex',
+            alignItems: 'center',
+            '% > .homeHeaderTitle': {
+              flexGrow: 1
+            }
+          }
+        },
         '& > .MuiBox-root': {
           maxWidth: theme.breakpoints.values.md,
           width: '100%',
@@ -251,10 +263,17 @@ const Layout = ({ children, title = 'This is the default title' }: Props) => {
       >
         <Toolbar variant="dense">
           {router.asPath === '/' ? (
-            <Box>
-              <Link variant="h6" color="textPrimary" href="/">
-                <HomeLabel asUrl="/" />
-              </Link>
+            <Box className="homeHeader">
+              <Box>
+                <Box className="homeHeaderTitle">
+                  <Link variant="h6" color="textPrimary" href="/">
+                    <HomeLabel asUrl="/" />
+                  </Link>
+                </Box>
+                <Link variant="button" color="textSecondary" href="/about">
+                  About
+                </Link>
+              </Box>
             </Box>
           ) : router.asPath !== '/about' ? (
             <Box>
@@ -273,9 +292,6 @@ const Layout = ({ children, title = 'This is the default title' }: Props) => {
                   {curPath?.current?.label}
                 </Typography>
               </Breadcrumbs>
-              <Link variant="body2" color="textSecondary" href="/about">
-                About
-              </Link>
             </Box>
           ) : (
             <Box className="AboutHeader">
