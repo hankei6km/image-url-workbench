@@ -30,7 +30,7 @@ export function FragmentPanel({
 const FragmentPage = () => {
   return (
     <Layout title="Fragment">
-      <Container maxWidth="sm">
+      <Container maxWidth="md">
         <Box py={1}>
           <FragmentPanel groupName="Parameters">
             <FragmentParams />

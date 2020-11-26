@@ -90,7 +90,7 @@ const CardPage = () => {
 
   return (
     <Layout title="Card">
-      <Container maxWidth="sm">
+      <Container maxWidth="md">
         <Box pb={3}>
           <Box p={1}>
             <DebTextField
