@@ -42,6 +42,15 @@ const useStyles = makeStyles((theme) => ({
             flexGrow: 1
           }
         },
+        '& > .AboutHeader': {
+          justifyContent: 'center',
+          '& > .MuiBox-root': {
+            width: '100%',
+            maxWidth: theme.breakpoints.values.sm,
+            display: 'flex',
+            alignItems: 'center'
+          }
+        },
         '& .HomePathIcon': {
           fontSize: theme.typography.fontSize * 1.5,
           [theme.breakpoints.up('sm')]: {
@@ -57,6 +66,17 @@ function HomeLabel({ asUrl }: { asUrl: string }): React.ReactElement {
   if (asUrl === '/') {
     return (
       <Box mt={1}>
+        <Typography variant="inherit" color="inherit">
+          {process.env.APP_NAME}
+        </Typography>
+      </Box>
+    );
+  } else if (asUrl === '/about') {
+    return (
+      <Box mt={1} display="flex">
+        <Box mr={1}>
+          <HomeIcon className="HomePathIcon" />
+        </Box>
         <Typography variant="inherit" color="inherit">
           {process.env.APP_NAME}
         </Typography>
@@ -153,9 +173,13 @@ const Layout = ({ children, title = 'This is the default title' }: Props) => {
               </Link>
             </Box>
           ) : (
-            <Link variant="h6" color="textSecondary" href="/">
-              <HomeIcon fontSize="large" />
-            </Link>
+            <Box className="AboutHeader">
+              <Box>
+                <Link variant="h6" color="textSecondary" href="/">
+                  <HomeLabel asUrl="/about" />
+                </Link>
+              </Box>
+            </Box>
           )}
         </Toolbar>
       </Paper>
