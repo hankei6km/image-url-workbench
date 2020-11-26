@@ -61,7 +61,7 @@ const breadCrumbsPath: BreadCrumbsPath[] = [
   {
     path: [],
     current: {
-      label: 'HOME',
+      label: process.env.APP_NAME,
       href: '/'
     }
   },
