@@ -45,6 +45,30 @@ type Props = {
   href: string | (string & UrlObject);
   innerRef?: any; // 降参。(node:any)=>void でもダメなの?
   naked?: boolean;
+  variant?:
+    | 'button'
+    | 'caption'
+    | 'h1'
+    | 'h2'
+    | 'h3'
+    | 'h4'
+    | 'h5'
+    | 'h6'
+    | 'inherit'
+    | 'subtitle1'
+    | 'subtitle2'
+    | 'body1'
+    | 'body2'
+    | 'overline'
+    | 'srOnly';
+  color?:
+    | 'inherit'
+    | 'initial'
+    | 'primary'
+    | 'secondary'
+    | 'textPrimary'
+    | 'textSecondary'
+    | 'error';
   onClick?: () => void;
   prefetch?: boolean;
 };
@@ -57,6 +81,8 @@ function Link(props: LinkProps & Props) {
     className: classNameProps,
     innerRef,
     naked,
+    variant,
+    color,
     ...other
   } = props;
 
@@ -83,6 +109,8 @@ function Link(props: LinkProps & Props) {
       className={className}
       ref={innerRef}
       href={href}
+      variant={variant}
+      color={color}
       {...other}
     />
   );
