@@ -41,11 +41,30 @@ const useStyles = makeStyles((theme) => ({
           '& > .MuiBreadcrumbs-root': {
             flexGrow: 1
           }
+        },
+        '& .HomePathIcon': {
+          fontSize: theme.typography.fontSize * 1.5,
+          [theme.breakpoints.up('sm')]: {
+            fontSize: theme.typography.fontSize * 2.5
+          }
         }
       }
     }
   }
 }));
+
+function HomeLabel({ asUrl }: { asUrl: string }): React.ReactElement {
+  if (asUrl === '/') {
+    return (
+      <Box mt={1}>
+        <Typography variant="inherit" color="inherit">
+          {process.env.APP_NAME}
+        </Typography>
+      </Box>
+    );
+  }
+  return <HomeIcon className="HomePathIcon" />;
+}
 
 type BreadCrumbsItem = {
   label: React.ReactNode;
@@ -61,17 +80,17 @@ const breadCrumbsPath: BreadCrumbsPath[] = [
   {
     path: [],
     current: {
-      label: process.env.APP_NAME,
+      label: <HomeLabel asUrl="/" />,
       href: '/'
     }
   },
   {
-    path: [{ label: <HomeIcon fontSize="large" />, href: '/' }],
+    path: [{ label: <HomeLabel asUrl="/set" />, href: '/' }],
     current: { label: 'previews', href: '/set' }
   },
   {
     path: [
-      { label: <HomeIcon fontSize="large" />, href: '/' },
+      { label: <HomeLabel asUrl="/render" />, href: '/' },
       { label: 'previews', href: '/set' }
     ],
     current: { label: 'render', href: '/render' }
