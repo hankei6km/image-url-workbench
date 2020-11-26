@@ -7,6 +7,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
 import Toolbar from '@material-ui/core/Toolbar';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 import HomeIcon from '@material-ui/icons/Home';
@@ -18,23 +20,30 @@ const useStyles = makeStyles((theme) => ({
       padding: '0 1rem',
       margin: '0rem auto 0rem'
     },
-    '& > .MuiPaper-root': {
-      padding: theme.spacing(1),
-      position: 'static',
-      flexGrow: 1,
-      width: '100%',
-      display: 'flex',
-      //maxWidth: theme.breakpoints.values.sm,
-      justifyContent: 'center',
+    '& > .stickyImageTabPanel': {
+      [theme.breakpoints.up('lg')]: {
+        position: 'sticky',
+        top: -50,
+        zIndex: theme.zIndex.appBar
+      }
+    },
+    '& > .stickyPath': {
       [theme.breakpoints.up('lg')]: {
         position: 'sticky',
         top: 0,
         zIndex: theme.zIndex.appBar
-      },
+      }
+    },
+    '& > .MuiPaper-root': {
+      // padding: theme.spacing(1),
+      position: 'static',
+      width: '100%',
       '& > .MuiToolbar-root': {
         width: '100%',
-        maxWidth: theme.breakpoints.values.md,
+        display: 'flex',
+        justifyContent: 'center',
         '& > .MuiBox-root': {
+          maxWidth: theme.breakpoints.values.md,
           width: '100%',
           display: 'flex',
           alignItems: 'center',
@@ -52,9 +61,41 @@ const useStyles = makeStyles((theme) => ({
           }
         },
         '& .HomePathIcon': {
-          fontSize: theme.typography.fontSize * 1.5,
+          fontSize: theme.typography.fontSize * 1.0,
           [theme.breakpoints.up('sm')]: {
-            fontSize: theme.typography.fontSize * 2.5
+            fontSize: theme.typography.fontSize * 2.0
+          }
+        }
+      },
+      '& > .ImageTabPanel-root': {
+        display: 'flex',
+        justifyContent: 'center',
+        alignContent: 'flex-end',
+        alignItems: 'flex-end',
+        width: '100%',
+        [theme.breakpoints.up('lg')]: {
+          position: 'sticky',
+          top: 10,
+          minHeight: 40,
+          zIndex: theme.zIndex.appBar
+        },
+        '& > .MuiBox-root': {
+          width: '100%',
+          maxWidth: theme.breakpoints.values.md,
+          '& > .MuiTabs-root': {
+            minHeight: 10,
+            '& > div': {
+              minHeight: 10,
+              '& .MuiTab-root': {
+                minHeight: 10,
+                padding: 0,
+                textTransform: 'none',
+                [theme.breakpoints.up('sm')]: {
+                  padding: theme.spacing(1),
+                  minWidth: 100
+                }
+              }
+            }
           }
         }
       }
@@ -106,12 +147,20 @@ const breadCrumbsPath: BreadCrumbsPath[] = [
   },
   {
     path: [{ label: <HomeLabel asUrl="/set" />, href: '/' }],
-    current: { label: 'previews', href: '/set' }
+    current: { label: 'Image', href: '/set' }
+  },
+  {
+    path: [{ label: <HomeLabel asUrl="/fragment" />, href: '/' }],
+    current: { label: 'Image', href: '/fragment' }
+  },
+  {
+    path: [{ label: <HomeLabel asUrl="/card" />, href: '/' }],
+    current: { label: 'Image', href: '/card' }
   },
   {
     path: [
       { label: <HomeLabel asUrl="/render" />, href: '/' },
-      { label: 'previews', href: '/set' }
+      { label: 'Image', href: '/set' }
     ],
     current: { label: 'render', href: '/render' }
   }
@@ -124,6 +173,48 @@ function getCurPath(asPath: string): BreadCrumbsPath {
     return breadCrumbsPath[idx];
   }
   return breadCrumbsPath[0];
+}
+
+const tabLink = [
+  { label: 'Previews', href: '/set' },
+  { label: 'Fragment', href: '/fragment' },
+  { label: 'Card', href: '/card' }
+];
+
+function getImageTabValue(asPath: string): number | boolean {
+  const p = asPath.split('?', 1)[0];
+  const idx = tabLink.findIndex(({ href }) => href === p);
+  if (idx >= 0) {
+    return idx;
+  }
+  return false;
+}
+
+function existImageTabPanel(asPath: string) {
+  return asPath === '/set' || asPath === '/fragment' || asPath === '/card';
+}
+function ImageTabPanel({ asPath }: { asPath: string }) {
+  const [value] = useState<number | boolean>(getImageTabValue(asPath));
+
+  if (existImageTabPanel(asPath)) {
+    return (
+      <Paper className="ImageTabPanel-root" square elevation={0}>
+        <Box>
+          <Tabs
+            indicatorColor="primary"
+            textColor="primary"
+            variant="scrollable"
+            value={value}
+          >
+            {tabLink.map((v, i) => (
+              <Tab {...v} key={i} component={Link} naked />
+            ))}
+          </Tabs>
+        </Box>
+      </Paper>
+    );
+  }
+  return <></>;
 }
 
 type Props = {
@@ -149,14 +240,28 @@ const Layout = ({ children, title = 'This is the default title' }: Props) => {
         <meta charSet="utf-8" />
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
-      <Paper square elevation={0}>
-        <Toolbar>
-          {router.asPath !== '/about' ? (
+      <Paper
+        square
+        elevation={existImageTabPanel(router.asPath) ? 1 : 0}
+        className={
+          existImageTabPanel(router.asPath)
+            ? 'stickyImageTabPanel'
+            : 'stickyPath'
+        }
+      >
+        <Toolbar variant="dense">
+          {router.asPath === '/' ? (
+            <Box>
+              <Link variant="h6" color="textPrimary" href="/">
+                <HomeLabel asUrl="/" />
+              </Link>
+            </Box>
+          ) : router.asPath !== '/about' ? (
             <Box>
               <Breadcrumbs aria-label="breadcrumb">
                 {curPath.path.map((v) => (
                   <Link
-                    variant="h6"
+                    variant="body2"
                     color="textSecondary"
                     key={v.href}
                     href={v.href}
@@ -164,11 +269,11 @@ const Layout = ({ children, title = 'This is the default title' }: Props) => {
                     {v.label}
                   </Link>
                 ))}
-                <Typography variant="h6" color="textPrimary">
+                <Typography variant="body2" color="textPrimary">
                   {curPath?.current?.label}
                 </Typography>
               </Breadcrumbs>
-              <Link variant="body1" color="textSecondary" href="/about">
+              <Link variant="body2" color="textSecondary" href="/about">
                 About
               </Link>
             </Box>
@@ -182,6 +287,7 @@ const Layout = ({ children, title = 'This is the default title' }: Props) => {
             </Box>
           )}
         </Toolbar>
+        <ImageTabPanel asPath={router.asPath} />
       </Paper>
       <div>{children}</div>
       <footer>
