@@ -97,7 +97,7 @@ export default function ImgPreview({
     const newState = { ...init };
     newState.loadingUrl = previewUrl;
     newState.state = 'loading';
-    setTimeout(() => dispatch({ type: 'setUrl', payload: [previewUrl] }), 1); // dispatch でないと即時反映されない?
+    // setTimeout(() => dispatch({ type: 'setUrl', payload: [previewUrl] }), 1); // dispatch でないと即時反映されない?
     return newState;
   });
   const outerEl = useRef<HTMLDivElement | null>(null);
