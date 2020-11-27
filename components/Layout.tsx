@@ -158,21 +158,21 @@ const breadCrumbsPath: BreadCrumbsPath[] = [
     }
   },
   {
-    path: [{ label: <HomeLabel asUrl="/set" />, href: '/' }],
-    current: { label: 'Image', href: '/set' }
+    path: [{ label: <HomeLabel asUrl="/previews" />, href: '/' }],
+    current: { label: 'result', href: '/previews' }
   },
   {
-    path: [{ label: <HomeLabel asUrl="/fragment" />, href: '/' }],
-    current: { label: 'Image', href: '/fragment' }
+    path: [{ label: <HomeLabel asUrl="/parameters" />, href: '/' }],
+    current: { label: 'result', href: '/parameters' }
   },
   {
     path: [{ label: <HomeLabel asUrl="/card" />, href: '/' }],
-    current: { label: 'Image', href: '/card' }
+    current: { label: 'result', href: '/card' }
   },
   {
     path: [
       { label: <HomeLabel asUrl="/render" />, href: '/' },
-      { label: 'Image', href: '/set' }
+      { label: 'result', href: '/previews' }
     ],
     current: { label: 'render', href: '/render' }
   }
@@ -188,8 +188,8 @@ function getCurPath(asPath: string): BreadCrumbsPath {
 }
 
 const tabLink = [
-  { label: 'Previews', href: '/set' },
-  { label: 'Fragment', href: '/fragment' },
+  { label: 'Previews', href: '/previews' },
+  { label: 'Parameters', href: '/parameters' },
   { label: 'Card', href: '/card' }
 ];
 
@@ -203,7 +203,9 @@ function getImageTabValue(asPath: string): number | boolean {
 }
 
 function existImageTabPanel(asPath: string) {
-  return asPath === '/set' || asPath === '/fragment' || asPath === '/card';
+  return (
+    asPath === '/previews' || asPath === '/parameters' || asPath === '/card'
+  );
 }
 function ImageTabPanel({ asPath }: { asPath: string }) {
   const [value] = useState<number | boolean>(getImageTabValue(asPath));
