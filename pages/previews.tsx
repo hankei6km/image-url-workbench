@@ -125,7 +125,7 @@ function SetItem({
   );
 }
 
-const SetPage = () => {
+const PreviewsPage = () => {
   const previewStateContext = useContext(PreviewContext);
   const previewDispatch = useContext(PreviewDispatch);
   const router = useRouter();
@@ -198,7 +198,7 @@ const SetPage = () => {
   }, [previewDispatch, previewStateContext.previewSet]);
 
   return (
-    <Layout title="Set">
+    <Layout title="Previews">
       <Container maxWidth="md">
         <Box py={1}>
           <TemplatePanel
@@ -240,4 +240,4 @@ const SetPage = () => {
   );
 };
 
-export default SetPage;
+export default PreviewsPage;

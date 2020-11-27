@@ -8,7 +8,7 @@ import FragmentLink from '../components/FragmentLink';
 import FragmentParams from '../components/FragmentParams';
 import FragmentTag from '../components/FragmentTag';
 
-export function FragmentPanel({
+export function ParametersPanel({
   groupName,
   children
 }: {
@@ -27,24 +27,24 @@ export function FragmentPanel({
   );
 }
 
-const FragmentPage = () => {
+const ParametersPage = () => {
   return (
-    <Layout title="Fragment">
+    <Layout title="Parameters">
       <Container maxWidth="md">
         <Box py={1}>
-          <FragmentPanel groupName="Parameters">
+          <ParametersPanel groupName="URL Parameters">
             <FragmentParams />
-          </FragmentPanel>
-          <FragmentPanel groupName="Link">
+          </ParametersPanel>
+          <ParametersPanel groupName="Link">
             <FragmentLink />
-          </FragmentPanel>
-          <FragmentPanel groupName="Tag">
+          </ParametersPanel>
+          <ParametersPanel groupName="Tag">
             <FragmentTag />
-          </FragmentPanel>
+          </ParametersPanel>
         </Box>
       </Container>
     </Layout>
   );
 };
 
-export default FragmentPage;
+export default ParametersPage;
