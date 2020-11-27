@@ -19,7 +19,10 @@ const useStyles = makeStyles((theme) => ({
   indicatorOuter: {
     display: 'flex',
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
+    '& .MuiButton-label > .MuiBox-root': {
+      marginRight: theme.spacing(1)
+    }
   },
   selectorOuter: {
     marginTop: theme.spacing(1),
@@ -70,15 +73,24 @@ const TemplatePanel = ({ disabled = false, onTemplate: onSample }: Props) => {
         <Button
           startIcon={
             <ExpandMoreIcon
-              style={{ transform: open ? 'rotate(180deg)' : '' }}
+              style={{
+                transform: open ? 'rotate(180deg)' : '' /*'rotate(270deg)'*/
+              }}
             />
           }
           onClick={() => setOpen(!open)}
           style={{ textTransform: 'none' }}
         >
-          <Typography variant="body1">
-            template: {BuiltinImportTemplate[templateIdx].label}
-          </Typography>
+          <Box>
+            <Typography variant="body1">template:</Typography>
+          </Box>
+          <Collapse in={!open}>
+            <Box>
+              <Typography variant="body1">
+                {BuiltinImportTemplate[templateIdx].label}
+              </Typography>
+            </Box>
+          </Collapse>
         </Button>
       </Box>
       <Box className={classes.selectorOuter}>
