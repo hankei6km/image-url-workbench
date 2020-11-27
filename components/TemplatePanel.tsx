@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
 
 type Props = {
   disabled?: boolean;
-  onSample: ({
+  onTemplate: ({
     templateIdx,
     sampleParametersSet,
     parametersSet
@@ -51,7 +51,7 @@ type Props = {
   }) => void;
 };
 
-const TemplatePanel = ({ disabled = false, onSample }: Props) => {
+const TemplatePanel = ({ disabled = false, onTemplate: onSample }: Props) => {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [templateIdx, setTemplateIdx] = useState(0);

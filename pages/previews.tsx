@@ -206,7 +206,7 @@ const PreviewsPage = () => {
               previewStateContext.previewSetState === 'edited' ||
               previewStateContext.imageBaseUrl === ''
             }
-            onSample={({
+            onTemplate={({
               templateIdx: idx,
               sampleParametersSet,
               parametersSet
