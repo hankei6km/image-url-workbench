@@ -90,10 +90,11 @@ const FragmentTag = () => {
       <picture>
         {previewStateContext.previewSet
           .filter(({ itemKey }) => itemKey !== defaultItem.itemKey)
-          .map(({ previewUrl, imgWidth }) => {
+          .map(({ previewUrl, imgWidth }, i) => {
             const mw = mediaBreakPoint(imgWidth);
             return (
               <source
+                key={i}
                 // src={`${previewUrl}`}
                 srcSet={`${previewUrl} ${imgWidth}w`}
                 sizes={`(min-width: ${mw}px) ${imgWidth}px`}
