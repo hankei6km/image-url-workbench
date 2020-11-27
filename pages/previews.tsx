@@ -230,7 +230,9 @@ const PreviewsPage = () => {
                   type: 'setEditTarget',
                   payload: [v.itemKey]
                 });
-                router.push('/render');
+                // https://github.com/vercel/next.js/issues/3249
+                // browser によっては、Alt+left で戻るとスクロール位置がリセットされている:
+                router.push('/render').then(() => window.scrollTo(0, 0));
               }}
             />
           ))}
