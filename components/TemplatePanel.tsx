@@ -43,6 +43,7 @@ const useStyles = makeStyles((theme) => ({
 
 type Props = {
   disabled?: boolean;
+  defaultIdx: number;
   onTemplate: ({
     templateIdx,
     sampleParametersSet,
@@ -54,10 +55,16 @@ type Props = {
   }) => void;
 };
 
-const TemplatePanel = ({ disabled = false, onTemplate: onSample }: Props) => {
+const TemplatePanel = ({
+  defaultIdx = -1,
+  disabled = false,
+  onTemplate: onSample
+}: Props) => {
   const classes = useStyles();
-  const [open, setOpen] = useState(false);
-  const [templateIdx, setTemplateIdx] = useState(0);
+  const [open, setOpen] = useState(defaultIdx < 0);
+  const [templateIdx, setTemplateIdx] = useState(
+    defaultIdx >= 0 ? defaultIdx : 0
+  );
 
   useEffect(() => {
     onSample({

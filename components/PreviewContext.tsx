@@ -33,6 +33,7 @@ export type PreviewSetState = '' | 'pre-init' | 'init' | 'edited';
 type PreviewContextState = {
   validateAssets: boolean;
   assets: string[];
+  templateIdx: number;
   imageBaseUrl: string;
   editTargetKey: string; // 編集対象の item を取得するときに selector がほしくなるよね(redux でなくても使える?)
   defaultTargetKey: string;
@@ -51,6 +52,11 @@ type PreviewContextState = {
 type actTypeResetPreviewSet = {
   type: 'resetPreviewSet';
   payload: [];
+};
+
+type actTypeTemplateIdx = {
+  type: 'setTemplateIdx';
+  payload: [number];
 };
 
 type actTypeSetImageBaseUrl = {
@@ -115,6 +121,7 @@ type actTypeSortSet = {
 
 type actType =
   | actTypeResetPreviewSet
+  | actTypeTemplateIdx
   | actTypeSetImageBaseUrl
   | actTypeImportPreviewSet
   | actTypeAddPreviewImageUrl
@@ -131,6 +138,7 @@ type actType =
 export const previewContextInitialState: PreviewContextState = {
   validateAssets: false,
   assets: [],
+  templateIdx: -1,
   imageBaseUrl: '',
   editTargetKey: '',
   defaultTargetKey: '',
@@ -156,6 +164,9 @@ function nextPreviewSetState(
   switch (action.type) {
     case 'resetPreviewSet':
       ret = '';
+      break;
+    case 'setTemplateIdx':
+      ret = 'pre-init';
       break;
     case 'setImageBaseUrl':
       ret = 'pre-init';
@@ -216,9 +227,13 @@ export function previewContextReducer(
       newState.previewSetKind = '';
       newState.previewSet = [];
       break;
+    case 'setTemplateIdx':
+      newState.templateIdx = action.payload[0];
+      break;
     case 'setImageBaseUrl':
       newState.previewSetKind = action.payload[0];
       newState.imageBaseUrl = action.payload[1];
+      newState.templateIdx = -1;
       break;
     case 'importPreviewSet':
       newState.previewSetKind = action.payload[0];
