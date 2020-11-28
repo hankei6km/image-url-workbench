@@ -166,7 +166,7 @@ function nextPreviewSetState(
       ret = '';
       break;
     case 'setTemplateIdx':
-      ret = 'pre-init';
+      ret = state.previewSetState;
       break;
     case 'setImageBaseUrl':
       ret = 'pre-init';

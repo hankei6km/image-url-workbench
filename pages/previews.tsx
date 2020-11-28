@@ -147,7 +147,10 @@ const PreviewsPage = () => {
   }, [previewDispatch, templateIdx]);
 
   useEffect(() => {
-    if (previewStateContext.imageBaseUrl !== '') {
+    if (
+      previewStateContext.imageBaseUrl !== '' &&
+      previewStateContext.previewSetState !== 'edited'
+    ) {
       previewDispatch({
         type: 'resetPreviewSet',
         payload: []
@@ -174,6 +177,7 @@ const PreviewsPage = () => {
   }, [
     previewDispatch,
     previewStateContext.imageBaseUrl,
+    previewStateContext.previewSetState,
     previewStateContext.previewSetKind,
     parametersSet,
     sampleParametersSet
