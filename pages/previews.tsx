@@ -125,6 +125,43 @@ function SetItem({
   );
 }
 
+function ActionBar({
+  onTemplate
+}: {
+  onTemplate: ({
+    templateIdx,
+    sampleParametersSet,
+    parametersSet
+  }: {
+    templateIdx: number;
+    sampleParametersSet: ImportTemplateParametersSet;
+    parametersSet: ImportTemplateParametersSet;
+  }) => void;
+}) {
+  const previewStateContext = useContext(PreviewContext);
+
+  return (
+    <TemplatePanel
+      defaultIdx={previewStateContext.templateIdx}
+      disabled={
+        previewStateContext.previewSetState === 'edited' ||
+        previewStateContext.imageBaseUrl === ''
+      }
+      onTemplate={({
+        templateIdx: idx,
+        sampleParametersSet,
+        parametersSet
+      }) => {
+        onTemplate({
+          templateIdx: idx,
+          sampleParametersSet: sampleParametersSet,
+          parametersSet: parametersSet
+        });
+      }}
+    />
+  );
+}
+
 const PreviewsPage = () => {
   const previewStateContext = useContext(PreviewContext);
   const previewDispatch = useContext(PreviewDispatch);
@@ -212,26 +249,20 @@ const PreviewsPage = () => {
   return (
     <Layout title="Previews">
       <Container maxWidth="md">
-        <Box py={1}>
-          <TemplatePanel
-            defaultIdx={previewStateContext.templateIdx}
-            disabled={
-              previewStateContext.previewSetState === 'edited' ||
-              previewStateContext.imageBaseUrl === ''
+        <Box py={1}></Box>
+        <ActionBar
+          onTemplate={({
+            templateIdx: idx,
+            sampleParametersSet,
+            parametersSet
+          }) => {
+            if (templateIdx !== idx) {
+              seTtemplateIdx(idx);
+              setSampleParametersSet(sampleParametersSet);
+              setParametersSet(parametersSet);
             }
-            onTemplate={({
-              templateIdx: idx,
-              sampleParametersSet,
-              parametersSet
-            }) => {
-              if (templateIdx !== idx) {
-                seTtemplateIdx(idx);
-                setSampleParametersSet(sampleParametersSet);
-                setParametersSet(parametersSet);
-              }
-            }}
-          />
-        </Box>
+          }}
+        />
         <Box>
           {previewStateContext.previewSet.map((v) => (
             <SetItem
