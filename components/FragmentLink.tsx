@@ -17,8 +17,8 @@ const FragmentLink = () => {
         const u = new URL(v.previewUrl);
         tmpImgPath.push(`${u.pathname}${u.search}`);
       });
-      setImgUrl(JSON.stringify(tmpImgUrl, null, ' '));
-      setImgPath(JSON.stringify(tmpImgPath, null, ' '));
+      setImgUrl(tmpImgUrl.join('\n'));
+      setImgPath(tmpImgPath.join('\n'));
     } catch {
       setImgUrl('');
       setImgPath('');

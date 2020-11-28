@@ -26,8 +26,8 @@ const FragmentParams = () => {
           }, {});
         tmpImgParametersJson.push(p);
       });
-      setImgParameters(JSON.stringify(tmpImgParameters, null, ' '));
       setImgParametersJson(JSON.stringify(tmpImgParametersJson, null, ' '));
+      setImgParameters(tmpImgParameters.join('\n'));
     } catch {
       setImgParametersJson('');
       setImgParameters('');
