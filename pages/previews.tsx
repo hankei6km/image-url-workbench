@@ -172,6 +172,12 @@ const useActionBarStyles = makeStyles((theme) => ({
     justifyContent: 'flex-end',
     //width: '6em'
     maxWidth: '10em'
+  },
+  templateButtonLabel: {
+    display: 'none',
+    [theme.breakpoints.up('sm')]: {
+      display: 'block'
+    }
   }
 }));
 
@@ -287,7 +293,7 @@ function ActionBar({
                 </Typography>
               </Box>
             </Collapse>
-            <Box>
+            <Box className={classes.templateButtonLabel}>
               <Typography variant="body1">template</Typography>
             </Box>
           </Button>
