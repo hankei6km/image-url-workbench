@@ -139,6 +139,14 @@ const PreviewsPage = () => {
   >([]);
 
   useEffect(() => {
+    return () =>
+      previewDispatch({
+        type: 'setTemplateIdx',
+        payload: [templateIdx]
+      });
+  }, [previewDispatch, templateIdx]);
+
+  useEffect(() => {
     if (previewStateContext.imageBaseUrl !== '') {
       previewDispatch({
         type: 'resetPreviewSet',
@@ -202,11 +210,12 @@ const PreviewsPage = () => {
       <Container maxWidth="md">
         <Box py={1}>
           <TemplatePanel
+            defaultIdx={previewStateContext.templateIdx}
             disabled={
               previewStateContext.previewSetState === 'edited' ||
               previewStateContext.imageBaseUrl === ''
             }
-            onSample={({
+            onTemplate={({
               templateIdx: idx,
               sampleParametersSet,
               parametersSet
