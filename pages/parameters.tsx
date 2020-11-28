@@ -64,7 +64,7 @@ const groupList = [
   }
 ];
 const ParametersPage = () => {
-  const [opened, setOpened] = useState(groupList[0].groupName);
+  const [opened, setOpened] = useState('');
   const changeOpend = (category: string) => {
     return (_e: React.ChangeEvent<{}>, isExpanded: boolean): void => {
       setOpened(isExpanded ? category : '');
