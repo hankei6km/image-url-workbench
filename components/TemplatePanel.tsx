@@ -15,13 +15,19 @@ import {
 } from '../src/template';
 
 const useStyles = makeStyles((theme) => ({
-  root: {},
+  root: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-end',
+    alignContent: 'flex-end',
+    justifyContent: 'flex-end'
+  },
   indicatorOuter: {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     '& .MuiButton-label > .MuiBox-root': {
-      marginRight: theme.spacing(1)
+      marginLeft: theme.spacing(1)
     }
   },
   selectorOuter: {
@@ -61,7 +67,8 @@ const TemplatePanel = ({
   onTemplate: onSample
 }: Props) => {
   const classes = useStyles();
-  const [open, setOpen] = useState(defaultIdx < 0);
+  //  const [open, setOpen] = useState(defaultIdx < 0);
+  const [open, setOpen] = useState(false);
   const [templateIdx, setTemplateIdx] = useState(
     defaultIdx >= 0 ? defaultIdx : 0
   );
@@ -78,7 +85,7 @@ const TemplatePanel = ({
     <Box className={classes.root}>
       <Box className={classes.indicatorOuter}>
         <Button
-          startIcon={
+          endIcon={
             <ExpandMoreIcon
               style={{
                 transform: open ? 'rotate(180deg)' : '' /*'rotate(270deg)'*/
@@ -88,9 +95,6 @@ const TemplatePanel = ({
           onClick={() => setOpen(!open)}
           style={{ textTransform: 'none' }}
         >
-          <Box>
-            <Typography variant="body1">template:</Typography>
-          </Box>
           <Collapse in={!open}>
             <Box>
               <Typography variant="body1">
@@ -98,6 +102,9 @@ const TemplatePanel = ({
               </Typography>
             </Box>
           </Collapse>
+          <Box>
+            <Typography variant="body1">template</Typography>
+          </Box>
         </Button>
       </Box>
       <Box className={classes.selectorOuter}>
