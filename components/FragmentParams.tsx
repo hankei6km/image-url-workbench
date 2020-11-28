@@ -2,20 +2,21 @@ import React, { useState, useContext, useEffect } from 'react';
 import Box from '@material-ui/core/Box';
 import PreviewContext from '../components/PreviewContext';
 import FragmentTextField from '../components/FragmentTextField';
+import { imgUrlParamsToString } from '../utils/imgParamsUtils';
 
 const FragmentParams = () => {
   const previewStateContext = useContext(PreviewContext);
 
   const [imgParametersJson, setImgParametersJson] = useState('');
   const [imgParameters, setImgParameters] = useState('');
+  const [imgParametersPlain, setImgParametersPlain] = useState('');
 
   useEffect(() => {
     try {
       const tmpImgParametersJson: { [key: string]: string }[] = [];
       const tmpImgParameters: string[] = [];
+      const tmpImgParametersPlain: string[] = [];
       previewStateContext.previewSet.forEach((v) => {
-        const u = new URL(v.previewUrl);
-        tmpImgParameters.push(`${u.search.slice(1)}`);
         const p = v.imageParams
           //https://stackoverflow.com/questions/26264956/convert-object-array-to-hash-map-indexed-by-an-attribute-value-of-the-object
           .reduce((m: { [key: string]: string }, v): {
@@ -25,9 +26,13 @@ const FragmentParams = () => {
             return m;
           }, {});
         tmpImgParametersJson.push(p);
+        const u = new URL(v.previewUrl);
+        tmpImgParameters.push(`${u.search.slice(1)}`);
+        tmpImgParametersPlain.push(imgUrlParamsToString(v.imageParams, true));
       });
-      setImgParameters(JSON.stringify(tmpImgParameters, null, ' '));
       setImgParametersJson(JSON.stringify(tmpImgParametersJson, null, ' '));
+      setImgParameters(tmpImgParameters.join('\n'));
+      setImgParametersPlain(tmpImgParametersPlain.join('\n'));
     } catch {
       setImgParametersJson('');
       setImgParameters('');
@@ -41,6 +46,9 @@ const FragmentParams = () => {
       </Box>
       <Box p={1}>
         <FragmentTextField label="query" value={imgParameters} />
+      </Box>
+      <Box p={1} display="none">
+        <FragmentTextField label="query(plain)" value={imgParametersPlain} />
       </Box>
     </Box>
   );

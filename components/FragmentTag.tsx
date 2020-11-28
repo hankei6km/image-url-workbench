@@ -6,6 +6,7 @@ import Switch from '@material-ui/core/Switch';
 import unified from 'unified';
 import rehypeParse from 'rehype-parse';
 import rehypeStringify from 'rehype-stringify';
+import format from 'rehype-format';
 import rehypeToRemark from 'rehype-remark';
 import remarkStringify from 'remark-stringify';
 import rehypeSanitize from 'rehype-sanitize';
@@ -27,6 +28,7 @@ const schema = merge(gh, {
 const processorHtml = unified()
   .use(rehypeParse, { fragment: true })
   .use(rehypeSanitize, (schema as unknown) as Schema)
+  .use(format)
   .use(rehypeStringify)
   .freeze();
 

@@ -117,11 +117,14 @@ const transformerPassthru: paramTransformerFunc = (
   v: string | number
 ): string => `${v}`;
 
-export function imgUrlParamsToString(p: ImgParamsValues): string {
+export function imgUrlParamsToString(
+  p: ImgParamsValues,
+  plain: boolean = false
+): string {
   const q = new URLSearchParams('');
   p.sort(({ key: a }, { key: b }) => a.localeCompare(b)).forEach(
     ({ key, value }) => {
-      const disallowBase64 = paramsKeyDisallowBase64(key);
+      const disallowBase64 = plain ? true : paramsKeyDisallowBase64(key);
       const transformerName: paramTransformerFunc = disallowBase64
         ? transformerPassthru
         : transformer64Name; // https://github.com/imgix/imgix-url-params disallow_base64
