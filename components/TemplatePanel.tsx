@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
-import Collapse from '@material-ui/core/Collapse';
 import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -36,7 +35,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type Props = {
-  open: boolean;
   disabled?: boolean;
   defaultIdx: number;
   onTemplate: ({
@@ -51,7 +49,6 @@ type Props = {
 };
 
 const TemplatePanel = ({
-  open = false,
   defaultIdx = -1,
   disabled = false,
   onTemplate: onSample
@@ -73,22 +70,20 @@ const TemplatePanel = ({
   return (
     <Box className={classes.root}>
       <Box className={classes.selectorOuter}>
-        <Collapse in={open}>
-          <Paper square elevation={0}>
-            <Tabs
-              indicatorColor="primary"
-              textColor="primary"
-              variant="scrollable"
-              value={templateIdx}
-              onChange={(_e, value) => setTemplateIdx(value)}
-              //onChange=((_e,value)=>{setTemplateIdx(value)}}
-            >
-              {BuiltinImportTemplate.map(({ label }, i) => (
-                <Tab disabled={disabled} label={label} key={i} />
-              ))}
-            </Tabs>
-          </Paper>
-        </Collapse>
+        <Paper square elevation={0}>
+          <Tabs
+            indicatorColor="primary"
+            textColor="primary"
+            variant="scrollable"
+            value={templateIdx}
+            onChange={(_e, value) => setTemplateIdx(value)}
+            //onChange=((_e,value)=>{setTemplateIdx(value)}}
+          >
+            {BuiltinImportTemplate.map(({ label }, i) => (
+              <Tab disabled={disabled} label={label} key={i} />
+            ))}
+          </Tabs>
+        </Paper>
       </Box>
     </Box>
   );
