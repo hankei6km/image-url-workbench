@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useContext, useCallback } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
 import Layout from '../components/Layout';
 import Container from '@material-ui/core/Container';
 import Box from '@material-ui/core/Box';
@@ -15,7 +16,19 @@ import ImgPreview from '../components/ImgPreview';
 
 const validator = Validator();
 
+const useStyles = makeStyles((theme) => ({
+  imagePreview: {
+    width: 300,
+    height: 150,
+    [theme.breakpoints.up('sm')]: {
+      width: 438,
+      height: 220
+    }
+  }
+}));
+
 const CardPage = () => {
+  const classes = useStyles();
   //const router = useRouter();
   const previewStateContext = useContext(PreviewContext);
   const previewDispatch = useContext(PreviewDispatch);
@@ -119,7 +132,7 @@ const CardPage = () => {
         </Box>
         <Box pb={3}>
           {imageUrlErrMsg === '' ? (
-            <Box p={1} width={438}>
+            <Box p={1}>
               <Box display="flex">
                 <Box>
                   <Typography variant="body2">Preview Card Image</Typography>
@@ -130,23 +143,25 @@ const CardPage = () => {
                   </Typography>
                 </Box>
               </Box>
-              <ImgPreview
-                previewUrl={imageUrl}
-                {...{
-                  fitMode: 'landscape',
-                  imgGrow: 'none',
-                  width: 438,
-                  height: 220
-                }}
-                skeleton={true}
-                onSize={({ w, h }) => {
-                  setImgWidth(w);
-                  setImgHeight(h);
-                }}
-              />
+              <Box className={classes.imagePreview}>
+                <ImgPreview
+                  previewUrl={imageUrl}
+                  {...{
+                    fitMode: 'landscape',
+                    imgGrow: 'none',
+                    width: undefined,
+                    height: undefined
+                  }}
+                  skeleton={true}
+                  onSize={({ w, h }) => {
+                    setImgWidth(w);
+                    setImgHeight(h);
+                  }}
+                />
+              </Box>
             </Box>
           ) : (
-            <Box p={1} width="100%">
+            <Box p={1}>
               <DebTextField
                 error={imageUrlErrMsg ? true : false}
                 id="preview-card-image-url"
@@ -159,7 +174,7 @@ const CardPage = () => {
               />
             </Box>
           )}
-          <Box p={1} width="100%">
+          <Box p={1}>
             <DebTextField
               id="preview-card-title"
               label="Preview Card Title"
@@ -171,7 +186,7 @@ const CardPage = () => {
               }}
             />
           </Box>
-          <Box p={1} width="100%">
+          <Box p={1}>
             <DebTextField
               id="preview-card-description"
               label="Preview Card Description"
