@@ -4,12 +4,16 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { decodeBase64Url } from '../utils/base64';
 import Validator from '../utils/validator';
-import PreviewContext, { PreviewDispatch } from '../components/PreviewContext';
+import PreviewContext, {
+  CardType,
+  PreviewDispatch
+} from '../components/PreviewContext';
 
 const validator = Validator();
 
 type CardGenPagePropsData = {
   imageUrl?: string;
+  cardType?: CardType;
   title?: string;
   description?: string;
 };
@@ -21,6 +25,13 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       title: decodeBase64Url((context.query?.title as string) || ''),
       description: decodeBase64Url((context.query?.description as string) || '')
     };
+    const cardTypeText = decodeBase64Url(
+      (context.query?.cardType as string) || ''
+    );
+    data.cardType =
+      cardTypeText === 'summary_large_image' || cardTypeText === 'summary'
+        ? cardTypeText
+        : 'summary_large_image';
     return { props: { data: data } };
   } catch (err) {
     return { props: { errors: err.message } };
@@ -57,9 +68,9 @@ const CardGenPage = ({
   useEffect(() => {
     previewDispatch({
       type: 'setCard',
-      payload: [data.title, data.description]
+      payload: [data.cardType, data.title, data.description]
     });
-  }, [previewDispatch, data.title, data.description]);
+  }, [previewDispatch, data.cardType, data.title, data.description]);
 
   useEffect(() => {
     router.push('/render');
@@ -81,7 +92,10 @@ const CardGenPage = ({
         content={dataImageUrlErr === undefined ? data.imageUrl : ''}
       />
       <meta name="og:title" content={data.title || '[preview] title'} />
-      <meta name="twitter:card" content="summary_large_image" />
+      <meta
+        name="twitter:card"
+        content={data.cardType || 'summary_large_image'}
+      />
     </Head>
   );
 };
