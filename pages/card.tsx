@@ -242,7 +242,11 @@ const CardPage = () => {
               <li>copy "Card Preview URL" to clipboard</li>
               <li>
                 open{' '}
-                <a href="https://cards-dev.twitter.com/validator">
+                <a
+                  href="https://cards-dev.twitter.com/validator"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   Twitter Card Validator
                 </a>
               </li>
