@@ -109,28 +109,6 @@ const CardPage = () => {
     <Layout title="Card">
       <Container maxWidth="md">
         <Box my={1} p={1}>
-          <Typography variant="h6">Usage:</Typography>
-          <Typography variant="body1">
-            <ul>
-              <li>copy "Card Preview URL" to clipboard</li>
-              <li>
-                open{' '}
-                <a href="https://cards-dev.twitter.com/validator">
-                  Twitter Card Validator
-                </a>
-              </li>
-              <li>paste the url to "Card URL"</li>
-            </ul>
-          </Typography>
-        </Box>
-        <Box my={1} p={1}>
-          <FragmentTextField
-            id="card-preview-url"
-            label="Card Preview URL"
-            value={cardPreviewUrl}
-          />
-        </Box>
-        <Box pb={3}>
           {imageUrlErrMsg === '' ? (
             <Box p={1}>
               <Box display="flex">
@@ -174,6 +152,30 @@ const CardPage = () => {
               />
             </Box>
           )}
+        </Box>
+        <Box my={1} p={1}>
+          <Typography variant="h6">Usage:</Typography>
+          <Typography variant="body1">
+            <ul>
+              <li>copy "Card Preview URL" to clipboard</li>
+              <li>
+                open{' '}
+                <a href="https://cards-dev.twitter.com/validator">
+                  Twitter Card Validator
+                </a>
+              </li>
+              <li>paste the url to "Card URL"</li>
+            </ul>
+          </Typography>
+        </Box>
+        <Box my={1} p={1}>
+          <FragmentTextField
+            id="card-preview-url"
+            label="Card Preview URL"
+            value={cardPreviewUrl}
+          />
+        </Box>
+        <Box pb={3}>
           <Box p={1}>
             <DebTextField
               id="preview-card-title"
