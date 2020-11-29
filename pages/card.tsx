@@ -3,10 +3,20 @@ import { makeStyles } from '@material-ui/core/styles';
 import Layout from '../components/Layout';
 import Container from '@material-ui/core/Container';
 import Box from '@material-ui/core/Box';
+import Accordion from '@material-ui/core/Accordion';
+import AccordionSummary from '@material-ui/core/AccordionSummary';
+import AccordionDetails from '@material-ui/core/AccordionDetails';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
 import Typography from '@material-ui/core/Typography';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import CheckIcon from '@material-ui/icons/Check';
 import { encodeBase64Url } from '../utils/base64';
 import Validator from '../utils/validator';
 import PreviewContext, {
+  CardType,
   PreviewDispatch,
   getTargetItemIndex
 } from '../components/PreviewContext';
@@ -27,6 +37,11 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
+const cardTypeList: { label: string; cardType: CardType }[] = [
+  { label: 'summary', cardType: 'summary' },
+  { label: 'summary large image', cardType: 'summary_large_image' }
+];
+
 const CardPage = () => {
   const classes = useStyles();
   //const router = useRouter();
@@ -44,6 +59,7 @@ const CardPage = () => {
   );
   const [imgWidth, setImgWidth] = useState(0);
   const [imgHeight, setImgHeight] = useState(0);
+  const [cardType, setCardType] = useState(previewStateContext.card.cardType);
   const [title, setTitle] = useState(previewStateContext.card.title);
   const [description, setDescription] = useState(
     previewStateContext.card.description
@@ -69,6 +85,10 @@ const CardPage = () => {
     imageUrl
   ]);
 
+  const handleListItemClick = (cardType: CardType) => {
+    setCardType(cardType);
+  };
+
   useEffect(() => {
     setImageUrlErrMsg(validateImageUrl());
   }, [validateImageUrl]);
@@ -76,7 +96,7 @@ const CardPage = () => {
   useEffect(() => {
     if (imageUrl && validateImageUrl() === '') {
       const q = new URLSearchParams('');
-      q.append('type', 'cardPreview');
+      q.append('cardType', encodeBase64Url(cardType));
       q.append('imageUrl', encodeBase64Url(imageUrl));
       q.append('title', encodeBase64Url(title));
       q.append('description', encodeBase64Url(description));
@@ -87,7 +107,7 @@ const CardPage = () => {
     } else {
       setCardPreviewUrl('');
     }
-  }, [imageUrl, title, description, validateImageUrl]);
+  }, [imageUrl, cardType, title, description, validateImageUrl]);
 
   useEffect(() => {
     if (validateImageUrl() === '') {
@@ -101,9 +121,9 @@ const CardPage = () => {
   useEffect(() => {
     previewDispatch({
       type: 'setCard',
-      payload: [title, description]
+      payload: [cardType, title, description]
     });
-  }, [previewDispatch, title, description]);
+  }, [previewDispatch, cardType, title, description]);
 
   return (
     <Layout title="Card">
@@ -152,6 +172,68 @@ const CardPage = () => {
               />
             </Box>
           )}
+          <Box>
+            <Accordion
+              elevation={0}
+              // expanded={groupName === opened}
+              // onChange={onChange}
+            >
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls={`optional parameters panel`}
+                IconButtonProps={{ edge: 'start' }}
+              >
+                <Typography variant="body2">Optional fields</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Box width="100%">
+                  <Typography variant="body1" color="textSecondary">
+                    Preview Card Type
+                  </Typography>
+                  <Box p={1}>
+                    <List component="nav" aria-label="main mailbox folders">
+                      {cardTypeList.map((v) => (
+                        <ListItem
+                          key={v.cardType}
+                          button
+                          onClick={() => handleListItemClick(v.cardType)}
+                        >
+                          <ListItemIcon>
+                            {cardType === v.cardType && <CheckIcon />}
+                          </ListItemIcon>
+                          <ListItemText primary={v.label} />
+                        </ListItem>
+                      ))}
+                    </List>
+                  </Box>
+                  <Box p={1}>
+                    <DebTextField
+                      id="preview-card-title"
+                      label="Preview Card Title"
+                      // defaultValue={data.cardTitle}
+                      fullWidth
+                      value={title}
+                      onChangeValue={({ value }) => {
+                        setTitle(value);
+                      }}
+                    />
+                  </Box>
+                  <Box p={1}>
+                    <DebTextField
+                      id="preview-card-description"
+                      label="Preview Card Description"
+                      // defaultValue={data.cardDescription}
+                      fullWidth
+                      value={description}
+                      onChangeValue={({ value }) => {
+                        setDescription(value);
+                      }}
+                    />
+                  </Box>
+                </Box>
+              </AccordionDetails>
+            </Accordion>
+          </Box>
         </Box>
         <Box my={1} p={1}>
           <Typography variant="h6">Usage:</Typography>
@@ -174,32 +256,6 @@ const CardPage = () => {
             label="Card Preview URL"
             value={cardPreviewUrl}
           />
-        </Box>
-        <Box pb={3}>
-          <Box p={1}>
-            <DebTextField
-              id="preview-card-title"
-              label="Preview Card Title"
-              // defaultValue={data.cardTitle}
-              fullWidth
-              value={title}
-              onChangeValue={({ value }) => {
-                setTitle(value);
-              }}
-            />
-          </Box>
-          <Box p={1}>
-            <DebTextField
-              id="preview-card-description"
-              label="Preview Card Description"
-              // defaultValue={data.cardDescription}
-              fullWidth
-              value={description}
-              onChangeValue={({ value }) => {
-                setDescription(value);
-              }}
-            />
-          </Box>
         </Box>
       </Container>
     </Layout>

@@ -7,7 +7,10 @@ import {
 } from '../utils/imgParamsUtils';
 import { ImportTemplateParametersSet } from '../src/template';
 
+export type CardType = 'summary' | 'summary_large_image';
+
 type Card = {
+  cardType: CardType;
   title: string;
   description: string;
 };
@@ -91,7 +94,7 @@ type actTypeClonePreviewImageUrl = {
 
 type actTypeSetCard = {
   type: 'setCard';
-  payload: [string, string];
+  payload: [CardType, string, string];
 };
 
 type actTypeSetTagFragment = {
@@ -143,6 +146,7 @@ export const previewContextInitialState: PreviewContextState = {
   editTargetKey: '',
   defaultTargetKey: '',
   card: {
+    cardType: 'summary_large_image',
     title: '',
     description: ''
   },
@@ -337,8 +341,9 @@ export function previewContextReducer(
       }
       break;
     case 'setCard':
-      newState.card.title = action.payload[0];
-      newState.card.description = action.payload[1];
+      newState.card.cardType = action.payload[0];
+      newState.card.title = action.payload[1];
+      newState.card.description = action.payload[2];
       break;
     case 'setTagFragment':
       newState.tagFragment.altText = action.payload[0];
