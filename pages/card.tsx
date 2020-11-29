@@ -1,8 +1,12 @@
 import React, { useEffect, useState, useContext, useCallback } from 'react';
+import { useRouter } from 'next/router';
 import { makeStyles } from '@material-ui/core/styles';
 import Layout from '../components/Layout';
 import Container from '@material-ui/core/Container';
 import Box from '@material-ui/core/Box';
+import Card from '@material-ui/core/Card';
+import CardHeader from '@material-ui/core/CardHeader';
+import CardActionArea from '@material-ui/core/CardActionArea';
 import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
@@ -33,6 +37,14 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.up('sm')]: {
       width: 438,
       height: 220
+    },
+    '& > .MuiBox-root': {
+      width: 300,
+      height: 150,
+      [theme.breakpoints.up('sm')]: {
+        width: 438,
+        height: 220
+      }
     }
   }
 }));
@@ -47,6 +59,7 @@ const CardPage = () => {
   //const router = useRouter();
   const previewStateContext = useContext(PreviewContext);
   const previewDispatch = useContext(PreviewDispatch);
+  const router = useRouter();
   const getPreviewUrl = useCallback(() => {
     const idx = getTargetItemIndex(
       previewStateContext.previewSet,
@@ -131,32 +144,48 @@ const CardPage = () => {
         <Box my={1} p={1}>
           {imageUrlErrMsg === '' ? (
             <Box p={1}>
-              <Box display="flex">
-                <Box>
-                  <Typography variant="body2">Preview Card Image</Typography>
-                </Box>
-                <Box ml={1}>
-                  <Typography variant="body2">
-                    {imgWidth > 0 ? `(${imgWidth} x ${imgHeight})` : ''}
-                  </Typography>
-                </Box>
-              </Box>
-              <Box className={classes.imagePreview}>
-                <ImgPreview
-                  previewUrl={imageUrl}
-                  {...{
-                    fitMode: 'landscape',
-                    imgGrow: 'none',
-                    width: undefined,
-                    height: undefined
-                  }}
-                  skeleton={true}
-                  onSize={({ w, h }) => {
-                    setImgWidth(w);
-                    setImgHeight(h);
-                  }}
+              <Card elevation={0}>
+                <CardHeader
+                  titleTypographyProps={{ variant: 'body2' }}
+                  title={
+                    <Box display="flex">
+                      <Box>
+                        <Typography variant="body2">
+                          Preview Card Image
+                        </Typography>
+                      </Box>
+                      <Box ml={1}>
+                        <Typography variant="body2">
+                          {imgWidth > 0 ? `(${imgWidth} x ${imgHeight})` : ''}
+                        </Typography>
+                      </Box>
+                    </Box>
+                  }
                 />
-              </Box>
+                <CardActionArea
+                  className={classes.imagePreview}
+                  onClick={() => {
+                    router.push('/render');
+                  }}
+                >
+                  <Box>
+                    <ImgPreview
+                      previewUrl={imageUrl}
+                      {...{
+                        fitMode: 'landscape',
+                        imgGrow: 'none',
+                        width: undefined,
+                        height: undefined
+                      }}
+                      skeleton={true}
+                      onSize={({ w, h }) => {
+                        setImgWidth(w);
+                        setImgHeight(h);
+                      }}
+                    />
+                  </Box>
+                </CardActionArea>
+              </Card>
             </Box>
           ) : (
             <Box p={1}>
