@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext, useCallback } from 'react';
 import Layout from '../components/Layout';
 import Container from '@material-ui/core/Container';
 import Box from '@material-ui/core/Box';
+import Typography from '@material-ui/core/Typography';
 import { encodeBase64Url } from '../utils/base64';
 import Validator from '../utils/validator';
 import PreviewContext, {
@@ -10,6 +11,7 @@ import PreviewContext, {
 } from '../components/PreviewContext';
 import DebTextField from '../components/DebTextField';
 import FragmentTextField from '../components/FragmentTextField';
+import ImgPreview from '../components/ImgPreview';
 
 const validator = Validator();
 
@@ -24,9 +26,11 @@ const CardPage = () => {
     );
     return idx >= 0 ? previewStateContext.previewSet[idx].previewUrl : '';
   }, [previewStateContext.previewSet, previewStateContext.editTargetKey]);
-  const [imageUrl, setImageUrl] = useState(
+  const [imageUrl] = useState(
     getPreviewUrl() // assets のチェックが入らない状態になる. あとで対応
   );
+  const [imgWidth, setImgWidth] = useState(0);
+  const [imgHeight, setImgHeight] = useState(0);
   const [title, setTitle] = useState(previewStateContext.card.title);
   const [description, setDescription] = useState(
     previewStateContext.card.description
@@ -54,7 +58,7 @@ const CardPage = () => {
 
   useEffect(() => {
     setImageUrlErrMsg(validateImageUrl());
-  }, [validateImageUrl, imageUrl]);
+  }, [validateImageUrl]);
 
   useEffect(() => {
     if (imageUrl && validateImageUrl() === '') {
@@ -91,22 +95,71 @@ const CardPage = () => {
   return (
     <Layout title="Card">
       <Container maxWidth="md">
+        <Box my={1} p={1}>
+          <Typography variant="h6">Usage:</Typography>
+          <Typography variant="body1">
+            <ul>
+              <li>copy "Card Preview URL" to clipboard</li>
+              <li>
+                open{' '}
+                <a href="https://cards-dev.twitter.com/validator">
+                  Twitter Card Validator
+                </a>
+              </li>
+              <li>paste the url to "Card URL"</li>
+            </ul>
+          </Typography>
+        </Box>
+        <Box my={1} p={1}>
+          <FragmentTextField
+            id="card-preview-url"
+            label="Card Preview URL"
+            value={cardPreviewUrl}
+          />
+        </Box>
         <Box pb={3}>
-          <Box p={1}>
-            <DebTextField
-              error={imageUrlErrMsg ? true : false}
-              id="preview-card-image-url"
-              label="Preview Card Image URL"
-              defaultValue={imageUrl}
-              fullWidth
-              helperText={imageUrlErrMsg}
-              // 入力できないようにする?
-              onChangeValue={({ value }) => {
-                setImageUrl(value);
-              }}
-            />
-          </Box>
-          <Box p={1}>
+          {imageUrlErrMsg === '' ? (
+            <Box p={1} width={438}>
+              <Box display="flex">
+                <Box>
+                  <Typography variant="body2">Preview Card Image</Typography>
+                </Box>
+                <Box ml={1}>
+                  <Typography variant="body2">
+                    {imgWidth > 0 ? `(${imgWidth} x ${imgHeight})` : ''}
+                  </Typography>
+                </Box>
+              </Box>
+              <ImgPreview
+                previewUrl={imageUrl}
+                {...{
+                  fitMode: 'landscape',
+                  imgGrow: 'none',
+                  width: 438,
+                  height: 220
+                }}
+                skeleton={true}
+                onSize={({ w, h }) => {
+                  setImgWidth(w);
+                  setImgHeight(h);
+                }}
+              />
+            </Box>
+          ) : (
+            <Box p={1} width="100%">
+              <DebTextField
+                error={imageUrlErrMsg ? true : false}
+                id="preview-card-image-url"
+                label="Preview Card Image URL"
+                defaultValue={imageUrl}
+                fullWidth
+                helperText={imageUrlErrMsg}
+                value={imageUrl}
+                onChangeValue={(_e) => {}}
+              />
+            </Box>
+          )}
+          <Box p={1} width="100%">
             <DebTextField
               id="preview-card-title"
               label="Preview Card Title"
@@ -118,7 +171,7 @@ const CardPage = () => {
               }}
             />
           </Box>
-          <Box p={1}>
+          <Box p={1} width="100%">
             <DebTextField
               id="preview-card-description"
               label="Preview Card Description"
@@ -130,13 +183,6 @@ const CardPage = () => {
               }}
             />
           </Box>
-        </Box>
-        <Box p={1}>
-          <FragmentTextField
-            id="card-preview-url"
-            label="Card Preview URL"
-            value={cardPreviewUrl}
-          />
         </Box>
       </Container>
     </Layout>
