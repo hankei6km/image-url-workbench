@@ -237,7 +237,7 @@ const CardPage = () => {
         </Box>
         <Box my={1} p={1}>
           <Typography variant="h6">Usage:</Typography>
-          <Typography variant="body1">
+          <Typography component={'span'} variant="body1">
             <ul>
               <li>copy "Card Preview URL" to clipboard</li>
               <li>
