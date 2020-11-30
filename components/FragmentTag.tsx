@@ -21,6 +21,7 @@ import { ImgParamsValues } from '../utils/imgParamsUtils';
 import merge from 'deepmerge';
 import gh from 'hast-util-sanitize/lib/github.json';
 import { Schema } from 'hast-util-sanitize';
+import CodePenDefineForm from './CodePen';
 
 const schema = merge(gh, {
   tagNames: ['picture', 'source'],
@@ -177,6 +178,20 @@ const FragmentTag = () => {
 
   return (
     <Box>
+      <Box p={1}>
+        <CodePenDefineForm
+          title="try picture"
+          html={pictureHtml}
+          buttonLabel="Try picture tag on CodePen"
+          buttonProps={{ variant: 'outlined' }}
+        />
+        <CodePenDefineForm
+          title="try img"
+          html={imgHtml}
+          buttonLabel="Try img tag on CodePen"
+          buttonProps={{ variant: 'outlined' }}
+        />
+      </Box>
       <Box p={1}>
         <DebTextField
           label="alt text"
