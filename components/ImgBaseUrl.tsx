@@ -30,6 +30,17 @@ export default function ImgBaseUrl({
     setValue(baseUrl);
   }, [baseUrl]);
 
+  useEffect(() => {
+    const err = validator.assets(value, validateAssets, assets, true);
+    if (err && value !== '') {
+      setErrMsg(err.message);
+      onChange({ value: '' });
+    } else {
+      setErrMsg('');
+      onChange({ value: value });
+    }
+  }, [onChange, validateAssets, assets, value]);
+
   return (
     <Box>
       <TextField
@@ -42,21 +53,15 @@ export default function ImgBaseUrl({
         helperText={errMsg}
         onKeyPress={(e) => {
           if (e.key === 'Enter') {
-            onEnterKey({ value: value });
+            if (errMsg === '') {
+              onEnterKey({ value: value });
+            }
             e.preventDefault();
           }
         }}
         onChange={(e) => {
           const newValue = e.target.value;
           setValue(newValue);
-          const err = validator.assets(newValue, validateAssets, assets, true);
-          if (err && newValue !== '') {
-            setErrMsg(err.message);
-            onChange({ value:'' });
-          } else {
-            onChange({ value: e.target.value });
-            setErrMsg('');
-          }
         }}
       />
     </Box>
