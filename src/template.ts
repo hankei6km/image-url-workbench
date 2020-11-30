@@ -1,9 +1,12 @@
+import { BreakPoint } from '../components/PreviewContext';
+
 export type ImportTemplateParameters = { [key: string]: string };
 export type ImportTemplateParametersSet = ImportTemplateParameters[];
 export type ImportTemplate = {
   label: string;
   sampleParameters: ImportTemplateParametersSet;
   parameters: ImportTemplateParametersSet;
+  medias: BreakPoint[];
 };
 
 export type ImportTemplateList = ImportTemplate[];
@@ -72,7 +75,8 @@ export const BuiltinImportTemplate: ImportTemplateList = [
         'max-h': '400',
         'max-w': '300'
       }
-    ]
+    ],
+    medias: [1280, 960, 600, 320]
   },
   {
     label: 'card(twitter)',
@@ -120,6 +124,7 @@ export const BuiltinImportTemplate: ImportTemplateList = [
         fit: 'crop',
         w: '314'
       }
-    ]
+    ],
+    medias: ['auto', 'auto']
   }
 ];

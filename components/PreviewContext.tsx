@@ -21,6 +21,26 @@ type TagFragment = {
   newTab: boolean;
 };
 
+export const BreakPointValues = [320, 600, 960, 1280, 1920] as const;
+export const BreakPointAutoAndValues = ['auto', ...BreakPointValues] as const;
+export type BreakPoint = typeof BreakPointAutoAndValues[number];
+
+export function breakPointValue(
+  media: BreakPoint,
+  imgWidth: number
+): BreakPoint {
+  if (media === 'auto') {
+    const idx = BreakPointValues.findIndex(
+      (v) => typeof v === 'number' && v >= imgWidth
+    );
+    if (idx >= 0) {
+      return BreakPointValues[idx];
+    }
+    return BreakPointValues[BreakPointValues.length - 1];
+  }
+  return media;
+}
+
 export type PreviewItem = {
   itemKey: string;
   previewUrl: string;
@@ -28,6 +48,7 @@ export type PreviewItem = {
   imageParams: ImgParamsValues;
   imgWidth: number;
   imgHeight: number;
+  media: BreakPoint;
 };
 
 export type PreviewSetKind = '' | 'sample' | 'data';
@@ -69,7 +90,7 @@ type actTypeSetImageBaseUrl = {
 
 type actTypeImportPreviewSet = {
   type: 'importPreviewSet';
-  payload: [PreviewSetKind, string, ImportTemplateParametersSet];
+  payload: [PreviewSetKind, string, ImportTemplateParametersSet, BreakPoint[]];
 };
 
 type actTypeAddPreviewImageUrl = {
@@ -85,6 +106,11 @@ type actTypeSetPreviewImageUrl = {
 type actTypeSetPreviewImageSize = {
   type: 'setPreviewImageSize';
   payload: [string, number, number];
+};
+
+type actTypeSetPreviewImageMedia = {
+  type: 'setPreviewImageMedia';
+  payload: [string, BreakPoint];
 };
 
 type actTypeClonePreviewImageUrl = {
@@ -130,6 +156,7 @@ type actType =
   | actTypeAddPreviewImageUrl
   | actTypeSetPreviewImageUrl
   | actTypeSetPreviewImageSize
+  | actTypeSetPreviewImageMedia
   | actTypeClonePreviewImageUrl
   | actTypeSetCard
   | actTypeSetTagFragment
@@ -187,6 +214,9 @@ function nextPreviewSetState(
     case 'setPreviewImageSize':
       ret = state.previewSetState;
       break;
+    case 'setPreviewImageMedia':
+      ret = 'edited';
+      break;
     case 'clonePreviewImageUrl':
       ret = 'edited';
       break;
@@ -241,6 +271,8 @@ export function previewContextReducer(
       break;
     case 'importPreviewSet':
       newState.previewSetKind = action.payload[0];
+      const medias = action.payload[3] || [];
+      const mediasLen = medias.length;
       newState.previewSet = action.payload[2].map((v, i) => {
         const [u, p] = action.payload[1].split('?', 2);
         const q = imgUrlParamsMergeObject(
@@ -249,13 +281,14 @@ export function previewContextReducer(
         );
         const s = imgUrlParamsToString(q);
         const paramsString = s ? `?${s}` : '';
-        const previewItem = {
+        const previewItem: PreviewItem = {
           itemKey: `${Date.now()}-${i}`,
           previewUrl: `${u}${paramsString}`,
           baseImageUrl: u,
           imageParams: q,
           imgWidth: 0,
-          imgHeight: 0
+          imgHeight: 0,
+          media: i < mediasLen ? medias[i] : 'auto'
         };
         return previewItem;
       });
@@ -268,13 +301,14 @@ export function previewContextReducer(
     case 'addPreviewImageUrl':
       if (action.payload[0]) {
         const [u, p] = action.payload[0].split('?', 2);
-        const previewItem = {
+        const previewItem: PreviewItem = {
           itemKey: `${Date.now()}`,
           previewUrl: action.payload[0],
           baseImageUrl: u,
           imageParams: p ? imgUrlParamsParseString(p) : [],
           imgWidth: 0,
-          imgHeight: 0
+          imgHeight: 0,
+          media: 'auto'
         };
         newState.editTargetKey = previewItem.itemKey;
         if (newState.defaultTargetKey === '') {
@@ -286,13 +320,14 @@ export function previewContextReducer(
     case 'setPreviewImageUrl':
       if (action.payload[0]) {
         const [u, p] = action.payload[0].split('?', 2);
-        const previewItem = {
+        const previewItem: PreviewItem = {
           itemKey: state.editTargetKey,
           previewUrl: action.payload[0],
           baseImageUrl: u,
           imageParams: p ? imgUrlParamsParseString(p) : [],
           imgWidth: 0,
-          imgHeight: 0
+          imgHeight: 0,
+          media: 'auto'
         };
         const idx = state.previewSet.findIndex(
           (v) => v.itemKey === state.editTargetKey
@@ -301,6 +336,7 @@ export function previewContextReducer(
           if (previewItem.previewUrl === state.previewSet[idx].previewUrl) {
             previewItem.imgWidth = state.previewSet[idx].imgWidth;
             previewItem.imgHeight = state.previewSet[idx].imgHeight;
+            previewItem.media = state.previewSet[idx].media;
           }
           newState.previewSet[idx] = previewItem;
         } else {
@@ -319,6 +355,16 @@ export function previewContextReducer(
         }
       }
       break;
+    case 'setPreviewImageMedia':
+      if (action.payload[0]) {
+        const idx = state.previewSet.findIndex(
+          (v) => v.itemKey === action.payload[0]
+        );
+        if (idx >= 0) {
+          newState.previewSet[idx].media = action.payload[1];
+        }
+      }
+      break;
     case 'clonePreviewImageUrl':
       if (action.payload[0]) {
         const idx = state.previewSet.findIndex(
@@ -327,13 +373,14 @@ export function previewContextReducer(
         if (idx >= 0) {
           //array の clone 代わりに再作成
           const [u, p] = state.previewSet[idx].previewUrl.split('?', 2);
-          const previewItem = {
+          const previewItem: PreviewItem = {
             itemKey: `${Date.now()}`,
             previewUrl: state.previewSet[idx].previewUrl,
             baseImageUrl: u,
             imageParams: p ? imgUrlParamsParseString(p) : [],
             imgWidth: state.previewSet[idx].imgWidth,
-            imgHeight: state.previewSet[idx].imgHeight
+            imgHeight: state.previewSet[idx].imgHeight,
+            media: state.previewSet[idx].media
           };
           newState.previewSet.splice(idx + 1, 0, previewItem);
           newState.editTargetKey = previewItem.itemKey;

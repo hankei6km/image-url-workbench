@@ -19,7 +19,9 @@ import MenuIcon from '@material-ui/icons/Menu';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import PreviewContext, {
   PreviewDispatch,
-  PreviewItem
+  PreviewItem,
+  BreakPoint,
+  BreakPointAutoAndValues
 } from '../components/PreviewContext';
 import TemplatePanel from '../components/TemplatePanel';
 import ImgPreview from '../components/ImgPreview';
@@ -47,6 +49,16 @@ function SetItem({
   const classes = useStyles();
   const [imgWidth, setImgWidth] = useState(0);
   const [imgHeight, setImgHeight] = useState(0);
+
+  const [mediaAnchorEl, setMediaAnchorEl] = useState<null | HTMLElement>(null);
+
+  const handleClickMedia = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setMediaAnchorEl(event.currentTarget);
+  };
+
+  const handleCloseMedia = () => {
+    setMediaAnchorEl(null);
+  };
 
   return (
     <Box key={previewItem.previewUrl} my={1} p={1}>
@@ -107,6 +119,34 @@ function SetItem({
           >
             Default
           </Button>
+          <Button size="small" onClick={handleClickMedia}>
+            <Box display="flex" alignContent="center">
+              <Box>Media: </Box>
+              {previewItem.media}
+            </Box>
+          </Button>
+          <Menu
+            id="select-media"
+            anchorEl={mediaAnchorEl}
+            keepMounted
+            open={Boolean(mediaAnchorEl)}
+            onClose={handleCloseMedia}
+          >
+            {BreakPointAutoAndValues.map((v, i) => (
+              <MenuItem
+                key={i}
+                onClick={() => {
+                  handleCloseMedia();
+                  previewDispatch({
+                    type: 'setPreviewImageMedia',
+                    payload: [previewItem.itemKey, v]
+                  });
+                }}
+              >
+                {v}
+              </MenuItem>
+            ))}
+          </Menu>
           <Button
             size="small"
             onClick={() => {
@@ -187,11 +227,13 @@ function ActionBar({
   onTemplate: ({
     templateIdx,
     sampleParametersSet,
-    parametersSet
+    parametersSet,
+    medias
   }: {
     templateIdx: number;
     sampleParametersSet: ImportTemplateParametersSet;
     parametersSet: ImportTemplateParametersSet;
+    medias: BreakPoint[];
   }) => void;
 }) {
   const classes = useActionBarStyles();
@@ -310,13 +352,15 @@ function ActionBar({
             onTemplate={({
               templateIdx: idx,
               sampleParametersSet,
-              parametersSet
+              parametersSet,
+              medias
             }) => {
               seTtemplateIdx(idx);
               onTemplate({
                 templateIdx: idx,
                 sampleParametersSet: sampleParametersSet,
-                parametersSet: parametersSet
+                parametersSet: parametersSet,
+                medias: medias
               });
             }}
           />
@@ -343,6 +387,7 @@ const PreviewsPage = () => {
   const [parametersSet, setParametersSet] = useState<
     ImportTemplateParametersSet
   >([]);
+  const [medias, setMedias] = useState<BreakPoint[]>([]);
 
   useEffect(() => {
     return () =>
@@ -365,7 +410,12 @@ const PreviewsPage = () => {
         case 'data':
           previewDispatch({
             type: 'importPreviewSet',
-            payload: ['data', previewStateContext.imageBaseUrl, parametersSet]
+            payload: [
+              'data',
+              previewStateContext.imageBaseUrl,
+              parametersSet,
+              medias
+            ]
           });
           break;
         case 'sample':
@@ -374,7 +424,8 @@ const PreviewsPage = () => {
             payload: [
               'sample',
               previewStateContext.imageBaseUrl,
-              sampleParametersSet
+              sampleParametersSet,
+              medias
             ]
           });
           break;
@@ -386,7 +437,8 @@ const PreviewsPage = () => {
     previewStateContext.previewSetState,
     previewStateContext.previewSetKind,
     parametersSet,
-    sampleParametersSet
+    sampleParametersSet,
+    medias
   ]);
 
   // useEffect(() => {
@@ -423,12 +475,14 @@ const PreviewsPage = () => {
           onTemplate={({
             templateIdx: idx,
             sampleParametersSet,
-            parametersSet
+            parametersSet,
+            medias
           }) => {
             if (templateIdx !== idx) {
               seTtemplateIdx(idx);
               setSampleParametersSet(sampleParametersSet);
               setParametersSet(parametersSet);
+              setMedias(medias);
             }
           }}
         />

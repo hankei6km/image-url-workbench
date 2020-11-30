@@ -8,6 +8,7 @@ import {
   BuiltinImportTemplate,
   ImportTemplateParametersSet
 } from '../src/template';
+import { BreakPoint } from './PreviewContext';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -40,18 +41,20 @@ type Props = {
   onTemplate: ({
     templateIdx,
     sampleParametersSet,
-    parametersSet
+    parametersSet,
+    medias
   }: {
     templateIdx: number;
     sampleParametersSet: ImportTemplateParametersSet;
     parametersSet: ImportTemplateParametersSet;
+    medias: BreakPoint[];
   }) => void;
 };
 
 const TemplatePanel = ({
   defaultIdx = -1,
   disabled = false,
-  onTemplate: onSample
+  onTemplate
 }: Props) => {
   const classes = useStyles();
   //  const [open, setOpen] = useState(defaultIdx < 0);
@@ -60,12 +63,13 @@ const TemplatePanel = ({
   );
 
   useEffect(() => {
-    onSample({
+    onTemplate({
       templateIdx: templateIdx,
       sampleParametersSet: BuiltinImportTemplate[templateIdx].sampleParameters,
-      parametersSet: BuiltinImportTemplate[templateIdx].parameters
+      parametersSet: BuiltinImportTemplate[templateIdx].parameters,
+      medias: BuiltinImportTemplate[templateIdx].medias
     });
-  }, [onSample, templateIdx]);
+  }, [onTemplate, templateIdx]);
 
   return (
     <Box className={classes.root}>
