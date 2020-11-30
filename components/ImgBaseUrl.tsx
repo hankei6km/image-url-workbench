@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext, useCallback } from 'react';
 import Box from '@material-ui/core/Box';
 import TextField from '@material-ui/core/TextField';
 import PreviewContext from '../components/PreviewContext';
@@ -30,16 +30,22 @@ export default function ImgBaseUrl({
     setValue(baseUrl);
   }, [baseUrl]);
 
-  useEffect(() => {
-    const err = validator.assets(value, validateAssets, assets, true);
-    if (err && value !== '') {
-      setErrMsg(err.message);
-      onChange({ value: '' });
-    } else {
-      setErrMsg('');
-      onChange({ value: value });
-    }
-  }, [onChange, validateAssets, assets, value]);
+  const validatedValue = useCallback(
+    (newValue: string) => {
+      if (newValue) {
+        const err = validator.assets(newValue, validateAssets, assets, true);
+        if (err) {
+          setErrMsg(err.message);
+          return '';
+        } else {
+          setErrMsg('');
+          return newValue;
+        }
+      }
+      return newValue;
+    },
+    [validateAssets, assets]
+  );
 
   return (
     <Box>
@@ -53,7 +59,7 @@ export default function ImgBaseUrl({
         helperText={errMsg}
         onKeyPress={(e) => {
           if (e.key === 'Enter') {
-            if (errMsg === '') {
+            if (errMsg === '' && value) {
               onEnterKey({ value: value });
             }
             e.preventDefault();
@@ -62,6 +68,7 @@ export default function ImgBaseUrl({
         onChange={(e) => {
           const newValue = e.target.value;
           setValue(newValue);
+          onChange({ value: validatedValue(newValue) });
         }}
       />
     </Box>
