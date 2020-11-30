@@ -21,8 +21,9 @@ const ImportPanel = ({ label, onSelect }: Props) => {
         <ImgBaseUrl
           label={label}
           baseUrl={imageBaseUrl}
-          onEnterKey={(e: BaseUrlOnEnterKeyEvent) => {
-            onSelect({ value: e.value });
+          onEnterKey={(_e: BaseUrlOnEnterKeyEvent) => {
+            // onSelect({ value: e.value });
+            onSelect({ value: imageBaseUrl });
             setImageBaseUrl('');
           }}
           onChange={(e: BaseUrlOnChangeEvent) => setImageBaseUrl(e.value)}
@@ -34,6 +35,7 @@ const ImportPanel = ({ label, onSelect }: Props) => {
           variant="contained"
           size="small"
           startIcon={<AddPhotoAlternateIcon fontSize="small" />}
+          disabled={imageBaseUrl === ''}
           onClick={() => {
             onSelect({ value: imageBaseUrl });
             setImageBaseUrl('');
