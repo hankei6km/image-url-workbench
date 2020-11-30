@@ -12,7 +12,8 @@ import remarkStringify from 'remark-stringify';
 import rehypeSanitize from 'rehype-sanitize';
 import PreviewContext, {
   PreviewDispatch,
-  getTargetItemIndex
+  getTargetItemIndex,
+  breakPointValue
 } from '../components/PreviewContext';
 import DebTextField from '../components/DebTextField';
 import FragmentTextField from '../components/FragmentTextField';
@@ -38,15 +39,6 @@ const processorMarkdown = unified()
   .use(rehypeToRemark)
   .use(remarkStringify)
   .freeze();
-
-const breakPointValues: number[] = [/* 240, */ 320, 600, 960, 1280, 1920];
-function mediaBreakPoint(imgWidth: number): number {
-  const idx = breakPointValues.findIndex((v) => v >= imgWidth);
-  if (idx >= 0) {
-    return breakPointValues[idx];
-  }
-  return 160;
-}
 
 const FragmentTag = () => {
   const previewStateContext = useContext(PreviewContext);
@@ -92,8 +84,8 @@ const FragmentTag = () => {
       <picture>
         {previewStateContext.previewSet
           .filter(({ itemKey }) => itemKey !== defaultItem.itemKey)
-          .map(({ previewUrl, imgWidth }, i) => {
-            const mw = mediaBreakPoint(imgWidth);
+          .map(({ previewUrl, imgWidth, media }, i) => {
+            const mw = breakPointValue(media, imgWidth);
             return (
               <source
                 key={i}
@@ -137,8 +129,8 @@ const FragmentTag = () => {
       ({ previewUrl, imgWidth }) => `${previewUrl} ${imgWidth}w`
     );
     const sizes: string[] = previewStateContext.previewSet.map(
-      ({ imgWidth }) =>
-        `(min-width: ${mediaBreakPoint(imgWidth)}px) ${imgWidth}px`
+      ({ imgWidth, media }) =>
+        `(min-width: ${breakPointValue(media, imgWidth)}px) ${imgWidth}px`
     );
     const imgElement = (
       <img
