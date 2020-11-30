@@ -20,7 +20,8 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import PreviewContext, {
   PreviewDispatch,
   PreviewItem,
-  BreakPoint
+  BreakPoint,
+  BreakPointAutoAndValues
 } from '../components/PreviewContext';
 import TemplatePanel from '../components/TemplatePanel';
 import ImgPreview from '../components/ImgPreview';
@@ -48,6 +49,16 @@ function SetItem({
   const classes = useStyles();
   const [imgWidth, setImgWidth] = useState(0);
   const [imgHeight, setImgHeight] = useState(0);
+
+  const [mediaAnchorEl, setMediaAnchorEl] = useState<null | HTMLElement>(null);
+
+  const handleClickMedia = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setMediaAnchorEl(event.currentTarget);
+  };
+
+  const handleCloseMedia = () => {
+    setMediaAnchorEl(null);
+  };
 
   return (
     <Box key={previewItem.previewUrl} my={1} p={1}>
@@ -108,7 +119,34 @@ function SetItem({
           >
             Default
           </Button>
-          <Typography variant="body2">{previewItem.media}</Typography>
+          <Button size="small" onClick={handleClickMedia}>
+            <Box display="flex" alignContent="center">
+              <Box>Media: </Box>
+              {previewItem.media}
+            </Box>
+          </Button>
+          <Menu
+            id="select-media"
+            anchorEl={mediaAnchorEl}
+            keepMounted
+            open={Boolean(mediaAnchorEl)}
+            onClose={handleCloseMedia}
+          >
+            {BreakPointAutoAndValues.map((v, i) => (
+              <MenuItem
+                key={i}
+                onClick={() => {
+                  handleCloseMedia();
+                  previewDispatch({
+                    type: 'setPreviewImageMedia',
+                    payload: [previewItem.itemKey, v]
+                  });
+                }}
+              >
+                {v}
+              </MenuItem>
+            ))}
+          </Menu>
           <Button
             size="small"
             onClick={() => {

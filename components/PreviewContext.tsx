@@ -21,15 +21,18 @@ type TagFragment = {
   newTab: boolean;
 };
 
-export const BreakPointValues = [/* 240, */ 320, 600, 960, 1280, 1920] as const;
-export type BreakPoint = 'auto' | typeof BreakPointValues[number];
+export const BreakPointValues = [320, 600, 960, 1280, 1920] as const;
+export const BreakPointAutoAndValues = ['auto', ...BreakPointValues] as const;
+export type BreakPoint = typeof BreakPointAutoAndValues[number];
 
 export function breakPointValue(
   media: BreakPoint,
   imgWidth: number
 ): BreakPoint {
   if (media === 'auto') {
-    const idx = BreakPointValues.findIndex((v) => v >= imgWidth);
+    const idx = BreakPointValues.findIndex(
+      (v) => typeof v === 'number' && v >= imgWidth
+    );
     if (idx >= 0) {
       return BreakPointValues[idx];
     }
@@ -105,6 +108,11 @@ type actTypeSetPreviewImageSize = {
   payload: [string, number, number];
 };
 
+type actTypeSetPreviewImageMedia = {
+  type: 'setPreviewImageMedia';
+  payload: [string, BreakPoint];
+};
+
 type actTypeClonePreviewImageUrl = {
   type: 'clonePreviewImageUrl';
   payload: [string];
@@ -148,6 +156,7 @@ type actType =
   | actTypeAddPreviewImageUrl
   | actTypeSetPreviewImageUrl
   | actTypeSetPreviewImageSize
+  | actTypeSetPreviewImageMedia
   | actTypeClonePreviewImageUrl
   | actTypeSetCard
   | actTypeSetTagFragment
@@ -204,6 +213,9 @@ function nextPreviewSetState(
       break;
     case 'setPreviewImageSize':
       ret = state.previewSetState;
+      break;
+    case 'setPreviewImageMedia':
+      ret = 'edited';
       break;
     case 'clonePreviewImageUrl':
       ret = 'edited';
@@ -340,6 +352,16 @@ export function previewContextReducer(
         if (idx >= 0) {
           newState.previewSet[idx].imgWidth = action.payload[1];
           newState.previewSet[idx].imgHeight = action.payload[2];
+        }
+      }
+      break;
+    case 'setPreviewImageMedia':
+      if (action.payload[0]) {
+        const idx = state.previewSet.findIndex(
+          (v) => v.itemKey === action.payload[0]
+        );
+        if (idx >= 0) {
+          newState.previewSet[idx].media = action.payload[1];
         }
       }
       break;
