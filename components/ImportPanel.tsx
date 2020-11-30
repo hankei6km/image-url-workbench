@@ -34,6 +34,7 @@ const ImportPanel = ({ label, onSelect }: Props) => {
           variant="contained"
           size="small"
           startIcon={<AddPhotoAlternateIcon fontSize="small" />}
+          disabled={imageBaseUrl === ''}
           onClick={() => {
             onSelect({ value: imageBaseUrl });
             setImageBaseUrl('');

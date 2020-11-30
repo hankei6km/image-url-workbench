@@ -52,6 +52,7 @@ export default function ImgBaseUrl({
           const err = validator.assets(newValue, validateAssets, assets, true);
           if (err && newValue !== '') {
             setErrMsg(err.message);
+            onChange({ value:'' });
           } else {
             onChange({ value: e.target.value });
             setErrMsg('');
