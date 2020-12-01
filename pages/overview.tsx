@@ -391,6 +391,9 @@ function ActionBar({
             >
               Add Image
             </MenuItem>
+            <MenuItem component={Link} href="/parameters">
+              View Parameters
+            </MenuItem>
           </Menu>
         </Box>
         <Box className={classes.indicatorOuter}>

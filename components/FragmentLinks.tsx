@@ -3,7 +3,7 @@ import Box from '@material-ui/core/Box';
 import PreviewContext from '../components/PreviewContext';
 import FragmentTextField from '../components/FragmentTextField';
 
-const FragmentLink = () => {
+const FragmentLinks = () => {
   const previewStateContext = useContext(PreviewContext);
   const [imgUrl, setImgUrl] = useState('');
   const [imgPath, setImgPath] = useState('');
@@ -17,8 +17,8 @@ const FragmentLink = () => {
         const u = new URL(v.previewUrl);
         tmpImgPath.push(`${u.pathname}${u.search}`);
       });
-      setImgUrl(tmpImgUrl.join('\n'));
-      setImgPath(tmpImgPath.join('\n'));
+      setImgUrl(JSON.stringify(tmpImgUrl, null, ' '));
+      setImgPath(JSON.stringify(tmpImgPath, null, ' '));
     } catch {
       setImgUrl('');
       setImgPath('');
@@ -28,13 +28,13 @@ const FragmentLink = () => {
   return (
     <Box>
       <Box p={1}>
-        <FragmentTextField label="url" value={imgUrl} />
+        <FragmentTextField label="url (array)" value={imgUrl} />
       </Box>
       <Box p={1}>
-        <FragmentTextField label="path" value={imgPath} />
+        <FragmentTextField label="path (array)" value={imgPath} />
       </Box>
     </Box>
   );
 };
 
-export default FragmentLink;
+export default FragmentLinks;

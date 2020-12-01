@@ -31,8 +31,8 @@ const FragmentParams = () => {
         tmpImgParametersPlain.push(imgUrlParamsToString(v.imageParams, true));
       });
       setImgParametersJson(JSON.stringify(tmpImgParametersJson, null, ' '));
-      setImgParameters(tmpImgParameters.join('\n'));
-      setImgParametersPlain(tmpImgParametersPlain.join('\n'));
+      setImgParameters(JSON.stringify(tmpImgParameters, null, ' '));
+      setImgParametersPlain(JSON.stringify(tmpImgParametersPlain, null, ' '));
     } catch {
       setImgParametersJson('');
       setImgParameters('');
@@ -45,10 +45,13 @@ const FragmentParams = () => {
         <FragmentTextField label="json" value={imgParametersJson} />
       </Box>
       <Box p={1}>
-        <FragmentTextField label="query" value={imgParameters} />
+        <FragmentTextField label="query (array)" value={imgParameters} />
       </Box>
       <Box p={1} display="none">
-        <FragmentTextField label="query(plain)" value={imgParametersPlain} />
+        <FragmentTextField
+          label="query-plain (array)"
+          value={imgParametersPlain}
+        />
       </Box>
     </Box>
   );

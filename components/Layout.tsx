@@ -141,10 +141,7 @@ function HomeLabel({ asUrl }: { asUrl: string }): React.ReactElement {
 
 type TabLink = { label: string; href: string };
 type TabLinks = TabLink[];
-const tabLinksWorkBench: TabLinks = [
-  { label: 'Overview', href: '/overview' },
-  { label: 'Parameters', href: '/parameters' }
-];
+const tabLinksWorkBench: TabLinks = [{ label: 'Overview', href: '/overview' }];
 const tabLinksTryItOn: TabLinks = [
   { label: 'CodePen', href: '/codepen' },
   { label: 'Card', href: '/card' },
@@ -176,9 +173,11 @@ const breadCrumbsPath: BreadCrumbsPath[] = [
     groupTab: tabLinksWorkBench
   },
   {
-    path: [{ label: <HomeLabel asUrl="/parameters" />, href: '/' }],
-    current: { label: 'Workbench', href: '/parameters' },
-    groupTab: tabLinksWorkBench
+    path: [
+      { label: <HomeLabel asUrl="/parameters" />, href: '/' },
+      { label: 'Workbench', href: '/overview' }
+    ],
+    current: { label: 'Parameters', href: '/parameters' }
   },
   {
     path: [
@@ -229,12 +228,7 @@ function getGroupTabValue(
 }
 
 function existGroupTabPanel(asPath: string) {
-  return (
-    asPath === '/overview' ||
-    asPath === '/parameters' ||
-    asPath === '/card' ||
-    asPath === '/codepen'
-  );
+  return asPath === '/overview' || asPath === '/card' || asPath === '/codepen';
 }
 
 function GroupTabPanel({

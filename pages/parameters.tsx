@@ -7,7 +7,7 @@ import AccordionDetails from '@material-ui/core/AccordionDetails';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import FragmentLink from '../components/FragmentLink';
+import FragmentLinks from '../components/FragmentLinks';
 import FragmentParams from '../components/FragmentParams';
 
 export function ParametersPanel({
@@ -54,12 +54,12 @@ const groupList = [
     group: <FragmentParams />
   },
   {
-    groupName: 'Link',
-    group: <FragmentLink />
+    groupName: 'Links',
+    group: <FragmentLinks />
   }
 ];
 const ParametersPage = () => {
-  const [opened, setOpened] = useState('');
+  const [opened, setOpened] = useState('URL Parameters');
   const changeOpend = (category: string) => {
     return (_e: React.ChangeEvent<{}>, isExpanded: boolean): void => {
       setOpened(isExpanded ? category : '');
@@ -68,7 +68,7 @@ const ParametersPage = () => {
   return (
     <Layout title="Parameters">
       <Container maxWidth="md">
-        <Box py={1}>
+        <Box>
           {groupList.map((v) => (
             <ParametersPanel
               key={v.groupName}
