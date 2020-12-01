@@ -510,7 +510,7 @@ const OverviewPage = () => {
   }, [previewDispatch, previewStateContext.previewSet]);
 
   return (
-    <Layout title="Previews">
+    <Layout title="Overview">
       <Container maxWidth="md">
         <Box py={1}></Box>
         <ActionBar
