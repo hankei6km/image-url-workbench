@@ -191,7 +191,9 @@ function getCurPath(asPath: string): BreadCrumbsPath {
   return breadCrumbsPath[0];
 }
 
-const tabLink = [
+type TabLink = { label: string; href: string };
+type TabLinks = TabLink[];
+const tabLinks: TabLinks = [
   { label: 'Overview', href: '/overview' },
   { label: 'Parameters', href: '/parameters' },
   { label: 'Card', href: '/card' },
@@ -200,7 +202,7 @@ const tabLink = [
 
 function getImageTabValue(asPath: string): number | boolean {
   const p = asPath.split('?', 1)[0];
-  const idx = tabLink.findIndex(({ href }) => href === p);
+  const idx = tabLinks.findIndex(({ href }) => href === p);
   if (idx >= 0) {
     return idx;
   }
@@ -228,7 +230,7 @@ function ImageTabPanel({ asPath }: { asPath: string }) {
             variant="scrollable"
             value={value}
           >
-            {tabLink.map((v, i) => (
+            {tabLinks.map((v, i) => (
               <Tab {...v} key={i} component={Link} naked />
             ))}
           </Tabs>
