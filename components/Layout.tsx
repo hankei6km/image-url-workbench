@@ -172,28 +172,34 @@ const breadCrumbsPath: BreadCrumbsPath[] = [
   },
   {
     path: [{ label: <HomeLabel asUrl="/overview" />, href: '/' }],
-    current: { label: 'workbench', href: '/overview' },
+    current: { label: 'Workbench', href: '/overview' },
     groupTab: tabLinksWorkBench
   },
   {
     path: [{ label: <HomeLabel asUrl="/parameters" />, href: '/' }],
-    current: { label: 'workbench', href: '/parameters' },
+    current: { label: 'Workbench', href: '/parameters' },
     groupTab: tabLinksWorkBench
   },
   {
-    path: [{ label: <HomeLabel asUrl="/codepen" />, href: '/' }],
-    current: { label: 'workbench', href: '/codepen' },
+    path: [
+      { label: <HomeLabel asUrl="/codepen" />, href: '/' },
+      { label: 'Workbench', href: '/overview' }
+    ],
+    current: { label: 'Try it on', href: '/codepen' },
     groupTab: tabLinksTryItOn
   },
   {
-    path: [{ label: <HomeLabel asUrl="/card" />, href: '/' }],
-    current: { label: 'workbench', href: '/card' },
+    path: [
+      { label: <HomeLabel asUrl="/card" />, href: '/' },
+      { label: 'Workbench', href: '/overview' }
+    ],
+    current: { label: 'Try it on', href: '/card' },
     groupTab: tabLinksTryItOn
   },
   {
     path: [
       { label: <HomeLabel asUrl="/render" />, href: '/' },
-      { label: 'workbench', href: '/overview' }
+      { label: 'Workbench', href: '/overview' }
     ],
     current: { label: 'render', href: '/render' }
   }
