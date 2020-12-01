@@ -1,6 +1,7 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { makeStyles } from '@material-ui/core/styles';
+import Link from '../components/Link';
 import Layout from '../components/Layout';
 import Container from '@material-ui/core/Container';
 import Box from '@material-ui/core/Box';
@@ -12,10 +13,9 @@ import CardActions from '@material-ui/core/CardActions';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
 import Skeleton from '@material-ui/lab/Skeleton';
 import Typography from '@material-ui/core/Typography';
-import MenuIcon from '@material-ui/icons/Menu';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import PreviewContext, {
   PreviewDispatch,
@@ -180,20 +180,27 @@ const useActionBarStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'row',
     // justifyContent: 'center'
-    justifyItems: 'center'
+    justifyContent: 'flex-end'
   },
   commandOuter: {
+    //marginRight: theme.spacing(1),
     flexGrow: 1,
-    '& .MuiButton-root': {
-      display: 'none',
-      [theme.breakpoints.up('sm')]: {
-        display: 'inline-flex'
-      }
-    },
-    '& .MuiIconButton-root': {
+    '& .MuiButton-sizeSmall': {
       display: 'inline-flex',
+      paddingLeft: theme.spacing(1),
+      paddingRight: theme.spacing(1),
+      minWidth: '1em',
       [theme.breakpoints.up('sm')]: {
         display: 'none'
+      }
+    },
+    '& .MuiButton-sizeLarge': {
+      display: 'none',
+      paddingLeft: theme.spacing(1),
+      paddingRight: theme.spacing(1),
+      minWidth: '1em',
+      [theme.breakpoints.up('sm')]: {
+        display: 'inline-flex'
       }
     }
   },
@@ -205,6 +212,15 @@ const useActionBarStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(1),
     '& .MuiButton-label > .MuiBox-root': {
       marginLeft: theme.spacing(1)
+    }
+  },
+  tryItOnOuter: {
+    display: 'flex',
+    '& > .MuiBox-root': {
+      marginRight: theme.spacing(1),
+      '& .MuiButton-root': {
+        textTransform: 'none'
+      }
     }
   },
   templateLabel: {
@@ -284,17 +300,11 @@ function ActionBar({
     <Box>
       <Box className={classes.bar}>
         <Box className={classes.commandOuter}>
-          <IconButton size="small" onClick={handleClickCommand}>
-            <MenuIcon />
-          </IconButton>
-          <Button
-            variant="outlined"
-            size="small"
-            startIcon={<MenuIcon />}
-            style={{ textTransform: 'none' }}
-            onClick={handleClickCommand}
-          >
-            <Typography variant="body1">command</Typography>
+          <Button size="small" variant="outlined" onClick={handleClickCommand}>
+            <MoreVertIcon fontSize="small" />
+          </Button>
+          <Button size="large" variant="outlined" onClick={handleClickCommand}>
+            <MoreVertIcon fontSize="small" />
           </Button>
           <Menu
             id="command-menu"
@@ -340,6 +350,38 @@ function ActionBar({
             </Box>
           </Button>
         </Box>
+        <Box className={classes.tryItOnOuter}>
+          <Box>
+            <Button
+              component={Link}
+              disableElevation={true}
+              href="/codepen"
+              className="MuiButton-containedPrimary"
+            >
+              CodePen
+            </Button>
+          </Box>
+          <Box>
+            <Button
+              component={Link}
+              disableElevation={true}
+              href="/card"
+              className="MuiButton-containedPrimary"
+            >
+              Card
+            </Button>
+          </Box>
+          <Box>
+            <Button
+              component={Link}
+              disableElevation={true}
+              href="/shellscript"
+              className="MuiButton-containedPrimary"
+            >
+              ShellScript
+            </Button>
+          </Box>
+        </Box>
       </Box>
       <Box>
         <Collapse in={open === 'template'} onExited={handleExited}>
@@ -375,7 +417,7 @@ function ActionBar({
   );
 }
 
-const PreviewsPage = () => {
+const OverviewPage = () => {
   const previewStateContext = useContext(PreviewContext);
   const previewDispatch = useContext(PreviewDispatch);
   const router = useRouter();
@@ -468,7 +510,7 @@ const PreviewsPage = () => {
   }, [previewDispatch, previewStateContext.previewSet]);
 
   return (
-    <Layout title="Previews">
+    <Layout title="Overview">
       <Container maxWidth="md">
         <Box py={1}></Box>
         <ActionBar
@@ -509,4 +551,4 @@ const PreviewsPage = () => {
   );
 };
 
-export default PreviewsPage;
+export default OverviewPage;
