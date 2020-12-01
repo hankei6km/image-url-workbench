@@ -23,7 +23,7 @@ const IndexPage = () => {
                   type: 'setImageBaseUrl',
                   payload: ['data', value]
                 });
-                router.push('/previews');
+                router.push('/overview');
               }}
             />
           </Box>
@@ -34,7 +34,7 @@ const IndexPage = () => {
                   type: 'setImageBaseUrl',
                   payload: ['sample', value]
                 });
-                router.push('/previews');
+                router.push('/overview');
               }}
             />
           </Box>

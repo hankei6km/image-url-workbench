@@ -375,7 +375,7 @@ function ActionBar({
   );
 }
 
-const PreviewsPage = () => {
+const OverviewPage = () => {
   const previewStateContext = useContext(PreviewContext);
   const previewDispatch = useContext(PreviewDispatch);
   const router = useRouter();
@@ -509,4 +509,4 @@ const PreviewsPage = () => {
   );
 };
 
-export default PreviewsPage;
+export default OverviewPage;
