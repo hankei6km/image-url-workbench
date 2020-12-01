@@ -78,34 +78,34 @@ const useStyles = makeStyles((theme) => ({
             fontSize: theme.typography.fontSize * 2.0
           }
         }
+      }
+    },
+    GroupTabPanel: {
+      display: 'flex',
+      justifyContent: 'center',
+      alignContent: 'flex-end',
+      alignItems: 'flex-end',
+      width: '100%',
+      [theme.breakpoints.up('lg')]: {
+        minHeight: 40
       },
-      '& > .GroupTabPanel-root': {
-        display: 'flex',
-        justifyContent: 'center',
-        alignContent: 'flex-end',
-        alignItems: 'flex-end',
+      '& > .MuiBox-root': {
         width: '100%',
-        [theme.breakpoints.up('lg')]: {
-          minHeight: 40
-        },
-        '& > .MuiBox-root': {
-          width: '100%',
-          maxWidth: theme.breakpoints.values.md,
-          '& > .MuiTabs-root': {
+        maxWidth: theme.breakpoints.values.md,
+        '& > .MuiTabs-root': {
+          minHeight: 10,
+          '& > div': {
             minHeight: 10,
-            '& > div': {
+            '& .MuiTab-root': {
               minHeight: 10,
-              '& .MuiTab-root': {
-                minHeight: 10,
-                padding: 0,
-                textTransform: 'none',
-                [theme.breakpoints.up('sm')]: {
-                  paddingTop: theme.spacing(1),
-                  paddingBottom: theme.spacing(2),
-                  paddingLeft: theme.spacing(1),
-                  paddingRight: theme.spacing(1),
-                  minWidth: 100
-                }
+              padding: 0,
+              textTransform: 'none',
+              [theme.breakpoints.up('sm')]: {
+                paddingTop: theme.spacing(1),
+                paddingBottom: theme.spacing(2),
+                paddingLeft: theme.spacing(1),
+                paddingRight: theme.spacing(1),
+                minWidth: 100
               }
             }
           }
@@ -219,11 +219,12 @@ function existGroupTabPanel(asPath: string) {
 }
 
 function GroupTabPanel({ asPath }: { asPath: string }) {
+  const classes = useStyles();
   const [value] = useState<number | boolean>(getGroupTabValue(asPath));
 
   if (existGroupTabPanel(asPath)) {
     return (
-      <Paper className="GroupTabPanel-root" square elevation={0}>
+      <Paper className={classes.GroupTabPanel} square elevation={0}>
         <Box>
           <Tabs
             indicatorColor="primary"
