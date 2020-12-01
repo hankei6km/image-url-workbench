@@ -7,7 +7,7 @@ import AccordionDetails from '@material-ui/core/AccordionDetails';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import FragmentLink from '../components/FragmentLink';
+import FragmentLinks from '../components/FragmentLinks';
 import FragmentParams from '../components/FragmentParams';
 
 export function ParametersPanel({
@@ -54,8 +54,8 @@ const groupList = [
     group: <FragmentParams />
   },
   {
-    groupName: 'Link',
-    group: <FragmentLink />
+    groupName: 'Links',
+    group: <FragmentLinks />
   }
 ];
 const ParametersPage = () => {
