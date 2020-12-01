@@ -170,6 +170,10 @@ const breadCrumbsPath: BreadCrumbsPath[] = [
     current: { label: 'result', href: '/card' }
   },
   {
+    path: [{ label: <HomeLabel asUrl="/codepen" />, href: '/' }],
+    current: { label: 'result', href: '/codepen' }
+  },
+  {
     path: [
       { label: <HomeLabel asUrl="/render" />, href: '/' },
       { label: 'result', href: '/previews' }
@@ -190,7 +194,8 @@ function getCurPath(asPath: string): BreadCrumbsPath {
 const tabLink = [
   { label: 'Previews', href: '/previews' },
   { label: 'Parameters', href: '/parameters' },
-  { label: 'Card', href: '/card' }
+  { label: 'Card', href: '/card' },
+  { label: 'CodePen', href: '/codepen' }
 ];
 
 function getImageTabValue(asPath: string): number | boolean {
@@ -204,7 +209,10 @@ function getImageTabValue(asPath: string): number | boolean {
 
 function existImageTabPanel(asPath: string) {
   return (
-    asPath === '/previews' || asPath === '/parameters' || asPath === '/card'
+    asPath === '/previews' ||
+    asPath === '/parameters' ||
+    asPath === '/card' ||
+    asPath === '/codepen'
   );
 }
 function ImageTabPanel({ asPath }: { asPath: string }) {
