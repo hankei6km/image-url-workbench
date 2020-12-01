@@ -14,8 +14,6 @@ import unified from 'unified';
 import rehypeParse from 'rehype-parse';
 import rehypeStringify from 'rehype-stringify';
 import format from 'rehype-format';
-import rehypeToRemark from 'rehype-remark';
-import remarkStringify from 'remark-stringify';
 import rehypeSanitize from 'rehype-sanitize';
 import PreviewContext, {
   PreviewDispatch,
@@ -41,13 +39,6 @@ const processorHtml = unified()
   .use(rehypeStringify)
   .freeze();
 
-const processorMarkdown = unified()
-  .use(rehypeParse, { fragment: true })
-  .use(rehypeSanitize)
-  .use(rehypeToRemark)
-  .use(remarkStringify)
-  .freeze();
-
 const CodePenPage = () => {
   const previewStateContext = useContext(PreviewContext);
   const previewDispatch = useContext(PreviewDispatch);
@@ -71,7 +62,6 @@ const CodePenPage = () => {
   const [newTab, setNewTab] = useState(previewStateContext.tagFragment.newTab);
   const [pictureHtml, setPictureHtml] = useState('');
   const [imgHtml, setImgHtml] = useState('');
-  const [imgMarkdown, setImgMarkdown] = useState('');
 
   useEffect(() => {
     const idx = getTargetItemIndex(
@@ -167,12 +157,6 @@ const CodePenPage = () => {
         console.error(err);
       }
       setImgHtml(String(file));
-    });
-    processorMarkdown.process(html, (err, file) => {
-      if (err) {
-        //console.error(reporter(file)); // 今回の利用ではここでデバッグ用の情報は表示されなさそう
-      }
-      setImgMarkdown(String(file).trimEnd());
     });
   }, [previewStateContext.previewSet, defaultItem, altText, linkText, newTab]);
 
@@ -274,9 +258,6 @@ const CodePenPage = () => {
                   </Box>
                   <Box p={1}>
                     <FragmentTextField label="img" value={imgHtml} />
-                  </Box>
-                  <Box p={1}>
-                    <FragmentTextField label="markdown" value={imgMarkdown} />
                   </Box>
                 </Box>
               </AccordionDetails>
