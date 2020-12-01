@@ -10,6 +10,8 @@ import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
@@ -31,6 +33,19 @@ import {
 } from '../src/template';
 
 const useStyles = makeStyles((theme) => ({
+  tab: {
+    minHeight: 10,
+    '& .MuiTab-root': {
+      textTransform: 'none',
+      minHeight: 10,
+      [theme.breakpoints.up('sm')]: {
+        minWidth: 100
+      }
+    }
+  },
+  imageDetailOuter: {
+    height: 400
+  },
   targetIndicator: {
     backgroundColor: theme.palette.primary.main
   }
@@ -50,6 +65,8 @@ function SetItem({
   const [imgWidth, setImgWidth] = useState(0);
   const [imgHeight, setImgHeight] = useState(0);
 
+  const [tabValue, setTabValue] = useState(0);
+
   const [mediaAnchorEl, setMediaAnchorEl] = useState<null | HTMLElement>(null);
 
   const handleClickMedia = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -66,36 +83,62 @@ function SetItem({
         <CardHeader
           titleTypographyProps={{ variant: 'h5' }}
           title={
-            imgWidth === 0 ? (
-              <Skeleton variant="rect" width="10em" />
-            ) : (
-              `${imgWidth}x${imgHeight}`
-            )
+            <Box display="flex">
+              <Box flexGrow="1">
+                {imgWidth === 0 ? (
+                  <Skeleton variant="rect" width="10em" />
+                ) : (
+                  `${imgWidth}x${imgHeight}`
+                )}
+              </Box>
+              <Box>
+                <Tabs
+                  className={classes.tab}
+                  disabled={imgWidth === 0}
+                  indicatorColor="primary"
+                  textColor="primary"
+                  value={tabValue}
+                  onChange={(_e, newValue) => setTabValue(newValue)}
+                >
+                  <Tab
+                    color="textSecondary"
+                    label={<Typography variant="body2">Preview</Typography>}
+                  />
+                  <Tab
+                    color="textSecondary"
+                    label={<Typography variant="body2">Detail</Typography>}
+                  />
+                </Tabs>
+              </Box>
+            </Box>
           }
         />
         <CardActionArea onClick={onClick}>
           <Box display="flex">
-            <Box flexGrow="1">
-              <ImgPreview
-                previewUrl={previewItem.previewUrl}
-                {...{
-                  fitMode: 'landscape',
-                  imgGrow: 'none',
-                  width: undefined,
-                  height: 400
-                }}
-                skeleton={true}
-                onSize={({ w, h }) => {
-                  setImgWidth(w);
-                  setImgHeight(h);
-                  if (previewItem.imgWidth === 0 && w !== 0) {
-                    previewDispatch({
-                      type: 'setPreviewImageSize',
-                      payload: [previewItem.itemKey, w, h]
-                    });
-                  }
-                }}
-              />
+            <Box flexGrow="1" className={classes.imageDetailOuter}>
+              <Box display={tabValue === 0 ? 'block' : 'none'}>
+                <ImgPreview
+                  previewUrl={previewItem.previewUrl}
+                  {...{
+                    fitMode: 'landscape',
+                    imgGrow: 'none',
+                    width: undefined,
+                    height: 400
+                  }}
+                  skeleton={true}
+                  onSize={({ w, h }) => {
+                    setImgWidth(w);
+                    setImgHeight(h);
+                    if (previewItem.imgWidth === 0 && w !== 0) {
+                      previewDispatch({
+                        type: 'setPreviewImageSize',
+                        payload: [previewItem.itemKey, w, h]
+                      });
+                    }
+                  }}
+                />
+              </Box>
+              <Box display={tabValue === 1 ? 'block' : 'none'}>deatil</Box>
             </Box>
             <Box
               width={2}
