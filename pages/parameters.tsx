@@ -9,7 +9,6 @@ import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import FragmentLink from '../components/FragmentLink';
 import FragmentParams from '../components/FragmentParams';
-import FragmentTag from '../components/FragmentTag';
 
 export function ParametersPanel({
   groupName,
@@ -57,10 +56,6 @@ const groupList = [
   {
     groupName: 'Link',
     group: <FragmentLink />
-  },
-  {
-    groupName: 'Tag',
-    group: <FragmentTag />
   }
 ];
 const ParametersPage = () => {
