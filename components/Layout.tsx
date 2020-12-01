@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
       padding: '0 1rem',
       margin: '0rem auto 0rem'
     },
-    '& > .stickyImageTabPanel': {
+    '& > .stickyGroupTabPanel': {
       [theme.breakpoints.up('sm')]: {
         position: 'sticky',
         top: -40,
@@ -79,7 +79,7 @@ const useStyles = makeStyles((theme) => ({
           }
         }
       },
-      '& > .ImageTabPanel-root': {
+      '& > .GroupTabPanel-root': {
         display: 'flex',
         justifyContent: 'center',
         alignContent: 'flex-end',
@@ -200,7 +200,7 @@ const tabLinks: TabLinks = [
   { label: 'CodePen', href: '/codepen' }
 ];
 
-function getImageTabValue(asPath: string): number | boolean {
+function getGroupTabValue(asPath: string): number | boolean {
   const p = asPath.split('?', 1)[0];
   const idx = tabLinks.findIndex(({ href }) => href === p);
   if (idx >= 0) {
@@ -209,7 +209,7 @@ function getImageTabValue(asPath: string): number | boolean {
   return false;
 }
 
-function existImageTabPanel(asPath: string) {
+function existGroupTabPanel(asPath: string) {
   return (
     asPath === '/overview' ||
     asPath === '/parameters' ||
@@ -217,12 +217,13 @@ function existImageTabPanel(asPath: string) {
     asPath === '/codepen'
   );
 }
-function ImageTabPanel({ asPath }: { asPath: string }) {
-  const [value] = useState<number | boolean>(getImageTabValue(asPath));
 
-  if (existImageTabPanel(asPath)) {
+function GroupTabPanel({ asPath }: { asPath: string }) {
+  const [value] = useState<number | boolean>(getGroupTabValue(asPath));
+
+  if (existGroupTabPanel(asPath)) {
     return (
-      <Paper className="ImageTabPanel-root" square elevation={0}>
+      <Paper className="GroupTabPanel-root" square elevation={0}>
         <Box>
           <Tabs
             indicatorColor="primary"
@@ -266,10 +267,10 @@ const Layout = ({ children, title = 'This is the default title' }: Props) => {
       </Head>
       <Paper
         square
-        elevation={existImageTabPanel(router.asPath) ? 1 : 0}
+        elevation={existGroupTabPanel(router.asPath) ? 1 : 0}
         className={
-          existImageTabPanel(router.asPath)
-            ? 'stickyImageTabPanel'
+          existGroupTabPanel(router.asPath)
+            ? 'stickyGroupTabPanel'
             : 'stickyPath'
         }
       >
@@ -315,7 +316,7 @@ const Layout = ({ children, title = 'This is the default title' }: Props) => {
             </Box>
           )}
         </Toolbar>
-        <ImageTabPanel asPath={router.asPath} />
+        <GroupTabPanel asPath={router.asPath} />
       </Paper>
       <div>{children}</div>
       <footer>
