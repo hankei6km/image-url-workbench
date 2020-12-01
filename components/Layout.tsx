@@ -79,34 +79,34 @@ const useStyles = makeStyles((theme) => ({
           }
         }
       }
+    }
+  },
+  GroupTabPanel: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignContent: 'flex-end',
+    alignItems: 'flex-end',
+    width: '100%',
+    [theme.breakpoints.up('lg')]: {
+      minHeight: 40
     },
-    GroupTabPanel: {
-      display: 'flex',
-      justifyContent: 'center',
-      alignContent: 'flex-end',
-      alignItems: 'flex-end',
+    '& > .MuiBox-root': {
       width: '100%',
-      [theme.breakpoints.up('lg')]: {
-        minHeight: 40
-      },
-      '& > .MuiBox-root': {
-        width: '100%',
-        maxWidth: theme.breakpoints.values.md,
-        '& > .MuiTabs-root': {
+      maxWidth: theme.breakpoints.values.md,
+      '& > .MuiTabs-root': {
+        minHeight: 10,
+        '& > div': {
           minHeight: 10,
-          '& > div': {
+          '& .MuiTab-root': {
             minHeight: 10,
-            '& .MuiTab-root': {
-              minHeight: 10,
-              padding: 0,
-              textTransform: 'none',
-              [theme.breakpoints.up('sm')]: {
-                paddingTop: theme.spacing(1),
-                paddingBottom: theme.spacing(2),
-                paddingLeft: theme.spacing(1),
-                paddingRight: theme.spacing(1),
-                minWidth: 100
-              }
+            padding: 0,
+            textTransform: 'none',
+            [theme.breakpoints.up('sm')]: {
+              paddingTop: theme.spacing(1),
+              paddingBottom: theme.spacing(2),
+              paddingLeft: theme.spacing(1),
+              paddingRight: theme.spacing(1),
+              minWidth: 100
             }
           }
         }
@@ -139,6 +139,18 @@ function HomeLabel({ asUrl }: { asUrl: string }): React.ReactElement {
   return <HomeIcon className="HomePathIcon" />;
 }
 
+type TabLink = { label: string; href: string };
+type TabLinks = TabLink[];
+const tabLinksWorkBench: TabLinks = [
+  { label: 'Overview', href: '/overview' },
+  { label: 'Parameters', href: '/parameters' }
+];
+const tabLinksTryItOn: TabLinks = [
+  { label: 'CodePen', href: '/codepen' },
+  { label: 'Card', href: '/card' },
+  { label: 'ShellScript', href: '/shellscript' }
+];
+
 type BreadCrumbsItem = {
   label: React.ReactNode;
   href: string;
@@ -147,6 +159,7 @@ type BreadCrumbsItem = {
 type BreadCrumbsPath = {
   path: BreadCrumbsItem[];
   current: BreadCrumbsItem;
+  groupTab?: TabLinks;
 };
 
 const breadCrumbsPath: BreadCrumbsPath[] = [
@@ -159,19 +172,23 @@ const breadCrumbsPath: BreadCrumbsPath[] = [
   },
   {
     path: [{ label: <HomeLabel asUrl="/overview" />, href: '/' }],
-    current: { label: 'workbench', href: '/overview' }
+    current: { label: 'workbench', href: '/overview' },
+    groupTab: tabLinksWorkBench
   },
   {
     path: [{ label: <HomeLabel asUrl="/parameters" />, href: '/' }],
-    current: { label: 'workbench', href: '/parameters' }
-  },
-  {
-    path: [{ label: <HomeLabel asUrl="/card" />, href: '/' }],
-    current: { label: 'workbench', href: '/card' }
+    current: { label: 'workbench', href: '/parameters' },
+    groupTab: tabLinksWorkBench
   },
   {
     path: [{ label: <HomeLabel asUrl="/codepen" />, href: '/' }],
-    current: { label: 'workbench', href: '/codepen' }
+    current: { label: 'workbench', href: '/codepen' },
+    groupTab: tabLinksTryItOn
+  },
+  {
+    path: [{ label: <HomeLabel asUrl="/card" />, href: '/' }],
+    current: { label: 'workbench', href: '/card' },
+    groupTab: tabLinksTryItOn
   },
   {
     path: [
@@ -191,20 +208,16 @@ function getCurPath(asPath: string): BreadCrumbsPath {
   return breadCrumbsPath[0];
 }
 
-type TabLink = { label: string; href: string };
-type TabLinks = TabLink[];
-const tabLinks: TabLinks = [
-  { label: 'Overview', href: '/overview' },
-  { label: 'Parameters', href: '/parameters' },
-  { label: 'Card', href: '/card' },
-  { label: 'CodePen', href: '/codepen' }
-];
-
-function getGroupTabValue(asPath: string): number | boolean {
-  const p = asPath.split('?', 1)[0];
-  const idx = tabLinks.findIndex(({ href }) => href === p);
-  if (idx >= 0) {
-    return idx;
+function getGroupTabValue(
+  asPath: string,
+  tabLinks?: TabLinks
+): number | boolean {
+  if (tabLinks) {
+    const p = asPath.split('?', 1)[0];
+    const idx = tabLinks.findIndex(({ href }) => href === p);
+    if (idx >= 0) {
+      return idx;
+    }
   }
   return false;
 }
@@ -218,11 +231,19 @@ function existGroupTabPanel(asPath: string) {
   );
 }
 
-function GroupTabPanel({ asPath }: { asPath: string }) {
+function GroupTabPanel({
+  tabLinks,
+  asPath
+}: {
+  tabLinks?: TabLinks;
+  asPath: string;
+}) {
   const classes = useStyles();
-  const [value] = useState<number | boolean>(getGroupTabValue(asPath));
+  const [value] = useState<number | boolean>(
+    getGroupTabValue(asPath, tabLinks)
+  );
 
-  if (existGroupTabPanel(asPath)) {
+  if (tabLinks && existGroupTabPanel(asPath)) {
     return (
       <Paper className={classes.GroupTabPanel} square elevation={0}>
         <Box>
@@ -317,7 +338,7 @@ const Layout = ({ children, title = 'This is the default title' }: Props) => {
             </Box>
           )}
         </Toolbar>
-        <GroupTabPanel asPath={router.asPath} />
+        <GroupTabPanel tabLinks={curPath.groupTab} asPath={router.asPath} />
       </Paper>
       <div>{children}</div>
       <footer>
