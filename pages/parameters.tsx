@@ -59,7 +59,7 @@ const groupList = [
   }
 ];
 const ParametersPage = () => {
-  const [opened, setOpened] = useState('');
+  const [opened, setOpened] = useState('URL Parameters');
   const changeOpend = (category: string) => {
     return (_e: React.ChangeEvent<{}>, isExpanded: boolean): void => {
       setOpened(isExpanded ? category : '');
@@ -68,7 +68,7 @@ const ParametersPage = () => {
   return (
     <Layout title="Parameters">
       <Container maxWidth="md">
-        <Box py={1}>
+        <Box>
           {groupList.map((v) => (
             <ParametersPanel
               key={v.groupName}
