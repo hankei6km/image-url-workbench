@@ -9,6 +9,7 @@ import Collapse from '@material-ui/core/Collapse';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardActionArea from '@material-ui/core/CardActionArea';
+import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -31,6 +32,7 @@ import {
   BuiltinImportTemplate,
   ImportTemplateParametersSet
 } from '../src/template';
+import FragmentTextField from '../components/FragmentTextField';
 
 const useStyles = makeStyles((theme) => ({
   tab: {
@@ -66,6 +68,22 @@ function SetItem({
   const [imgHeight, setImgHeight] = useState(0);
 
   const [tabValue, setTabValue] = useState(0);
+
+  const [imgUrl, setImgUrl] = useState('');
+  const [imgPath, setImgPath] = useState('');
+
+  useEffect(() => {
+    if (tabValue === 1) {
+      try {
+        const u = new URL(previewItem.previewUrl);
+        setImgUrl(previewItem.previewUrl);
+        setImgPath(`${u.pathname}${u.search}`);
+      } catch {
+        setImgUrl('');
+        setImgPath('');
+      }
+    }
+  }, [previewItem.previewUrl, tabValue]);
 
   const [mediaAnchorEl, setMediaAnchorEl] = useState<null | HTMLElement>(null);
 
@@ -106,17 +124,17 @@ function SetItem({
                   />
                   <Tab
                     color="textSecondary"
-                    label={<Typography variant="body2">Detail</Typography>}
+                    label={<Typography variant="body2">Link</Typography>}
                   />
                 </Tabs>
               </Box>
             </Box>
           }
         />
-        <CardActionArea onClick={onClick}>
-          <Box display="flex">
-            <Box flexGrow="1" className={classes.imageDetailOuter}>
-              <Box display={tabValue === 0 ? 'block' : 'none'}>
+        <Box flexGrow="1" className={classes.imageDetailOuter}>
+          <Box display={tabValue === 0 ? 'block' : 'none'}>
+            <CardActionArea onClick={onClick}>
+              <Box display="flex">
                 <ImgPreview
                   previewUrl={previewItem.previewUrl}
                   {...{
@@ -137,19 +155,28 @@ function SetItem({
                     }
                   }}
                 />
+                <Box
+                  width={2}
+                  className={
+                    defaultTargetKey === previewItem.itemKey
+                      ? classes.targetIndicator
+                      : undefined
+                  }
+                />
               </Box>
-              <Box display={tabValue === 1 ? 'block' : 'none'}>deatil</Box>
-            </Box>
-            <Box
-              width={2}
-              className={
-                defaultTargetKey === previewItem.itemKey
-                  ? classes.targetIndicator
-                  : undefined
-              }
-            />
+            </CardActionArea>
           </Box>
-        </CardActionArea>
+          <Box display={tabValue === 1 ? 'block' : 'none'}>
+            <CardContent>
+              <Box p={1}>
+                <FragmentTextField label="url" value={imgUrl} />
+              </Box>
+              <Box p={1}>
+                <FragmentTextField label="path" value={imgPath} />
+              </Box>
+            </CardContent>
+          </Box>
+        </Box>
         <CardActions>
           <Button
             size="small"
