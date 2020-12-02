@@ -198,6 +198,14 @@ const breadCrumbsPath: BreadCrumbsPath[] = [
   },
   {
     path: [
+      { label: <HomeLabel asUrl="/parameters" />, href: '/' },
+      { label: 'Workbench', href: '/workbench' }
+    ],
+    current: { label: 'Try it on', href: '/shellscript' },
+    groupTab: tabLinksWorkBench
+  },
+  {
+    path: [
       { label: <HomeLabel asUrl="/render" />, href: '/' },
       { label: 'Workbench', href: '/workbench' }
     ],
@@ -229,7 +237,9 @@ function getGroupTabValue(
 }
 
 function existGroupTabPanel(asPath: string) {
-  return asPath === '/card' || asPath === '/codepen';
+  return (
+    asPath === '/card' || asPath === '/codepen' || asPath === '/shellscript'
+  );
 }
 
 function GroupTabPanel({
