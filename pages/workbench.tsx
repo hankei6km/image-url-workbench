@@ -20,6 +20,7 @@ import Skeleton from '@material-ui/lab/Skeleton';
 import Typography from '@material-ui/core/Typography';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import PreviewContext, {
   PreviewDispatch,
   PreviewItem,
@@ -51,6 +52,13 @@ const useStyles = makeStyles((theme) => ({
   },
   linkOuter: {
     minHeight: 400
+  },
+  linkViewButtonOuter: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    '& .MuiButton-root': {
+      textTransform: 'none'
+    }
   },
   targetIndicator: {
     backgroundColor: theme.palette.primary.main
@@ -178,11 +186,29 @@ function SetItem({
             display={tabValue === 1 ? 'block' : 'none'}
           >
             <CardContent>
-              <Box p={1}>
-                <FragmentTextField label="url" value={imgUrl} />
+              <Box mt={-1} p={1} className={classes.linkViewButtonOuter}>
+                <Box display="flex" alignItems="center">
+                  <Typography variant="body1" color="textPrimary">
+                    Open Image:
+                  </Typography>
+                  <Button
+                    component={Link}
+                    href={previewItem.previewUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    disableElevation={true}
+                  >
+                    <OpenInNewIcon />
+                  </Button>
+                </Box>
               </Box>
-              <Box p={1}>
-                <FragmentTextField label="path" value={imgPath} />
+              <Box my={1}>
+                <Box p={1}>
+                  <FragmentTextField label="url" value={imgUrl} />
+                </Box>
+                <Box p={1}>
+                  <FragmentTextField label="path" value={imgPath} />
+                </Box>
               </Box>
             </CardContent>
           </Box>
