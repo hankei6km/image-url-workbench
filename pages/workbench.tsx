@@ -61,6 +61,12 @@ const useStyles = makeStyles((theme) => ({
       textTransform: 'none'
     }
   },
+  qrCodeButton: {
+    display: 'none',
+    [theme.breakpoints.up('sm')]: {
+      display: 'block'
+    }
+  },
   targetIndicator: {
     backgroundColor: theme.palette.primary.main
   }
@@ -85,22 +91,25 @@ function SetItem({
   const [imgUrl, setImgUrl] = useState('');
   const [imgPath, setImgPath] = useState('');
   const [imgUrlQr64, setImgUrlQr64] = useState('');
+  const [qrOpened, setQrOpened] = useState(false);
 
   useEffect(() => {
-    if (tabValue === 1) {
-      try {
-        const u = new URL(previewItem.previewUrl);
-        setImgUrl(previewItem.previewUrl);
-        setImgPath(`${u.pathname}${u.search}`);
-        const generateQR = async (text: string) => {
-          setImgUrlQr64(await QRCode.toDataURL(text));
-        };
-        generateQR(previewItem.previewUrl);
-      } catch {
-        setImgUrl('');
-        setImgPath('');
-        setImgUrlQr64('');
+    try {
+      switch (tabValue) {
+        case 1:
+          const u = new URL(previewItem.previewUrl);
+          setImgUrl(previewItem.previewUrl);
+          setImgPath(`${u.pathname}${u.search}`);
+          const generateQR = async (text: string) => {
+            setImgUrlQr64(await QRCode.toDataURL(text));
+          };
+          generateQR(previewItem.previewUrl);
+          break;
       }
+    } catch {
+      setImgUrl('');
+      setImgPath('');
+      setImgUrlQr64('');
     }
   }, [previewItem.previewUrl, tabValue]);
 
@@ -189,8 +198,8 @@ function SetItem({
             </CardActionArea>
           </Box>
           <Box
-            className={classes.linkOuter}
             display={tabValue === 1 ? 'block' : 'none'}
+            className={classes.linkOuter}
           >
             <CardContent>
               <Box mt={-1} p={1} className={classes.linkViewButtonOuter}>
@@ -207,9 +216,27 @@ function SetItem({
                   >
                     <OpenInNewIcon />
                   </Button>
+                  <Box className={classes.qrCodeButton}>
+                    <Button
+                      onClick={() => setQrOpened(!qrOpened)}
+                      endIcon={
+                        <ExpandMoreIcon
+                          style={{
+                            transform: qrOpened ? 'rotate(180deg)' : ''
+                          }}
+                        />
+                      }
+                    >
+                      QR Code
+                    </Button>
+                  </Box>
                 </Box>
-                <img src={imgUrlQr64} alt="qr code to open link" />
               </Box>
+              <Collapse in={qrOpened}>
+                <Box display="flex" justifyContent="flex-end">
+                  <img src={imgUrlQr64} alt="qr code to open link" />
+                </Box>
+              </Collapse>
               <Box my={1}>
                 <Box p={1}>
                   <FragmentTextField label="url" value={imgUrl} />
