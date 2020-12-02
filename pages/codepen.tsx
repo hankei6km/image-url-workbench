@@ -10,6 +10,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import unified from 'unified';
 import rehypeParse from 'rehype-parse';
 import rehypeStringify from 'rehype-stringify';
@@ -179,7 +180,12 @@ const CodePenPage = () => {
                 title="picture tag"
                 html={pictureHtml}
                 buttonLabel={'picture tag'}
-                buttonProps={{ color: 'primary', variant: 'outlined' }}
+                buttonProps={{
+                  color: 'primary',
+                  variant: 'contained',
+                  disableElevation: true,
+                  endIcon: <OpenInNewIcon />
+                }}
               />
             </Box>
             <Box p={1}>
@@ -187,7 +193,12 @@ const CodePenPage = () => {
                 title="img tag"
                 html={imgHtml}
                 buttonLabel={'img tag'}
-                buttonProps={{ color: 'primary', variant: 'outlined' }}
+                buttonProps={{
+                  color: 'primary',
+                  variant: 'contained',
+                  disableElevation: true,
+                  endIcon: <OpenInNewIcon />
+                }}
               />
             </Box>
           </Box>
