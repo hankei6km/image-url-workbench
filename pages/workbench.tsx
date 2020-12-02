@@ -293,6 +293,30 @@ const useActionBarStyles = makeStyles((theme) => ({
       }
     }
   },
+  tryItOnSimple: {
+    display: 'flex',
+    '& > .MuiBox-root': {
+      marginRight: theme.spacing(1),
+      '& .MuiButton-root': {
+        textTransform: 'none'
+      }
+    },
+    [theme.breakpoints.up('sm')]: {
+      display: 'none'
+    }
+  },
+  tryItOnDirect: {
+    display: 'none',
+    [theme.breakpoints.up('sm')]: {
+      display: 'flex',
+      '& > .MuiBox-root': {
+        marginRight: theme.spacing(1),
+        '& .MuiButton-root': {
+          textTransform: 'none'
+        }
+      }
+    }
+  },
   templateLabel: {
     display: 'flex',
     justifyContent: 'flex-end',
@@ -424,35 +448,49 @@ function ActionBar({
           </Button>
         </Box>
         <Box className={classes.tryItOnOuter}>
-          <Box>
-            <Button
-              component={Link}
-              disableElevation={true}
-              href="/codepen"
-              className="MuiButton-containedPrimary"
-            >
-              CodePen
-            </Button>
+          <Box className={classes.tryItOnSimple}>
+            <Box>
+              <Button
+                component={Link}
+                disableElevation={true}
+                href="/codepen"
+                className="MuiButton-containedPrimary"
+              >
+                Try it on:
+              </Button>
+            </Box>
           </Box>
-          <Box>
-            <Button
-              component={Link}
-              disableElevation={true}
-              href="/card"
-              className="MuiButton-containedPrimary"
-            >
-              Card
-            </Button>
-          </Box>
-          <Box>
-            <Button
-              component={Link}
-              disableElevation={true}
-              href="/shellscript"
-              className="MuiButton-containedPrimary"
-            >
-              ShellScript
-            </Button>
+          <Box className={classes.tryItOnDirect}>
+            <Box>
+              <Button
+                component={Link}
+                disableElevation={true}
+                href="/codepen"
+                className="MuiButton-containedPrimary"
+              >
+                CodePen
+              </Button>
+            </Box>
+            <Box>
+              <Button
+                component={Link}
+                disableElevation={true}
+                href="/card"
+                className="MuiButton-containedPrimary"
+              >
+                Card
+              </Button>
+            </Box>
+            <Box>
+              <Button
+                component={Link}
+                disableElevation={true}
+                href="/shellscript"
+                className="MuiButton-containedPrimary"
+              >
+                ShellScript
+              </Button>
+            </Box>
           </Box>
         </Box>
       </Box>
