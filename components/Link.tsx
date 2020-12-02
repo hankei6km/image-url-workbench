@@ -4,7 +4,7 @@ import React from 'react';
 import clsx from 'clsx';
 import { useRouter } from 'next/router';
 import NextLink, { LinkProps } from 'next/link';
-import MuiLink from '@material-ui/core/Link';
+import MuiLink, { LinkProps as MuiLinkProps } from '@material-ui/core/Link';
 import { UrlObject } from 'url';
 
 const NextComposed = React.forwardRef<
@@ -74,7 +74,7 @@ type Props = {
 };
 // A styled version of the Next.js Link component:
 // https://nextjs.org/docs/#with-link
-function Link(props: LinkProps & Props) {
+function Link(props: LinkProps & MuiLinkProps & Props) {
   const {
     href,
     activeClassName = 'active',
