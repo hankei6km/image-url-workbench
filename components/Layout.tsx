@@ -91,6 +91,8 @@ const useStyles = makeStyles((theme) => ({
       minHeight: 40
     },
     '& > .MuiBox-root': {
+      // display: 'flex',
+      // justifyContent: 'flex-end',
       width: '100%',
       maxWidth: theme.breakpoints.values.md,
       '& > .MuiTabs-root': {
@@ -141,8 +143,7 @@ function HomeLabel({ asUrl }: { asUrl: string }): React.ReactElement {
 
 type TabLink = { label: string; href: string };
 type TabLinks = TabLink[];
-const tabLinksWorkBench: TabLinks = [{ label: 'Overview', href: '/overview' }];
-const tabLinksTryItOn: TabLinks = [
+const tabLinksWorkBench: TabLinks = [
   { label: 'CodePen', href: '/codepen' },
   { label: 'Card', href: '/card' },
   { label: 'ShellScript', href: '/shellscript' }
@@ -168,37 +169,37 @@ const breadCrumbsPath: BreadCrumbsPath[] = [
     }
   },
   {
-    path: [{ label: <HomeLabel asUrl="/overview" />, href: '/' }],
-    current: { label: 'Workbench', href: '/overview' },
-    groupTab: tabLinksWorkBench
+    path: [{ label: <HomeLabel asUrl="/workbench" />, href: '/' }],
+    current: { label: 'Workbench', href: '/workbench' }
+    // groupTab: tabLinksWorkBench
   },
   {
     path: [
       { label: <HomeLabel asUrl="/parameters" />, href: '/' },
-      { label: 'Workbench', href: '/overview' }
+      { label: 'Workbench', href: '/workbench' }
     ],
     current: { label: 'Parameters', href: '/parameters' }
   },
   {
     path: [
-      { label: <HomeLabel asUrl="/codepen" />, href: '/' },
-      { label: 'Workbench', href: '/overview' }
+      { label: <HomeLabel asUrl="/parameters" />, href: '/' },
+      { label: 'Workbench', href: '/workbench' }
     ],
     current: { label: 'Try it on', href: '/codepen' },
-    groupTab: tabLinksTryItOn
+    groupTab: tabLinksWorkBench
   },
   {
     path: [
-      { label: <HomeLabel asUrl="/card" />, href: '/' },
-      { label: 'Workbench', href: '/overview' }
+      { label: <HomeLabel asUrl="/parameters" />, href: '/' },
+      { label: 'Workbench', href: '/workbench' }
     ],
     current: { label: 'Try it on', href: '/card' },
-    groupTab: tabLinksTryItOn
+    groupTab: tabLinksWorkBench
   },
   {
     path: [
       { label: <HomeLabel asUrl="/render" />, href: '/' },
-      { label: 'Workbench', href: '/overview' }
+      { label: 'Workbench', href: '/workbench' }
     ],
     current: { label: 'render', href: '/render' }
   }
@@ -228,7 +229,7 @@ function getGroupTabValue(
 }
 
 function existGroupTabPanel(asPath: string) {
-  return asPath === '/overview' || asPath === '/card' || asPath === '/codepen';
+  return asPath === '/card' || asPath === '/codepen';
 }
 
 function GroupTabPanel({
