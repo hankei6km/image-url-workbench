@@ -20,6 +20,8 @@ import Skeleton from '@material-ui/lab/Skeleton';
 import Typography from '@material-ui/core/Typography';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import OpenInNewIcon from '@material-ui/icons/OpenInNew';
+import QRCode from 'qrcode';
 import PreviewContext, {
   PreviewDispatch,
   PreviewItem,
@@ -45,8 +47,25 @@ const useStyles = makeStyles((theme) => ({
       }
     }
   },
-  imageDetailOuter: {
+  cardItem: {},
+  previewOuter: {
     height: 400
+  },
+  linkOuter: {
+    minHeight: 400
+  },
+  linkViewButtonOuter: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    '& .MuiButton-root': {
+      textTransform: 'none'
+    }
+  },
+  qrCodeButton: {
+    display: 'none',
+    [theme.breakpoints.up('sm')]: {
+      display: 'block'
+    }
   },
   targetIndicator: {
     backgroundColor: theme.palette.primary.main
@@ -71,17 +90,26 @@ function SetItem({
 
   const [imgUrl, setImgUrl] = useState('');
   const [imgPath, setImgPath] = useState('');
+  const [imgUrlQr64, setImgUrlQr64] = useState('');
+  const [qrOpened, setQrOpened] = useState(false);
 
   useEffect(() => {
-    if (tabValue === 1) {
-      try {
-        const u = new URL(previewItem.previewUrl);
-        setImgUrl(previewItem.previewUrl);
-        setImgPath(`${u.pathname}${u.search}`);
-      } catch {
-        setImgUrl('');
-        setImgPath('');
+    try {
+      switch (tabValue) {
+        case 1:
+          const u = new URL(previewItem.previewUrl);
+          setImgUrl(previewItem.previewUrl);
+          setImgPath(`${u.pathname}${u.search}`);
+          const generateQR = async (text: string) => {
+            setImgUrlQr64(await QRCode.toDataURL(text));
+          };
+          generateQR(previewItem.previewUrl);
+          break;
       }
+    } catch {
+      setImgUrl('');
+      setImgPath('');
+      setImgUrlQr64('');
     }
   }, [previewItem.previewUrl, tabValue]);
 
@@ -131,8 +159,11 @@ function SetItem({
             </Box>
           }
         />
-        <Box flexGrow="1" className={classes.imageDetailOuter}>
-          <Box display={tabValue === 0 ? 'block' : 'none'}>
+        <Box flexGrow="1" className={classes.cardItem}>
+          <Box
+            className={classes.previewOuter}
+            display={tabValue === 0 ? 'block' : 'none'}
+          >
             <CardActionArea onClick={onClick}>
               <Box display="flex">
                 <ImgPreview
@@ -166,13 +197,53 @@ function SetItem({
               </Box>
             </CardActionArea>
           </Box>
-          <Box display={tabValue === 1 ? 'block' : 'none'}>
+          <Box
+            display={tabValue === 1 ? 'block' : 'none'}
+            className={classes.linkOuter}
+          >
             <CardContent>
-              <Box p={1}>
-                <FragmentTextField label="url" value={imgUrl} />
+              <Box mt={-1} p={1} className={classes.linkViewButtonOuter}>
+                <Box display="flex" alignItems="center">
+                  <Typography variant="body1" color="textPrimary">
+                    Open Image:
+                  </Typography>
+                  <Button
+                    component={Link}
+                    href={previewItem.previewUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    disableElevation={true}
+                  >
+                    <OpenInNewIcon />
+                  </Button>
+                  <Box className={classes.qrCodeButton}>
+                    <Button
+                      onClick={() => setQrOpened(!qrOpened)}
+                      endIcon={
+                        <ExpandMoreIcon
+                          style={{
+                            transform: qrOpened ? 'rotate(180deg)' : ''
+                          }}
+                        />
+                      }
+                    >
+                      QR Code
+                    </Button>
+                  </Box>
+                </Box>
               </Box>
-              <Box p={1}>
-                <FragmentTextField label="path" value={imgPath} />
+              <Collapse in={qrOpened}>
+                <Box display="flex" justifyContent="flex-end">
+                  <img src={imgUrlQr64} alt="qr code to open link" />
+                </Box>
+              </Collapse>
+              <Box my={1}>
+                <Box p={1}>
+                  <FragmentTextField label="url" value={imgUrl} />
+                </Box>
+                <Box p={1}>
+                  <FragmentTextField label="path" value={imgPath} />
+                </Box>
               </Box>
             </CardContent>
           </Box>
