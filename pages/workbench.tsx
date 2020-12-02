@@ -45,8 +45,12 @@ const useStyles = makeStyles((theme) => ({
       }
     }
   },
-  imageDetailOuter: {
+  cardItem: {},
+  previewOuter: {
     height: 400
+  },
+  linkOuter: {
+    minHeight: 400
   },
   targetIndicator: {
     backgroundColor: theme.palette.primary.main
@@ -131,8 +135,11 @@ function SetItem({
             </Box>
           }
         />
-        <Box flexGrow="1" className={classes.imageDetailOuter}>
-          <Box display={tabValue === 0 ? 'block' : 'none'}>
+        <Box flexGrow="1" className={classes.cardItem}>
+          <Box
+            className={classes.previewOuter}
+            display={tabValue === 0 ? 'block' : 'none'}
+          >
             <CardActionArea onClick={onClick}>
               <Box display="flex">
                 <ImgPreview
@@ -166,7 +173,10 @@ function SetItem({
               </Box>
             </CardActionArea>
           </Box>
-          <Box display={tabValue === 1 ? 'block' : 'none'}>
+          <Box
+            className={classes.linkOuter}
+            display={tabValue === 1 ? 'block' : 'none'}
+          >
             <CardContent>
               <Box p={1}>
                 <FragmentTextField label="url" value={imgUrl} />
