@@ -21,6 +21,7 @@ import Typography from '@material-ui/core/Typography';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
+import QRCode from 'qrcode';
 import PreviewContext, {
   PreviewDispatch,
   PreviewItem,
@@ -83,6 +84,7 @@ function SetItem({
 
   const [imgUrl, setImgUrl] = useState('');
   const [imgPath, setImgPath] = useState('');
+  const [imgUrlQr64, setImgUrlQr64] = useState('');
 
   useEffect(() => {
     if (tabValue === 1) {
@@ -90,9 +92,14 @@ function SetItem({
         const u = new URL(previewItem.previewUrl);
         setImgUrl(previewItem.previewUrl);
         setImgPath(`${u.pathname}${u.search}`);
+        const generateQR = async (text: string) => {
+          setImgUrlQr64(await QRCode.toDataURL(text));
+        };
+        generateQR(previewItem.previewUrl);
       } catch {
         setImgUrl('');
         setImgPath('');
+        setImgUrlQr64('');
       }
     }
   }, [previewItem.previewUrl, tabValue]);
@@ -201,6 +208,7 @@ function SetItem({
                     <OpenInNewIcon />
                   </Button>
                 </Box>
+                <img src={imgUrlQr64} alt="qr code to open link" />
               </Box>
               <Box my={1}>
                 <Box p={1}>
