@@ -142,6 +142,7 @@ const CardPage = () => {
     <Layout title="Card">
       <Container maxWidth="md">
         <Box my={1} p={1}>
+          <Typography variant="h5">{'Try it on Card Validator'}</Typography>
           {imageUrlErrMsg === '' ? (
             <Box p={1}>
               <Card elevation={0}>
@@ -150,9 +151,7 @@ const CardPage = () => {
                   title={
                     <Box display="flex">
                       <Box>
-                        <Typography variant="body2">
-                          Preview Card Image
-                        </Typography>
+                        <Typography variant="body2">Image for Card</Typography>
                       </Box>
                       <Box ml={1}>
                         <Typography variant="body2">
@@ -216,25 +215,6 @@ const CardPage = () => {
               </AccordionSummary>
               <AccordionDetails>
                 <Box width="100%">
-                  <Typography variant="body1" color="textSecondary">
-                    Preview Card Type
-                  </Typography>
-                  <Box p={1}>
-                    <List component="nav" aria-label="main mailbox folders">
-                      {cardTypeList.map((v) => (
-                        <ListItem
-                          key={v.cardType}
-                          button
-                          onClick={() => handleListItemClick(v.cardType)}
-                        >
-                          <ListItemIcon>
-                            {cardType === v.cardType && <CheckIcon />}
-                          </ListItemIcon>
-                          <ListItemText primary={v.label} />
-                        </ListItem>
-                      ))}
-                    </List>
-                  </Box>
                   <Box p={1}>
                     <DebTextField
                       id="preview-card-title"
@@ -259,6 +239,27 @@ const CardPage = () => {
                       }}
                     />
                   </Box>
+                  <Box mt={2} p={1}>
+                    <Typography variant="body1" color="textSecondary">
+                      Preview Card Type
+                    </Typography>
+                    <Box p={1}>
+                      <List component="nav" aria-label="main mailbox folders">
+                        {cardTypeList.map((v) => (
+                          <ListItem
+                            key={v.cardType}
+                            button
+                            onClick={() => handleListItemClick(v.cardType)}
+                          >
+                            <ListItemIcon>
+                              {cardType === v.cardType && <CheckIcon />}
+                            </ListItemIcon>
+                            <ListItemText primary={v.label} />
+                          </ListItem>
+                        ))}
+                      </List>
+                    </Box>
+                  </Box>
                 </Box>
               </AccordionDetails>
             </Accordion>
@@ -268,7 +269,7 @@ const CardPage = () => {
           <Typography variant="h6">Usage:</Typography>
           <Typography component={'span'} variant="body1">
             <ul>
-              <li>copy "Card Preview URL" to clipboard</li>
+              <li>copy "Card Preview URL" to clipboard.</li>
               <li>
                 open{' '}
                 <a
@@ -276,10 +277,10 @@ const CardPage = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  Twitter Card Validator
+                  Twitter Card Validator.
                 </a>
               </li>
-              <li>paste the url to "Card URL"</li>
+              <li>paste the url to "Card URL".</li>
             </ul>
           </Typography>
         </Box>

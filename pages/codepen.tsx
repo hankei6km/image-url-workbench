@@ -1,8 +1,12 @@
 import React, { useState, useContext, useEffect } from 'react';
 import ReactDomServer from 'react-dom/server';
+import { makeStyles } from '@material-ui/core/styles';
 import Layout from '../components/Layout';
 import Container from '@material-ui/core/Container';
 import Box from '@material-ui/core/Box';
+import Card from '@material-ui/core/Card';
+import CardHeader from '@material-ui/core/CardHeader';
+import CardContent from '@material-ui/core/CardContent';
 import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
@@ -10,6 +14,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import unified from 'unified';
 import rehypeParse from 'rehype-parse';
 import rehypeStringify from 'rehype-stringify';
@@ -27,6 +32,7 @@ import merge from 'deepmerge';
 import gh from 'hast-util-sanitize/lib/github.json';
 import { Schema } from 'hast-util-sanitize';
 import CodePenDefineForm from '../components/CodePen';
+import ImgPreview from '../components/ImgPreview';
 
 const schema = merge(gh, {
   tagNames: ['picture', 'source'],
@@ -39,9 +45,32 @@ const processorHtml = unified()
   .use(rehypeStringify)
   .freeze();
 
+const useStyles = makeStyles((theme) => ({
+  imagePreview: {
+    width: 300,
+    height: 150,
+    [theme.breakpoints.up('sm')]: {
+      width: 400,
+      height: 200
+    },
+    '& > .MuiBox-root': {
+      width: 300,
+      height: 150,
+      [theme.breakpoints.up('sm')]: {
+        width: 400,
+        height: 200
+      }
+    }
+  }
+}));
+
 const CodePenPage = () => {
   const previewStateContext = useContext(PreviewContext);
   const previewDispatch = useContext(PreviewDispatch);
+  const classes = useStyles();
+
+  const [imgWidth, setImgWidth] = useState(0);
+  const [imgHeight, setImgHeight] = useState(0);
 
   const [defaultItem, setDefaultItem] = useState<{
     itemKey: string;
@@ -179,7 +208,12 @@ const CodePenPage = () => {
                 title="picture tag"
                 html={pictureHtml}
                 buttonLabel={'picture tag'}
-                buttonProps={{ color: 'primary', variant: 'outlined' }}
+                buttonProps={{
+                  color: 'primary',
+                  variant: 'contained',
+                  disableElevation: true,
+                  endIcon: <OpenInNewIcon />
+                }}
               />
             </Box>
             <Box p={1}>
@@ -187,12 +221,68 @@ const CodePenPage = () => {
                 title="img tag"
                 html={imgHtml}
                 buttonLabel={'img tag'}
-                buttonProps={{ color: 'primary', variant: 'outlined' }}
+                buttonProps={{
+                  color: 'primary',
+                  variant: 'contained',
+                  disableElevation: true,
+                  endIcon: <OpenInNewIcon />
+                }}
               />
             </Box>
           </Box>
-          <Box mb={2}>
-            <Accordion elevation={0} defaultExpanded={true}>
+          <Box p={1}>
+            <Card elevation={0}>
+              <CardHeader
+                titleTypographyProps={{ variant: 'body2' }}
+                title={
+                  <Box display="flex">
+                    <Box>
+                      <Typography variant="body2">Default Image</Typography>
+                    </Box>
+                    <Box ml={1}>
+                      <Typography variant="body2">
+                        {imgWidth > 0 ? `(${imgWidth} x ${imgHeight})` : ''}
+                      </Typography>
+                    </Box>
+                    {imgWidth > 0 &&
+                      previewStateContext.previewSet.length > 1 &&
+                      ((n) => {
+                        switch (n) {
+                          case 2:
+                            return <Box ml={1}>{'and 1 Image'}</Box>;
+                        }
+                        return <Box ml={1}>{`and ${n - 1} Images`}</Box>;
+                      })(previewStateContext.previewSet.length)}
+                  </Box>
+                }
+              />
+              <CardContent
+                className={classes.imagePreview}
+                // onClick={() => {
+                //   router.push('/render');
+                // }}
+              >
+                <Box>
+                  <ImgPreview
+                    previewUrl={defaultItem.previewUrl}
+                    {...{
+                      fitMode: 'landscape',
+                      imgGrow: 'none',
+                      width: undefined,
+                      height: undefined
+                    }}
+                    skeleton={true}
+                    onSize={({ w, h }) => {
+                      setImgWidth(w);
+                      setImgHeight(h);
+                    }}
+                  />
+                </Box>
+              </CardContent>
+            </Card>
+          </Box>
+          <Box mx={1} mb={2}>
+            <Accordion elevation={0}>
               <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
                 aria-controls={`optional parameters panel`}
@@ -242,7 +332,7 @@ const CodePenPage = () => {
               </AccordionDetails>
             </Accordion>
           </Box>
-          <Box mt={1} mb={2}>
+          <Box mx={1} mt={1} mb={2}>
             <Accordion elevation={0}>
               <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
