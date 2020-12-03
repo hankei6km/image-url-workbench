@@ -46,6 +46,17 @@ const processorHtml = unified()
   .freeze();
 
 const useStyles = makeStyles((theme) => ({
+  openWithOuter: {
+    display: 'block',
+    '& > .MuiBox-root': {
+      display: 'flex',
+      alignItems: 'center'
+    },
+    [theme.breakpoints.up('sm')]: {
+      display: 'flex',
+      alignItems: 'center'
+    }
+  },
   imagePreview: {
     width: 300,
     height: 150,
@@ -201,33 +212,35 @@ const CodePenPage = () => {
       <Container maxWidth="md">
         <Box my={1} p={1}>
           <Typography variant="h5">{'Try it on CodePen'}</Typography>
-          <Box p={1} display="flex" alignItems="center">
+          <Box p={1} className={classes.openWithOuter}>
             <Typography variant="body1">{'open with: '}</Typography>
-            <Box p={1}>
-              <CodePenDefineForm
-                title="picture tag"
-                html={pictureHtml}
-                buttonLabel={'picture tag'}
-                buttonProps={{
-                  color: 'primary',
-                  variant: 'contained',
-                  disableElevation: true,
-                  endIcon: <OpenInNewIcon />
-                }}
-              />
-            </Box>
-            <Box p={1}>
-              <CodePenDefineForm
-                title="img tag"
-                html={imgHtml}
-                buttonLabel={'img tag'}
-                buttonProps={{
-                  color: 'primary',
-                  variant: 'contained',
-                  disableElevation: true,
-                  endIcon: <OpenInNewIcon />
-                }}
-              />
+            <Box>
+              <Box p={1}>
+                <CodePenDefineForm
+                  title="picture tag"
+                  html={pictureHtml}
+                  buttonLabel={'picture tag'}
+                  buttonProps={{
+                    color: 'primary',
+                    variant: 'contained',
+                    disableElevation: true,
+                    endIcon: <OpenInNewIcon />
+                  }}
+                />
+              </Box>
+              <Box p={1}>
+                <CodePenDefineForm
+                  title="img tag"
+                  html={imgHtml}
+                  buttonLabel={'img tag'}
+                  buttonProps={{
+                    color: 'primary',
+                    variant: 'contained',
+                    disableElevation: true,
+                    endIcon: <OpenInNewIcon />
+                  }}
+                />
+              </Box>
             </Box>
           </Box>
           <Box p={1}>
