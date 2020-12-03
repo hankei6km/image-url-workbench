@@ -24,12 +24,10 @@ const ShellScriptPage = () => {
             <Typography component={'span'} variant="body1">
               <ul>
                 <li>open your favorite shell.</li>
-                <li>
-                  run following "commands".
-                  <FragmentDownload />
-                </li>
+                <li>run following "commands".</li>
               </ul>
             </Typography>
+            <FragmentDownload />
           </Box>
           <Box my={1} p={1}>
             <Typography variant="h6">
@@ -39,11 +37,11 @@ const ShellScriptPage = () => {
               <ul>
                 <li>
                   save following "code" as shell script(ie. `make_variant.sh`).
-                  <FragmentMakeVariants />
                 </li>
-                <li>{`run saved script with <your image bare url>(ie. \`bash make_variant.sh https://..../foo.jpg\`).`}</li>
+                <li>{`run saved script with <your image bare url>(ie. \`bash make_variant.sh 'https://..../foo.jpg'\`).`}</li>
               </ul>
             </Typography>
+            <FragmentMakeVariants />
           </Box>
         </Box>
       </Container>
