@@ -1,5 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import Box from '@material-ui/core/Box';
+import Typography from '@material-ui/core/Typography';
 import { basename, extname } from 'path';
 import PreviewContext from '../components/PreviewContext';
 import FragmentTextField from '../components/FragmentTextField';
@@ -26,6 +27,7 @@ const FragmentDownload = () => {
             '-fL',
             '-o',
             `${fileBaseName}-w${v.imgWidth}${extName}`,
+            '--',
             v.previewUrl
           ])}`
         );
@@ -38,11 +40,17 @@ const FragmentDownload = () => {
 
   return (
     <Box>
-      <Box p={1}>
-        <FragmentTextField
-          label="commands (download images)"
-          value={downloadImagesCommands}
-        />
+      <Box mx={2} p={1}>
+        <Typography variant="h6">Usage:</Typography>
+        <Typography component={'span'} variant="body1">
+          <ul>
+            <li>open your favorite shell.</li>
+            <li>run following "commands".</li>
+          </ul>
+        </Typography>
+      </Box>
+      <Box mx={1} p={1}>
+        <FragmentTextField label="commands" value={downloadImagesCommands} />
       </Box>
     </Box>
   );

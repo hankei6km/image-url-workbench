@@ -5,7 +5,7 @@ import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 // import PreviewContext from '../components/PreviewContext';
 import FragmentDownload from '../components/FragmentDownload';
-import FragmentMakeVariants from '../components/FragmentMakeVariants';
+import FragmentMake from '../components/FragmentMake';
 
 const ShellScriptPage = () => {
   // const classes = useStyles();
@@ -41,7 +41,7 @@ const ShellScriptPage = () => {
                 <li>{`run saved script with <your image bare url>(ie. \`bash make_variant.sh 'https://..../foo.jpg'\`).`}</li>
               </ul>
             </Typography>
-            <FragmentMakeVariants />
+            <FragmentMake />
           </Box>
         </Box>
       </Container>
