@@ -50,10 +50,7 @@ const FragmentDownload = () => {
         </Typography>
       </Box>
       <Box mx={1} p={1}>
-        <FragmentTextField
-          label="commands (download images)"
-          value={downloadImagesCommands}
-        />
+        <FragmentTextField label="commands" value={downloadImagesCommands} />
       </Box>
     </Box>
   );
