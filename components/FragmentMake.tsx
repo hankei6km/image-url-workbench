@@ -5,7 +5,7 @@ import PreviewContext from '../components/PreviewContext';
 import FragmentTextField from '../components/FragmentTextField';
 import shellescape from 'shell-escape';
 
-const FragmentMakeVariants = () => {
+const FragmentMake = () => {
   const previewStateContext = useContext(PreviewContext);
   const [makeVariantsScript, setMakeVariantsScript] = useState('');
 
@@ -64,4 +64,4 @@ ${commands.join('\n')}
   );
 };
 
-export default FragmentMakeVariants;
+export default FragmentMake;

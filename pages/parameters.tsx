@@ -10,7 +10,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import FragmentImageTag from '../components/FragmentImageTag';
 import FragmentCard from '../components/FragmentCard';
 import FragmentDownload from '../components/FragmentDownload';
-import FragmentMakeVariants from '../components/FragmentMakeVariants';
+import FragmentMake from '../components/FragmentMake';
 import FragmentLinks from '../components/FragmentLinks';
 import FragmentParams from '../components/FragmentParams';
 
@@ -66,8 +66,8 @@ const groupList = [
     group: <FragmentDownload />
   },
   {
-    groupName: 'Make variants by using current parameters.',
-    group: <FragmentMakeVariants />
+    groupName: 'Make images by using current parameters.',
+    group: <FragmentMake />
   },
   {
     groupName: 'URL Parameters',
