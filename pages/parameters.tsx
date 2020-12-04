@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { withStyles } from '@material-ui/core/styles';
 import Layout from '../components/Layout';
 import Container from '@material-ui/core/Container';
 import Accordion from '@material-ui/core/Accordion';
@@ -13,6 +14,12 @@ import FragmentDownload from '../components/FragmentDownload';
 import FragmentMake from '../components/FragmentMake';
 import FragmentLinks from '../components/FragmentLinks';
 import FragmentParams from '../components/FragmentParams';
+
+const AccordionSummaryStartIcon = withStyles({
+  expandIcon: {
+    order: -1
+  }
+})(AccordionSummary);
 
 export function ParametersPanel({
   groupName,
@@ -32,16 +39,16 @@ export function ParametersPanel({
         expanded={groupName === opened}
         onChange={onChange}
       >
-        <AccordionSummary
+        <AccordionSummaryStartIcon
           expandIcon={<ExpandMoreIcon />}
           aria-controls={`parameters panel : ${groupName}`}
           id={`group-${groupName}`}
-          IconButtonProps={{ edge: 'end' }}
+          IconButtonProps={{ edge: 'start' }}
         >
-          <Box p={1}>
+          <Box>
             <Typography variant="h6">{groupName}</Typography>
           </Box>
-        </AccordionSummary>
+        </AccordionSummaryStartIcon>
         <AccordionDetails style={{ padding: 0 }}>
           <Box pl={1} width="100%">
             {children}
