@@ -7,6 +7,8 @@ import AccordionDetails from '@material-ui/core/AccordionDetails';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import FragmentImageTag from '../components/FragmentImageTag';
+import FragmentCard from '../components/FragmentCard';
 import FragmentLinks from '../components/FragmentLinks';
 import FragmentParams from '../components/FragmentParams';
 
@@ -49,6 +51,14 @@ export function ParametersPanel({
 }
 
 const groupList = [
+  {
+    groupName: 'Image tag',
+    group: <FragmentImageTag />
+  },
+  {
+    groupName: 'Twitter Card Preview ',
+    group: <FragmentCard />
+  },
   {
     groupName: 'URL Parameters',
     group: <FragmentParams />
