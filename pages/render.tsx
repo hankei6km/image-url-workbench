@@ -4,11 +4,18 @@ import { makeStyles, useTheme } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Layout from '../components/Layout';
 import Container from '@material-ui/core/Container';
+import Link from '../components/Link';
 import Box from '@material-ui/core/Box';
 import Paper from '@material-ui/core/Paper';
+import Collapse from '@material-ui/core/Collapse';
+import Button from '@material-ui/core/Button';
+import Skeleton from '@material-ui/lab/Skeleton';
+import Typography from '@material-ui/core/Typography';
 import Fade from '@material-ui/core/Fade';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import SearchIcon from '@material-ui/icons/Search';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import PreviewContext, {
   PreviewDispatch,
   getTargetItemIndex
@@ -20,6 +27,7 @@ import ImgPreview, {
   ImgPreviewFitMode,
   ImgPreviewImgGrow
 } from '../components/ImgPreview';
+import { FragmentLinkQRcode } from '../components/FragmentLink';
 
 // クライアント側で毎回リスト作るのも効率悪くない?
 // props 経由で渡すのは?
@@ -63,7 +71,7 @@ const useStyles = makeStyles((theme) => ({
     }
   },
   imgPreviewFixLgUp: {
-    '& MuiBox': {
+    '& .ImagePreviewOuter': {
       display: 'flex',
       flexDirection: 'column',
       width: '100%',
@@ -71,13 +79,28 @@ const useStyles = makeStyles((theme) => ({
     },
     [theme.breakpoints.up('lg')]: {
       position: 'fixed',
-      top: 70,
+      top: 50,
       bottom: 70,
       maxWidth: theme.breakpoints.values.sm,
       width: '100%',
-      '& MuiBox': {
+      '& .ImagePreviewOuter': {
         height: '100%'
       }
+    }
+  },
+  imageHeaderOuter: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    '& .MuiButton-root': {
+      minWidth: 20,
+      textTransform: 'none'
+    }
+  },
+  qrCodeButton: {
+    display: 'none',
+    [theme.breakpoints.up('sm')]: {
+      display: 'block'
     }
   }
 }));
@@ -104,6 +127,8 @@ const RenderPage = () => {
   const [previewUrl, setPreviewUrl] = useState(getPreviewUrl());
   const [imgWidth, setImgWidth] = useState(0);
   const [imgHeight, setImgHeight] = useState(0);
+
+  const [qrOpened, setQrOpened] = useState(false);
 
   const [searchText, setSearchText] = useState('');
 
@@ -231,42 +256,67 @@ const RenderPage = () => {
               className={classes.imgPreviewOuter}
             >
               <Box className={classes.imgPreviewFixLgUp}>
-                <Box
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    width: '100%',
-                    // height: 200
-                    height: '100%'
-                  }}
-                >
-                  <Box
-                    mt={3}
-                    style={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      height: '100%'
-                    }}
-                  >
-                    <Fade
-                      in={!(mdDown && trigger)}
-                      timeout={{ enter: 700 }}
-                      style={{ flexGrow: 1 }}
+                <Box p={1} className={classes.imageHeaderOuter}>
+                  <Box flexGrow="1">
+                    {imgWidth === 0 ? (
+                      <Skeleton variant="rect" width="14em" />
+                    ) : (
+                      <Typography variant="body1" color="textPrimary">
+                        {`Image size: ${imgWidth}x${imgHeight}`}
+                      </Typography>
+                    )}
+                  </Box>
+                  <Box display="flex" alignItems="center">
+                    <Typography variant="body2" color="textPrimary">
+                      Open Image:
+                    </Typography>
+                    <Button
+                      component={Link}
+                      href={previewUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      disableElevation={true}
                     >
-                      <Paper square elevation={0} style={{ width: '100%' }}>
-                        <ImgPreview
-                          position={mdDown && trigger ? 'fixed' : 'static'}
-                          previewUrl={previewUrl}
-                          {...imgPreviewProps}
-                          onSize={({ w, h }) => {
-                            setImgWidth(w);
-                            setImgHeight(h);
+                      <OpenInNewIcon color="action" />
+                    </Button>
+                  </Box>
+                  <Box className={classes.qrCodeButton}>
+                    <Button
+                      onClick={() => setQrOpened(!qrOpened)}
+                      endIcon={
+                        <ExpandMoreIcon
+                          style={{
+                            transform: qrOpened ? 'rotate(180deg)' : ''
                           }}
                         />
-                      </Paper>
-                    </Fade>
+                      }
+                    >
+                      QR code
+                    </Button>
                   </Box>
                 </Box>
+                <Collapse in={qrOpened}>
+                  <Box display="flex" justifyContent="flex-end">
+                    <FragmentLinkQRcode url={previewUrl} />
+                  </Box>
+                </Collapse>
+                <Fade
+                  in={!(mdDown && trigger)}
+                  timeout={{ enter: 700 }}
+                  style={{ flexGrow: 1 }}
+                >
+                  <Box className="ImagePreviewOuter">
+                    <ImgPreview
+                      position={mdDown && trigger ? 'fixed' : 'static'}
+                      previewUrl={previewUrl}
+                      {...imgPreviewProps}
+                      onSize={({ w, h }) => {
+                        setImgWidth(w);
+                        setImgHeight(h);
+                      }}
+                    />
+                  </Box>
+                </Fade>
               </Box>
             </Box>
           </Box>

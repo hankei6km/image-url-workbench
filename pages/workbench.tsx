@@ -21,7 +21,6 @@ import Typography from '@material-ui/core/Typography';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
-import QRCode from 'qrcode';
 import PreviewContext, {
   PreviewDispatch,
   PreviewItem,
@@ -34,7 +33,7 @@ import {
   BuiltinImportTemplate,
   ImportTemplateParametersSet
 } from '../src/template';
-import FragmentTextField from '../components/FragmentTextField';
+import FragmentLink, { FragmentLinkQRcode } from '../components/FragmentLink';
 
 const useStyles = makeStyles((theme) => ({
   tab: {
@@ -87,31 +86,7 @@ function SetItem({
   const [imgHeight, setImgHeight] = useState(0);
 
   const [tabValue, setTabValue] = useState(0);
-
-  const [imgUrl, setImgUrl] = useState('');
-  const [imgPath, setImgPath] = useState('');
-  const [imgUrlQr64, setImgUrlQr64] = useState('');
   const [qrOpened, setQrOpened] = useState(false);
-
-  useEffect(() => {
-    try {
-      switch (tabValue) {
-        case 1:
-          const u = new URL(previewItem.previewUrl);
-          setImgUrl(previewItem.previewUrl);
-          setImgPath(`${u.pathname}${u.search}`);
-          const generateQR = async (text: string) => {
-            setImgUrlQr64(await QRCode.toDataURL(text));
-          };
-          generateQR(previewItem.previewUrl);
-          break;
-      }
-    } catch {
-      setImgUrl('');
-      setImgPath('');
-      setImgUrlQr64('');
-    }
-  }, [previewItem.previewUrl, tabValue]);
 
   const [mediaAnchorEl, setMediaAnchorEl] = useState<null | HTMLElement>(null);
 
@@ -234,17 +209,12 @@ function SetItem({
               </Box>
               <Collapse in={qrOpened}>
                 <Box display="flex" justifyContent="flex-end">
-                  <img src={imgUrlQr64} alt="qr code to open link" />
+                  {tabValue === 1 && (
+                    <FragmentLinkQRcode url={previewItem.previewUrl} />
+                  )}
                 </Box>
               </Collapse>
-              <Box my={1}>
-                <Box p={1}>
-                  <FragmentTextField label="url" value={imgUrl} />
-                </Box>
-                <Box p={1}>
-                  <FragmentTextField label="path" value={imgPath} />
-                </Box>
-              </Box>
+              {tabValue === 1 && <FragmentLink itemKey={previewItem.itemKey} />}
             </CardContent>
           </Box>
         </Box>
