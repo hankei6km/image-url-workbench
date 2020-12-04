@@ -9,6 +9,7 @@ import Box from '@material-ui/core/Box';
 import Paper from '@material-ui/core/Paper';
 import Collapse from '@material-ui/core/Collapse';
 import Button from '@material-ui/core/Button';
+import Skeleton from '@material-ui/lab/Skeleton';
 import Typography from '@material-ui/core/Typography';
 import Fade from '@material-ui/core/Fade';
 import InputAdornment from '@material-ui/core/InputAdornment';
@@ -90,6 +91,7 @@ const useStyles = makeStyles((theme) => ({
   imageHeaderOuter: {
     display: 'flex',
     justifyContent: 'flex-end',
+    alignItems: 'center',
     '& .MuiButton-root': {
       minWidth: 20,
       textTransform: 'none'
@@ -254,78 +256,67 @@ const RenderPage = () => {
               className={classes.imgPreviewOuter}
             >
               <Box className={classes.imgPreviewFixLgUp}>
-                <Box
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    width: '100%',
-                    // height: 200
-                    height: '100%'
-                  }}
-                >
-                  <Box p={1} className={classes.imageHeaderOuter}>
-                    <Box display="flex" alignItems="center">
-                      <Typography variant="body2" color="textSecondary">
-                        Open Image:
+                <Box p={1} className={classes.imageHeaderOuter}>
+                  <Box flexGrow="1">
+                    {imgWidth === 0 ? (
+                      <Skeleton variant="rect" width="14em" />
+                    ) : (
+                      <Typography variant="body1" color="textPrimary">
+                        {`Image size: ${imgWidth}x${imgHeight}`}
                       </Typography>
-                      <Button
-                        component={Link}
-                        href={previewUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        disableElevation={true}
-                      >
-                        <OpenInNewIcon color="action" />
-                      </Button>
-                    </Box>
-                    <Box className={classes.qrCodeButton}>
-                      <Button
-                        onClick={() => setQrOpened(!qrOpened)}
-                        endIcon={
-                          <ExpandMoreIcon
-                            style={{
-                              transform: qrOpened ? 'rotate(180deg)' : ''
-                            }}
-                          />
-                        }
-                      >
-                        QR code
-                      </Button>
-                    </Box>
+                    )}
                   </Box>
-                  <Box mb={3}>
-                    <Collapse in={qrOpened}>
-                      <Box display="flex" justifyContent="flex-end">
-                        <FragmentLinkQRcode url={previewUrl} />
-                      </Box>
-                    </Collapse>
-                  </Box>
-                  <Box
-                    style={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      height: '100%'
-                    }}
-                  >
-                    <Fade
-                      in={!(mdDown && trigger)}
-                      timeout={{ enter: 700 }}
-                      style={{ flexGrow: 1 }}
+                  <Box display="flex" alignItems="center">
+                    <Typography variant="body2" color="textPrimary">
+                      Open Image:
+                    </Typography>
+                    <Button
+                      component={Link}
+                      href={previewUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      disableElevation={true}
                     >
-                      <Box className="ImagePreviewOuter">
-                        <ImgPreview
-                          position={mdDown && trigger ? 'fixed' : 'static'}
-                          previewUrl={previewUrl}
-                          {...imgPreviewProps}
-                          onSize={({ w, h }) => {
-                            setImgWidth(w);
-                            setImgHeight(h);
+                      <OpenInNewIcon color="action" />
+                    </Button>
+                  </Box>
+                  <Box className={classes.qrCodeButton}>
+                    <Button
+                      onClick={() => setQrOpened(!qrOpened)}
+                      endIcon={
+                        <ExpandMoreIcon
+                          style={{
+                            transform: qrOpened ? 'rotate(180deg)' : ''
                           }}
                         />
-                      </Box>
-                    </Fade>
+                      }
+                    >
+                      QR code
+                    </Button>
                   </Box>
                 </Box>
+                <Collapse in={qrOpened}>
+                  <Box display="flex" justifyContent="flex-end">
+                    <FragmentLinkQRcode url={previewUrl} />
+                  </Box>
+                </Collapse>
+                <Fade
+                  in={!(mdDown && trigger)}
+                  timeout={{ enter: 700 }}
+                  style={{ flexGrow: 1 }}
+                >
+                  <Box className="ImagePreviewOuter">
+                    <ImgPreview
+                      position={mdDown && trigger ? 'fixed' : 'static'}
+                      previewUrl={previewUrl}
+                      {...imgPreviewProps}
+                      onSize={({ w, h }) => {
+                        setImgWidth(w);
+                        setImgHeight(h);
+                      }}
+                    />
+                  </Box>
+                </Fade>
               </Box>
             </Box>
           </Box>
