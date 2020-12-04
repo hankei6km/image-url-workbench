@@ -4,11 +4,17 @@ import { makeStyles, useTheme } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Layout from '../components/Layout';
 import Container from '@material-ui/core/Container';
+import Link from '../components/Link';
 import Box from '@material-ui/core/Box';
 import Paper from '@material-ui/core/Paper';
+import Collapse from '@material-ui/core/Collapse';
+import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
 import Fade from '@material-ui/core/Fade';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import SearchIcon from '@material-ui/icons/Search';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import PreviewContext, {
   PreviewDispatch,
   getTargetItemIndex
@@ -20,6 +26,7 @@ import ImgPreview, {
   ImgPreviewFitMode,
   ImgPreviewImgGrow
 } from '../components/ImgPreview';
+import { FragmentLinkQRcode } from '../components/FragmentLink';
 
 // クライアント側で毎回リスト作るのも効率悪くない?
 // props 経由で渡すのは?
@@ -63,7 +70,7 @@ const useStyles = makeStyles((theme) => ({
     }
   },
   imgPreviewFixLgUp: {
-    '& MuiBox': {
+    '& .ImagePreviewOuter': {
       display: 'flex',
       flexDirection: 'column',
       width: '100%',
@@ -71,13 +78,27 @@ const useStyles = makeStyles((theme) => ({
     },
     [theme.breakpoints.up('lg')]: {
       position: 'fixed',
-      top: 70,
+      top: 50,
       bottom: 70,
       maxWidth: theme.breakpoints.values.sm,
       width: '100%',
-      '& MuiBox': {
+      '& .ImagePreviewOuter': {
         height: '100%'
       }
+    }
+  },
+  imageHeaderOuter: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    '& .MuiButton-root': {
+      minWidth: 20,
+      textTransform: 'none'
+    }
+  },
+  qrCodeButton: {
+    display: 'none',
+    [theme.breakpoints.up('sm')]: {
+      display: 'block'
     }
   }
 }));
@@ -104,6 +125,8 @@ const RenderPage = () => {
   const [previewUrl, setPreviewUrl] = useState(getPreviewUrl());
   const [imgWidth, setImgWidth] = useState(0);
   const [imgHeight, setImgHeight] = useState(0);
+
+  const [qrOpened, setQrOpened] = useState(false);
 
   const [searchText, setSearchText] = useState('');
 
@@ -240,8 +263,44 @@ const RenderPage = () => {
                     height: '100%'
                   }}
                 >
+                  <Box p={1} className={classes.imageHeaderOuter}>
+                    <Box display="flex" alignItems="center">
+                      <Typography variant="body2" color="textSecondary">
+                        Open Image:
+                      </Typography>
+                      <Button
+                        component={Link}
+                        href={previewUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        disableElevation={true}
+                      >
+                        <OpenInNewIcon color="action" />
+                      </Button>
+                    </Box>
+                    <Box className={classes.qrCodeButton}>
+                      <Button
+                        onClick={() => setQrOpened(!qrOpened)}
+                        endIcon={
+                          <ExpandMoreIcon
+                            style={{
+                              transform: qrOpened ? 'rotate(180deg)' : ''
+                            }}
+                          />
+                        }
+                      >
+                        QR code
+                      </Button>
+                    </Box>
+                  </Box>
+                  <Box mb={3}>
+                    <Collapse in={qrOpened}>
+                      <Box display="flex" justifyContent="flex-end">
+                        <FragmentLinkQRcode url={previewUrl} />
+                      </Box>
+                    </Collapse>
+                  </Box>
                   <Box
-                    mt={3}
                     style={{
                       display: 'flex',
                       flexDirection: 'column',
@@ -253,7 +312,7 @@ const RenderPage = () => {
                       timeout={{ enter: 700 }}
                       style={{ flexGrow: 1 }}
                     >
-                      <Paper square elevation={0} style={{ width: '100%' }}>
+                      <Box className="ImagePreviewOuter">
                         <ImgPreview
                           position={mdDown && trigger ? 'fixed' : 'static'}
                           previewUrl={previewUrl}
@@ -263,7 +322,7 @@ const RenderPage = () => {
                             setImgHeight(h);
                           }}
                         />
-                      </Paper>
+                      </Box>
                     </Fade>
                   </Box>
                 </Box>

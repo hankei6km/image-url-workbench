@@ -6,25 +6,24 @@ import PreviewContext, {
 } from '../components/PreviewContext';
 import FragmentTextField from '../components/FragmentTextField';
 
-export const FragmentLinkQRcode = ({ itemKey }: { itemKey: string }) => {
+export const FragmentLinkQRcode = ({ url }: { url: string }) => {
   const previewStateContext = useContext(PreviewContext);
   const [imgUrlQr64, setImgUrlQr64] = useState('');
 
   useEffect(() => {
     try {
-      const idx = getTargetItemIndex(previewStateContext.previewSet, itemKey);
-      if (idx >= 0) {
+      if (url) {
         const generateQR = async (text: string) => {
           setImgUrlQr64(await QRCode.toDataURL(text));
         };
-        generateQR(previewStateContext.previewSet[idx].previewUrl);
+        generateQR(url);
       } else {
         setImgUrlQr64('');
       }
     } catch {
       setImgUrlQr64('');
     }
-  }, [previewStateContext.previewSet, itemKey]);
+  }, [previewStateContext.previewSet, url]);
 
   return (
     <Box>

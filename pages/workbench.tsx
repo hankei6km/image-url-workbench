@@ -210,7 +210,7 @@ function SetItem({
               <Collapse in={qrOpened}>
                 <Box display="flex" justifyContent="flex-end">
                   {tabValue === 1 && (
-                    <FragmentLinkQRcode itemKey={previewItem.itemKey} />
+                    <FragmentLinkQRcode url={previewItem.previewUrl} />
                   )}
                 </Box>
               </Collapse>
