@@ -9,6 +9,8 @@ import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import FragmentImageTag from '../components/FragmentImageTag';
 import FragmentCard from '../components/FragmentCard';
+import FragmentDownload from '../components/FragmentDownload';
+import FragmentMakeVariants from '../components/FragmentMakeVariants';
 import FragmentLinks from '../components/FragmentLinks';
 import FragmentParams from '../components/FragmentParams';
 
@@ -58,6 +60,14 @@ const groupList = [
   {
     groupName: 'Twitter Card Preview ',
     group: <FragmentCard />
+  },
+  {
+    groupName: 'Download images from the current workbench',
+    group: <FragmentDownload />
+  },
+  {
+    groupName: 'Make variants by using current parameters.',
+    group: <FragmentMakeVariants />
   },
   {
     groupName: 'URL Parameters',
