@@ -28,10 +28,10 @@ const FragmentLinks = () => {
   return (
     <Box mx={1}>
       <Box p={1}>
-        <FragmentTextField label="url (array)" value={imgUrl} />
+        <FragmentTextField defaultOpened label="url (array)" value={imgUrl} />
       </Box>
       <Box p={1}>
-        <FragmentTextField label="path (array)" value={imgPath} />
+        <FragmentTextField defaultOpened label="path (array)" value={imgPath} />
       </Box>
     </Box>
   );

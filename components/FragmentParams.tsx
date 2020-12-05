@@ -42,13 +42,22 @@ const FragmentParams = () => {
   return (
     <Box mx={1}>
       <Box p={1}>
-        <FragmentTextField label="json" value={imgParametersJson} />
+        <FragmentTextField
+          defaultOpened
+          label="json"
+          value={imgParametersJson}
+        />
       </Box>
       <Box p={1}>
-        <FragmentTextField label="query (array)" value={imgParameters} />
+        <FragmentTextField
+          defaultOpened
+          label="query (array)"
+          value={imgParameters}
+        />
       </Box>
       <Box p={1} display="none">
         <FragmentTextField
+          defaultOpened
           label="query-plain (array)"
           value={imgParametersPlain}
         />

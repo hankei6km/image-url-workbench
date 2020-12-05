@@ -242,52 +242,53 @@ const FragmentCard = () => {
       <Box my={1} p={1}>
         <FragmentTextField
           id="card-preview-url"
+          summary={
+            <Card elevation={0}>
+              <CardHeader
+                titleTypographyProps={{ variant: 'body2' }}
+                title={
+                  <Box display="flex">
+                    <Box>
+                      <Typography variant="body2">Image for Card</Typography>
+                    </Box>
+                    <Box ml={1}>
+                      <Typography variant="body2">
+                        {imgWidth > 0 ? `(${imgWidth} x ${imgHeight})` : ''}
+                      </Typography>
+                    </Box>
+                  </Box>
+                }
+              />
+              <CardActionArea
+                className={classes.imagePreview}
+                onClick={() => {
+                  router.push('/render');
+                }}
+              >
+                <Box>
+                  <ImgPreview
+                    previewUrl={imageUrl}
+                    {...{
+                      fitMode: 'landscape',
+                      imgGrow: 'none',
+                      width: undefined,
+                      height: undefined
+                    }}
+                    skeleton={true}
+                    onSize={({ w, h }) => {
+                      setImgWidth(w);
+                      setImgHeight(h);
+                    }}
+                  />
+                </Box>
+              </CardActionArea>
+            </Card>
+          }
           label="Card Preview URL"
           value={cardPreviewUrl}
         />
       </Box>
-      <Box m={1} p={1}>
-        <Card elevation={0}>
-          <CardHeader
-            titleTypographyProps={{ variant: 'body2' }}
-            title={
-              <Box display="flex">
-                <Box>
-                  <Typography variant="body2">Image for Card</Typography>
-                </Box>
-                <Box ml={1}>
-                  <Typography variant="body2">
-                    {imgWidth > 0 ? `(${imgWidth} x ${imgHeight})` : ''}
-                  </Typography>
-                </Box>
-              </Box>
-            }
-          />
-          <CardActionArea
-            className={classes.imagePreview}
-            onClick={() => {
-              router.push('/render');
-            }}
-          >
-            <Box>
-              <ImgPreview
-                previewUrl={imageUrl}
-                {...{
-                  fitMode: 'landscape',
-                  imgGrow: 'none',
-                  width: undefined,
-                  height: undefined
-                }}
-                skeleton={true}
-                onSize={({ w, h }) => {
-                  setImgWidth(w);
-                  setImgHeight(h);
-                }}
-              />
-            </Box>
-          </CardActionArea>
-        </Card>
-      </Box>
+      <Box m={1} p={1}></Box>
     </Box>
   );
 };

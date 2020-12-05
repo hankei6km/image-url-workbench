@@ -84,7 +84,11 @@ ${commands.join('\n')}
         </Typography>
       </Box>
       <Box p={1}>
-        <FragmentTextField label="code" value={makeVariantsScript} />
+        <FragmentTextField
+          defaultOpened
+          label="code"
+          value={makeVariantsScript}
+        />
       </Box>
     </Box>
   );
