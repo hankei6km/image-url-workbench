@@ -1,4 +1,5 @@
 import React from 'react';
+import { makeStyles } from '@material-ui/core/styles';
 import Layout from '../components/Layout';
 import Container from '@material-ui/core/Container';
 import Accordion from '@material-ui/core/Accordion';
@@ -14,6 +15,20 @@ import FragmentMake from '../components/FragmentMake';
 import FragmentLinks from '../components/FragmentLinks';
 import FragmentParams from '../components/FragmentParams';
 
+const useStyles = makeStyles((theme) => ({
+  groupName: {
+    [theme.breakpoints.up('sm')]: {
+      padding: theme.spacing(1)
+    }
+  },
+  group: {
+    width: '100%',
+    [theme.breakpoints.up('sm')]: {
+      padding: theme.spacing(1)
+    }
+  }
+}));
+
 export function ParametersPanel({
   groupName,
   defaultExpanded = false,
@@ -23,6 +38,8 @@ export function ParametersPanel({
   defaultExpanded?: boolean;
   children: React.ReactNode;
 }) {
+  const classes = useStyles();
+
   return (
     <Box my={1}>
       <Accordion elevation={0} defaultExpanded={defaultExpanded}>
@@ -32,14 +49,12 @@ export function ParametersPanel({
           id={`group-${groupName}`}
           IconButtonProps={{ edge: 'end' }}
         >
-          <Box p={1}>
+          <Box className={classes.groupName}>
             <Typography variant="h6">{groupName}</Typography>
           </Box>
         </AccordionSummary>
         <AccordionDetails style={{ padding: 0 }}>
-          <Box pl={1} width="100%">
-            {children}
-          </Box>
+          <Box className={classes.group}>{children}</Box>
         </AccordionDetails>
       </Accordion>
     </Box>

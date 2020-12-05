@@ -334,30 +334,6 @@ const useActionBarStyles = makeStyles((theme) => ({
       }
     }
   },
-  tryItOnSimple: {
-    display: 'flex',
-    '& > .MuiBox-root': {
-      marginRight: theme.spacing(1),
-      '& .MuiButton-root': {
-        textTransform: 'none'
-      }
-    },
-    [theme.breakpoints.up('sm')]: {
-      display: 'none'
-    }
-  },
-  tryItOnDirect: {
-    display: 'none',
-    [theme.breakpoints.up('sm')]: {
-      display: 'flex',
-      '& > .MuiBox-root': {
-        marginRight: theme.spacing(1),
-        '& .MuiButton-root': {
-          textTransform: 'none'
-        }
-      }
-    }
-  },
   templateLabel: {
     display: 'flex',
     justifyContent: 'flex-end',
@@ -489,19 +465,7 @@ function ActionBar({
           </Button>
         </Box>
         <Box className={classes.tryItOnOuter}>
-          <Box className={classes.tryItOnSimple}>
-            <Box>
-              <Button
-                component={Link}
-                disableElevation={true}
-                href="/codepen"
-                className="MuiButton-containedPrimary"
-              >
-                Try it
-              </Button>
-            </Box>
-          </Box>
-          <Box className={classes.tryItOnDirect}>
+          <Box>
             <Box>
               <Button
                 component={Link}
