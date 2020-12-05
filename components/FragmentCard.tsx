@@ -309,8 +309,8 @@ const FragmentCard = () => {
               </CardActionArea>
             </Card>
           }
-          label="Card Preview URL"
-          value={cardPreviewUrl}
+          label="Image URL"
+          value={imageUrl}
         />
       </Box>
       <Box m={1} p={1}></Box>
