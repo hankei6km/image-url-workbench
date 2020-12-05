@@ -205,7 +205,7 @@ const FragmentImageTag = () => {
             aria-controls={`optional parameters panel`}
             IconButtonProps={{ edge: 'start' }}
           >
-            <Typography variant="body2">Optional fields</Typography>
+            <Typography variant="body1">Optional fields</Typography>
           </AccordionSummary>
           <AccordionDetails>
             <Box width="100%">
