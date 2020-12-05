@@ -199,22 +199,6 @@ const FragmentCard = () => {
             </Zoom>
           ]}
         />
-        <Typography component={'span'} variant="body1">
-          <ul>
-            <li>copy "Card Preview URL" to clipboard.</li>
-            <li>
-              open{' '}
-              <a
-                href="https://cards-dev.twitter.com/validator"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Twitter Card Validator.
-              </a>
-            </li>
-            <li>paste the url to "Card URL".</li>
-          </ul>
-        </Typography>
       </Box>
       <Box p={1} mb={2}>
         <Accordion
