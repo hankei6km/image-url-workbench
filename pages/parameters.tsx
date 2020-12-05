@@ -52,7 +52,7 @@ const groupList: {
   group: React.ReactNode;
 }[] = [
   {
-    groupName: 'Image tag',
+    groupName: 'Preview image tag',
     group: <FragmentImageTag />
   },
   {
