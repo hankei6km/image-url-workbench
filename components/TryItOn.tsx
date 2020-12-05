@@ -8,27 +8,20 @@ const useStyles = makeStyles((theme) => ({
     display: 'block',
     '& > .MuiBox-root': {
       display: 'flex',
-      alignItems: 'center'
+      alignItems: 'center',
+      '& .MuiButton-root': {
+        textTransform: 'none'
+      },
+      [theme.breakpoints.down('xs')]: {
+        display: 'block',
+        '&  .MuiButton-root': {
+          width: '100%'
+        }
+      }
     },
     [theme.breakpoints.up('sm')]: {
       display: 'flex',
       alignItems: 'center'
-    }
-  },
-  imagePreview: {
-    width: 300,
-    height: 150,
-    [theme.breakpoints.up('sm')]: {
-      width: 400,
-      height: 200
-    },
-    '& > .MuiBox-root': {
-      width: 300,
-      height: 150,
-      [theme.breakpoints.up('sm')]: {
-        width: 400,
-        height: 200
-      }
     }
   }
 }));
@@ -45,8 +38,10 @@ const TryItOn = ({
     <Box mx={1} p={1} className={classes.openWithOuter}>
       <Typography variant="body1">{`Try it on ${title}: `}</Typography>
       <Box>
-        {linkButtons.map((v) => (
-          <Box p={1}>{v}</Box>
+        {linkButtons.map((v, i) => (
+          <Box key={i} p={1}>
+            {v}
+          </Box>
         ))}
       </Box>
     </Box>
