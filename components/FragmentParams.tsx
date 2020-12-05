@@ -44,6 +44,7 @@ const FragmentParams = () => {
       <Box p={1}>
         <FragmentTextField
           defaultOpened
+          naked
           label="json"
           value={imgParametersJson}
         />
@@ -51,6 +52,7 @@ const FragmentParams = () => {
       <Box p={1}>
         <FragmentTextField
           defaultOpened
+          naked
           label="query (array)"
           value={imgParameters}
         />
@@ -58,6 +60,7 @@ const FragmentParams = () => {
       <Box p={1} display="none">
         <FragmentTextField
           defaultOpened
+          naked
           label="query-plain (array)"
           value={imgParametersPlain}
         />

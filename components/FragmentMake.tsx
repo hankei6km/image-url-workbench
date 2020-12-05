@@ -86,6 +86,7 @@ ${commands.join('\n')}
       <Box p={1}>
         <FragmentTextField
           defaultOpened
+          naked
           label="code"
           value={makeVariantsScript}
         />

@@ -52,6 +52,7 @@ const FragmentDownload = () => {
       <Box p={1}>
         <FragmentTextField
           defaultOpened
+          naked
           label="commands"
           value={downloadImagesCommands}
         />

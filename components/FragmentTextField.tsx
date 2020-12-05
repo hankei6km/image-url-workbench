@@ -1,8 +1,6 @@
 import React, { useState, useRef } from 'react';
 import Box from '@material-ui/core/Box';
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import CardContent from '@material-ui/core/CardContent';
+import Paper from '@material-ui/core/Card';
 import Collapse from '@material-ui/core/Collapse';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
@@ -82,12 +80,14 @@ const FragmentTextField = ({
   }
   return (
     <Box>
-      <Card>
-        {summary && <CardHeader title={summary} />}
-        <CardContent>
-          <FragmentTextFieldInner {...others} />
-        </CardContent>
-      </Card>
+      <Paper>
+        <Box mx={1} p={1}>
+          <Box>{summary}</Box>
+          <Box my={1}>
+            <FragmentTextFieldInner {...others} />
+          </Box>
+        </Box>
+      </Paper>
     </Box>
   );
 };
