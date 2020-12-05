@@ -251,10 +251,10 @@ const FragmentImageTag = () => {
       </Box>
       <Box>
         <Box p={1}>
-          <FragmentTextField label="picture" value={pictureHtml} />
+          <FragmentTextField naked label="picture tag" value={pictureHtml} />
         </Box>
         <Box p={1}>
-          <FragmentTextField label="img" value={imgHtml} />
+          <FragmentTextField naked label="img tag" value={imgHtml} />
         </Box>
       </Box>
     </Box>
