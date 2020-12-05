@@ -139,7 +139,7 @@ const FragmentCard = () => {
   }, [previewDispatch, cardType, title, description]);
 
   return (
-    <Box>
+    <Box mx={1}>
       <Box p={1}>
         <TryItOn
           title="Twitter Card Validator"
@@ -175,7 +175,7 @@ const FragmentCard = () => {
           </ul>
         </Typography>
       </Box>
-      <Box mx={1} mb={2}>
+      <Box p={1} mb={2}>
         <Accordion
           elevation={0}
           // expanded={groupName === opened}
@@ -246,7 +246,7 @@ const FragmentCard = () => {
           value={cardPreviewUrl}
         />
       </Box>
-      <Box my={1} p={1}>
+      <Box m={1} p={1}>
         <Card elevation={0}>
           <CardHeader
             titleTypographyProps={{ variant: 'body2' }}

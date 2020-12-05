@@ -56,7 +56,7 @@ const groupList: {
     group: <FragmentImageTag />
   },
   {
-    groupName: 'Twitter Card Preview ',
+    groupName: 'Preview Twitter Card',
     group: <FragmentCard />
   },
   {
