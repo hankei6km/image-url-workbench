@@ -45,8 +45,8 @@ const TryItOn = ({
     <Box mx={1} p={1} className={classes.openWithOuter}>
       <Typography variant="body1">{`Try it on ${title}: `}</Typography>
       <Box>
-        {linkButtons.map((v) => (
-          <Box p={1}>{v}</Box>
+        {linkButtons.map((v,i) => (
+          <Box key={i} p={1}>{v}</Box>
         ))}
       </Box>
     </Box>
