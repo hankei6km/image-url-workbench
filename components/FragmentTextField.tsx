@@ -7,6 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import CodeIcon from '@material-ui/icons/Code';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
+import { useSnackbar } from 'notistack';
 import copyTextToClipboard from '../utils/clipboard';
 
 // type Props = {} & TextFieldProps;
@@ -29,6 +30,8 @@ const FragmentTextFieldInner = ({
 }: InnerProps) => {
   const inputRef = useRef<HTMLTextAreaElement>();
   const [open, setOpen] = useState(defaultOpened);
+  const { enqueueSnackbar } = useSnackbar();
+
   return (
     <Box>
       <Box display="flex" alignItems="center">
@@ -40,7 +43,18 @@ const FragmentTextFieldInner = ({
         </IconButton>
         <IconButton
           onClick={() => {
-            copyTextToClipboard(value);
+            copyTextToClipboard(value).then(
+              () => {
+                enqueueSnackbar('The code has been copied.', {
+                  variant: 'success'
+                });
+              },
+              (err) => {
+                enqueueSnackbar(`error in cpoing the code: ${err.message} `, {
+                  variant: 'error'
+                });
+              }
+            );
           }}
         >
           <FileCopyIcon fontSize="small" />
