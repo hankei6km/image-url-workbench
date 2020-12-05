@@ -30,7 +30,7 @@ const theme = createMuiTheme({
     // ここで header 用のを操作するのもどうかと思わなくもないが、
     MuiTypography: {
       h6: {
-        fontSize: pxToRem(12),
+        fontSize: pxToRem(16),
         [breakpoints.up('sm')]: {
           fontSize: pxToRem(18)
         }
