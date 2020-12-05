@@ -9,6 +9,7 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import CodeIcon from '@material-ui/icons/Code';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
+import copyTextToClipboard from '../utils/clipboard';
 
 // type Props = {} & TextFieldProps;
 type InnerProps = {
@@ -25,6 +26,7 @@ type Props = {
 const FragmentTextFieldInner = ({
   defaultOpened = false,
   label,
+  value,
   ...others
 }: InnerProps) => {
   const inputRef = useRef<HTMLTextAreaElement>();
@@ -38,7 +40,11 @@ const FragmentTextFieldInner = ({
         <IconButton onClick={() => setOpen(!open)}>
           <CodeIcon fontSize="small" />
         </IconButton>
-        <IconButton>
+        <IconButton
+          onClick={() => {
+            copyTextToClipboard(value);
+          }}
+        >
           <FileCopyIcon fontSize="small" />
         </IconButton>
       </Box>
@@ -48,6 +54,7 @@ const FragmentTextFieldInner = ({
           variant="outlined"
           fullWidth={true}
           multiline={true}
+          value={value}
           onSelect={(_e) => {
             if (
               inputRef &&
