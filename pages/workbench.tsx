@@ -497,7 +497,7 @@ function ActionBar({
                 href="/codepen"
                 className="MuiButton-containedPrimary"
               >
-                Try it on:
+                Try it
               </Button>
             </Box>
           </Box>
@@ -506,30 +506,10 @@ function ActionBar({
               <Button
                 component={Link}
                 disableElevation={true}
-                href="/codepen"
+                href="/parameters"
                 className="MuiButton-containedPrimary"
               >
-                CodePen
-              </Button>
-            </Box>
-            <Box>
-              <Button
-                component={Link}
-                disableElevation={true}
-                href="/card"
-                className="MuiButton-containedPrimary"
-              >
-                Card
-              </Button>
-            </Box>
-            <Box>
-              <Button
-                component={Link}
-                disableElevation={true}
-                href="/shellscript"
-                className="MuiButton-containedPrimary"
-              >
-                ShellScript
+                Try it
               </Button>
             </Box>
           </Box>

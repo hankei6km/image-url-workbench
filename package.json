@@ -22,6 +22,7 @@
     "hast-util-sanitize": "^3.0.1",
     "imgix-url-params": "^11.10.1",
     "next": "latest",
+    "notistack": "^1.0.2",
     "qrcode": "^1.4.4",
     "react": "^16.12.0",
     "react-color": "^2.18.1",

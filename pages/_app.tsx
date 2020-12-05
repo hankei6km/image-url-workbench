@@ -6,6 +6,7 @@ import Head from 'next/head';
 import { ThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import theme from '../src/theme';
+import { SnackbarProvider } from 'notistack';
 import PreviewContext, {
   PreviewDispatch,
   previewContextReducer,
@@ -54,7 +55,9 @@ export default function MyApp({ Component, pageProps }: AppProps) {
           <ThemeProvider theme={theme}>
             {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
             <CssBaseline />
-            <Component {...pageProps} />
+            <SnackbarProvider maxSnack={3}>
+              <Component {...pageProps} />
+            </SnackbarProvider>
           </ThemeProvider>
         </PreviewContext.Provider>
       </PreviewDispatch.Provider>
