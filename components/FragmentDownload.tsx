@@ -39,8 +39,8 @@ const FragmentDownload = () => {
   }, [previewStateContext.previewSet]);
 
   return (
-    <Box>
-      <Box mx={2} p={1}>
+    <Box mx={1}>
+      <Box mx={1} p={1}>
         <Typography variant="h6">Usage:</Typography>
         <Typography component={'span'} variant="body1">
           <ul>
@@ -49,7 +49,7 @@ const FragmentDownload = () => {
           </ul>
         </Typography>
       </Box>
-      <Box mx={1} p={1}>
+      <Box p={1}>
         <FragmentTextField label="commands" value={downloadImagesCommands} />
       </Box>
     </Box>

@@ -168,35 +168,37 @@ const FragmentImageTag = () => {
   }, [previewDispatch, altText, linkText, newTab]);
 
   return (
-    <Box my={1} p={1}>
-      <TryItOn
-        title="CodePen"
-        linkButtons={[
-          <CodePenDefineForm
-            title="picture tag"
-            html={pictureHtml}
-            buttonLabel={'picture tag'}
-            buttonProps={{
-              color: 'primary',
-              variant: 'contained',
-              disableElevation: true,
-              endIcon: <OpenInNewIcon />
-            }}
-          />,
-          <CodePenDefineForm
-            title="img tag"
-            html={imgHtml}
-            buttonLabel={'img tag'}
-            buttonProps={{
-              color: 'primary',
-              variant: 'contained',
-              disableElevation: true,
-              endIcon: <OpenInNewIcon />
-            }}
-          />
-        ]}
-      />
-      <Box mx={1} mb={2}>
+    <Box mx={1}>
+      <Box p={1}>
+        <TryItOn
+          title="CodePen"
+          linkButtons={[
+            <CodePenDefineForm
+              title="picture tag"
+              html={pictureHtml}
+              buttonLabel={'picture tag'}
+              buttonProps={{
+                color: 'primary',
+                variant: 'contained',
+                disableElevation: true,
+                endIcon: <OpenInNewIcon />
+              }}
+            />,
+            <CodePenDefineForm
+              title="img tag"
+              html={imgHtml}
+              buttonLabel={'img tag'}
+              buttonProps={{
+                color: 'primary',
+                variant: 'contained',
+                disableElevation: true,
+                endIcon: <OpenInNewIcon />
+              }}
+            />
+          ]}
+        />
+      </Box>
+      <Box p={1} mb={2}>
         <Accordion elevation={0}>
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
@@ -247,7 +249,7 @@ const FragmentImageTag = () => {
           </AccordionDetails>
         </Accordion>
       </Box>
-      <Box mx={1} mt={1} mb={2}>
+      <Box>
         <Box p={1}>
           <FragmentTextField label="picture" value={pictureHtml} />
         </Box>

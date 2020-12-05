@@ -26,7 +26,7 @@ const FragmentLinks = () => {
   }, [previewStateContext.previewSet]);
 
   return (
-    <Box>
+    <Box mx={1}>
       <Box p={1}>
         <FragmentTextField label="url (array)" value={imgUrl} />
       </Box>

@@ -67,8 +67,8 @@ ${commands.join('\n')}
   }, [previewStateContext.previewSet]);
 
   return (
-    <Box className={classes.root}>
-      <Box mx={2} p={1}>
+    <Box mx={1} className={classes.root}>
+      <Box mx={1} p={1}>
         <Typography variant="h6">Usage</Typography>
         <Typography component={'span'} variant="body1">
           <ul>
@@ -83,7 +83,7 @@ ${commands.join('\n')}
           </ul>
         </Typography>
       </Box>
-      <Box mx={1} p={1}>
+      <Box p={1}>
         <FragmentTextField label="code" value={makeVariantsScript} />
       </Box>
     </Box>
