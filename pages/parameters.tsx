@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Layout from '../components/Layout';
 import Container from '@material-ui/core/Container';
 import Accordion from '@material-ui/core/Accordion';
@@ -16,22 +16,14 @@ import FragmentParams from '../components/FragmentParams';
 
 export function ParametersPanel({
   groupName,
-  opened,
-  children,
-  onChange
+  children
 }: {
   groupName: string;
-  opened: string;
   children: React.ReactNode;
-  onChange: (_e: React.ChangeEvent<{}>, isExpanded: boolean) => void;
 }) {
   return (
     <Box my={1}>
-      <Accordion
-        elevation={0}
-        expanded={groupName === opened}
-        onChange={onChange}
-      >
+      <Accordion elevation={0}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls={`parameters panel : ${groupName}`}
@@ -79,23 +71,12 @@ const groupList = [
   }
 ];
 const ParametersPage = () => {
-  const [opened, setOpened] = useState('URL Parameters');
-  const changeOpend = (category: string) => {
-    return (_e: React.ChangeEvent<{}>, isExpanded: boolean): void => {
-      setOpened(isExpanded ? category : '');
-    };
-  };
   return (
     <Layout title="Parameters">
       <Container maxWidth="md">
         <Box>
           {groupList.map((v) => (
-            <ParametersPanel
-              key={v.groupName}
-              opened={opened}
-              groupName={v.groupName}
-              onChange={changeOpend(v.groupName)}
-            >
+            <ParametersPanel key={v.groupName} groupName={v.groupName}>
               {v.group}
             </ParametersPanel>
           ))}
