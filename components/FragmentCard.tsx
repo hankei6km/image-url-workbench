@@ -13,10 +13,12 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
+import Zoom from '@material-ui/core/Zoom';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import CheckIcon from '@material-ui/icons/Check';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
+import FileCopyOutlinedIcon from '@material-ui/icons/FileCopyOutlined';
 import { dirname, join } from 'path';
 import { encodeBase64Url } from '../utils/base64';
 import Validator from '../utils/validator';
@@ -30,6 +32,8 @@ import FragmentTextField from '../components/FragmentTextField';
 import ImgPreview from '../components/ImgPreview';
 import Link from '../components/Link';
 import TryItOn from '../components/TryItOn';
+import copyTextToClipboard from '../utils/clipboard';
+import { useSnackbar } from 'notistack';
 
 const validator = Validator();
 
@@ -63,6 +67,8 @@ const FragmentCard = () => {
   const previewStateContext = useContext(PreviewContext);
   const previewDispatch = useContext(PreviewDispatch);
   const router = useRouter();
+  const { enqueueSnackbar } = useSnackbar();
+
   const getPreviewUrl = useCallback(() => {
     const idx = getTargetItemIndex(
       previewStateContext.previewSet,
@@ -75,6 +81,9 @@ const FragmentCard = () => {
   );
   const [imgWidth, setImgWidth] = useState(0);
   const [imgHeight, setImgHeight] = useState(0);
+
+  const [copied, setCopied] = useState(false);
+
   const [cardType, setCardType] = useState(previewStateContext.card.cardType);
   const [title, setTitle] = useState(previewStateContext.card.title);
   const [description, setDescription] = useState(
@@ -145,35 +154,51 @@ const FragmentCard = () => {
           title="Twitter Card Validator"
           linkButtons={[
             <Button
-              component={Link}
               color="primary"
-              href="https://cards-dev.twitter.com/validator"
-              target="_blank"
-              rel="noopener noreferrer"
               disableElevation={true}
               className="MuiButton-containedPrimary"
-              endIcon={<OpenInNewIcon />}
+              endIcon={<FileCopyOutlinedIcon />}
+              onClick={() => {
+                copyTextToClipboard(cardPreviewUrl).then(
+                  () => {
+                    setCopied(true);
+                    setTimeout(
+                      () =>
+                        enqueueSnackbar('The Card URL has been copied.', {
+                          variant: 'success'
+                        }),
+                      copied ? 1 : 1000
+                    );
+                  },
+                  (err) => {
+                    enqueueSnackbar(
+                      `error in cpoing the Card URL: ${err.message} `,
+                      {
+                        variant: 'error'
+                      }
+                    );
+                  }
+                );
+              }}
             >
-              Open
-            </Button>
-          ]}
-        />
-        <Typography component={'span'} variant="body1">
-          <ul>
-            <li>copy "Card Preview URL" to clipboard.</li>
-            <li>
-              open{' '}
-              <a
+              <Box>Copy Card URL</Box>
+            </Button>,
+            <Zoom in={copied}>
+              <Button
+                component={Link}
+                color="primary"
                 href="https://cards-dev.twitter.com/validator"
                 target="_blank"
                 rel="noopener noreferrer"
+                disableElevation={true}
+                className="MuiButton-containedPrimary"
+                endIcon={<OpenInNewIcon />}
               >
-                Twitter Card Validator.
-              </a>
-            </li>
-            <li>paste the url to "Card URL".</li>
-          </ul>
-        </Typography>
+                Open Card Validator
+              </Button>
+            </Zoom>
+          ]}
+        />
       </Box>
       <Box p={1} mb={2}>
         <Accordion
@@ -186,7 +211,7 @@ const FragmentCard = () => {
             aria-controls={`optional parameters panel`}
             IconButtonProps={{ edge: 'start' }}
           >
-            <Typography variant="body2">Optional fields</Typography>
+            <Typography variant="body1">Optional fields</Typography>
           </AccordionSummary>
           <AccordionDetails>
             <Box width="100%">
@@ -284,8 +309,8 @@ const FragmentCard = () => {
               </CardActionArea>
             </Card>
           }
-          label="Card Preview URL"
-          value={cardPreviewUrl}
+          label="Image URL"
+          value={imageUrl}
         />
       </Box>
       <Box m={1} p={1}></Box>
