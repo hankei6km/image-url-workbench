@@ -16,14 +16,16 @@ import FragmentParams from '../components/FragmentParams';
 
 export function ParametersPanel({
   groupName,
+  defaultExpanded = false,
   children
 }: {
   groupName: string;
+  defaultExpanded?: boolean;
   children: React.ReactNode;
 }) {
   return (
     <Box my={1}>
-      <Accordion elevation={0}>
+      <Accordion elevation={0} defaultExpanded={defaultExpanded}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls={`parameters panel : ${groupName}`}
@@ -44,7 +46,11 @@ export function ParametersPanel({
   );
 }
 
-const groupList = [
+const groupList: {
+  groupName: string;
+  defaultExpanded?: boolean;
+  group: React.ReactNode;
+}[] = [
   {
     groupName: 'Image tag',
     group: <FragmentImageTag />
@@ -75,9 +81,13 @@ const ParametersPage = () => {
     <Layout title="Parameters">
       <Container maxWidth="md">
         <Box>
-          {groupList.map((v) => (
-            <ParametersPanel key={v.groupName} groupName={v.groupName}>
-              {v.group}
+          {groupList.map(({ groupName, defaultExpanded, group }) => (
+            <ParametersPanel
+              key={groupName}
+              defaultExpanded={defaultExpanded}
+              groupName={groupName}
+            >
+              {group}
             </ParametersPanel>
           ))}
         </Box>
