@@ -273,13 +273,13 @@ const RenderPage = () => {
               <Box className={classes.imgPreviewFixLgUp}>
                 <Box p={1} className={classes.imageHeaderOuter}>
                   <Box flexGrow="1">
-                    {imgWidth === 0 ? (
-                      <Skeleton variant="rect" width="14em" />
-                    ) : (
-                      <Typography variant="body1" color="textPrimary">
-                        {`Image size: ${imgWidth}x${imgHeight}`}
-                      </Typography>
-                    )}
+                    <Typography variant="body1" color="textPrimary">
+                      {imgWidth === 0 ? (
+                        <Skeleton variant="rect" width="11em" />
+                      ) : (
+                        `Image size: ${imgWidth}x${imgHeight}`
+                      )}
+                    </Typography>
                   </Box>
                   <Box display="flex" alignItems="center">
                     <Typography variant="body2" color="textPrimary">
