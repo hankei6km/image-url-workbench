@@ -7,6 +7,7 @@ import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import Tooltip from '@material-ui/core/Tooltip';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import ImgParams, {
@@ -290,16 +291,30 @@ export default function ImgUrl({
                     <Box className={classes.infoButtonOuter}>
                       {((p) => {
                         return p ? (
-                          <Button
-                            component={Link}
-                            href={p.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
+                          <Tooltip
+                            interactive
+                            placement="left"
+                            disableFocusListener
+                            disableTouchListener
+                            title={
+                              <Box>
+                                <Typography variant="body1">
+                                  {p.short_description}
+                                </Typography>
+                              </Box>
+                            }
                           >
-                            <Typography color="textSecondary">
-                              <InfoOutlinedIcon fontSize="small" />
-                            </Typography>
-                          </Button>
+                            <Button
+                              component={Link}
+                              href={p.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              <Typography color="textSecondary">
+                                <InfoOutlinedIcon fontSize="small" />
+                              </Typography>
+                            </Button>
+                          </Tooltip>
                         ) : (
                           ''
                         );

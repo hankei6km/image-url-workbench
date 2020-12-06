@@ -9,6 +9,7 @@ type Parameters = {
     category: string;
     expects: ParamsExpect[];
     url: string;
+    short_description: string;
   } & any;
 };
 type FontValues = string[];
