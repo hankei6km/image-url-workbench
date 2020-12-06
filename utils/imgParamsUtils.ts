@@ -5,7 +5,11 @@ export type ParamsExpect = {
   [key: string]: any;
 };
 type Parameters = {
-  [key: string]: { category: string; expects: ParamsExpect[] } & any;
+  [key: string]: {
+    category: string;
+    expects: ParamsExpect[];
+    url: string;
+  } & any;
 };
 type FontValues = string[];
 type CategoryValues = string[];

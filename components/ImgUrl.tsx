@@ -1,9 +1,14 @@
 import React, { useReducer, useCallback, useEffect, useState } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import Link from '../components/Link';
 import Box from '@material-ui/core/Box';
 import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
+import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import ImgParams, {
   ImgUrlParamsOnChangeEvent,
   ImgParamsEnabled
@@ -13,8 +18,25 @@ import {
   ImgParamsItems,
   imgParamsCategories,
   imgParamsInCategory,
-  imgUrlParamsToString
+  imgUrlParamsToString,
+  paramsKeyParameters
 } from '../utils/imgParamsUtils';
+
+const useStyles = makeStyles((theme) => ({
+  paramRow: {
+    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(1),
+    [theme.breakpoints.up('sm')]: {
+      paddingLeft: theme.spacing(1),
+      paddingRight: theme.spacing(1)
+    }
+  },
+  infoButtonOuter: {
+    '& .MuiButton-root': {
+      minWidth: 0
+    }
+  }
+}));
 
 type CategoryPanelProps = {
   category: string;
@@ -158,6 +180,7 @@ export default function ImgUrl({
   onChangeImageUrl = (_e) => {},
   onChangePreviewUrl
 }: ImgUrlProps) {
+  const classes = useStyles();
   const [state, dispatch] = useReducer(reducer, initialState, (init) => {
     const newState = { ...init };
     newState.baseUrl = baseUrl;
@@ -244,7 +267,7 @@ export default function ImgUrl({
               imgParamsInCategory(paramsItem, v).map(
                 ({ paramsKey }: { paramsKey: string }) => (
                   <Box
-                    p={1}
+                    className={classes.paramRow}
                     key={paramsKey}
                     display="flex"
                     flexDirection="row"
@@ -263,6 +286,24 @@ export default function ImgUrl({
                         paramsValue={paramsValue(paramsKey)}
                         onChange={debounceInputText('setParam', paramsKey)}
                       />
+                    </Box>
+                    <Box className={classes.infoButtonOuter}>
+                      {((p) => {
+                        return p ? (
+                          <Button
+                            component={Link}
+                            href={p.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <Typography color="textSecondary">
+                              <InfoOutlinedIcon fontSize="small" />
+                            </Typography>
+                          </Button>
+                        ) : (
+                          ''
+                        );
+                      })(paramsKeyParameters(paramsKey))}
                     </Box>
                   </Box>
                 )
