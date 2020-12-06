@@ -402,7 +402,7 @@ export default function ImgParams(props: ImgParamsProps) {
   const p = paramsKeyParameters(props.paramsKey);
   if (p) {
     return (
-      <div>
+      <Box>
         {pruneExpects(p.expects).map((v: ParamsExpect, i: number) => {
           const suggestRange = expectToRange(v);
           const possibleValues = expectToList(v);
@@ -430,7 +430,7 @@ export default function ImgParams(props: ImgParamsProps) {
           }
           return <ImgParamsTextField key={key} paramsExpect={v} {...props} />;
         })}
-      </div>
+      </Box>
     );
   }
   return <div></div>;
