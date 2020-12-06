@@ -85,6 +85,7 @@ function SetItem({
   const classes = useStyles();
   const [imgWidth, setImgWidth] = useState(0);
   const [imgHeight, setImgHeight] = useState(0);
+  const [imgFileSize, setImgFileSize] = useState(0);
 
   const [tabValue, setTabValue] = useState(0);
   const [qrOpened, setQrOpened] = useState(false);
@@ -107,10 +108,10 @@ function SetItem({
           title={
             <Box display="flex">
               <Box flexGrow="1">
-                {imgWidth === 0 ? (
+                {imgFileSize === 0 ? (
                   <Skeleton variant="rect" width="10em" />
                 ) : (
-                  `${imgWidth}x${imgHeight}`
+                  `${imgWidth}x${imgHeight} ${Math.round(imgFileSize / 1000)}kB`
                 )}
               </Box>
               <Box>
@@ -162,6 +163,9 @@ function SetItem({
                         payload: [previewItem.itemKey, w, h]
                       });
                     }
+                  }}
+                  onFileSize={({ imgFileSize }) => {
+                    setImgFileSize(imgFileSize);
                   }}
                 />
                 <Box
