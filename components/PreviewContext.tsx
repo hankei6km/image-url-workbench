@@ -426,6 +426,9 @@ export const getTargetItemIndex = (
   targetKey: string
 ): number => previewSet.findIndex(({ itemKey }) => itemKey === targetKey);
 
+export const isPreviewSetReady = (previewSet: PreviewItem[]): boolean =>
+  previewSet.every(({ imgWidth, imgHeight }) => imgWidth > 0 && imgHeight > 0);
+
 export const PreviewDispatch = React.createContext<React.Dispatch<actType>>(
   (_a: actType) => {}
 );
