@@ -25,7 +25,8 @@ import PreviewContext, {
   PreviewDispatch,
   PreviewItem,
   BreakPoint,
-  BreakPointAutoAndValues
+  BreakPointAutoAndValues,
+  isPreviewSetReady
 } from '../components/PreviewContext';
 import TemplatePanel from '../components/TemplatePanel';
 import ImgPreview from '../components/ImgPreview';
@@ -122,10 +123,12 @@ function SetItem({
                   onChange={(_e, newValue) => setTabValue(newValue)}
                 >
                   <Tab
+                    disabled={imgWidth === 0}
                     color="textSecondary"
                     label={<Typography variant="body2">Preview</Typography>}
                   />
                   <Tab
+                    disabled={imgWidth === 0}
                     color="textSecondary"
                     label={<Typography variant="body2">Link</Typography>}
                   />
@@ -139,7 +142,7 @@ function SetItem({
             className={classes.previewOuter}
             display={tabValue === 0 ? 'block' : 'none'}
           >
-            <CardActionArea onClick={onClick}>
+            <CardActionArea disabled={imgWidth === 0} onClick={onClick}>
               <Box display="flex">
                 <ImgPreview
                   previewUrl={previewItem.previewUrl}
@@ -472,6 +475,7 @@ function ActionBar({
                 disableElevation={true}
                 href="/parameters"
                 className="MuiButton-containedPrimary"
+                disabled={!isPreviewSetReady(previewStateContext.previewSet)}
               >
                 Try it
               </Button>
@@ -593,11 +597,7 @@ const WorkbenchPage = () => {
   // }, [previewDispatch, sampleImageBaseUrl, sampleParametersSet]);
 
   useEffect(() => {
-    if (
-      previewStateContext.previewSet.every(
-        ({ imgWidth, imgHeight }) => imgWidth > 0 && imgHeight > 0
-      )
-    ) {
+    if (isPreviewSetReady(previewStateContext.previewSet)) {
       previewDispatch({
         type: 'sortSet',
         payload: []
