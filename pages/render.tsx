@@ -116,17 +116,23 @@ const RenderPage = () => {
   // ただし、PC でも md のサイズでリロードするとちらつく。
   // TODO: makeStyle で CSS の機能で試す
   const mdDown = useMediaQuery(theme.breakpoints.down('md'));
-  const getPreviewUrl = useCallback(() => {
+  const getPreviewUrlAndSize = useCallback((): [string, number, number] => {
     const idx = getTargetItemIndex(
       previewStateContext.previewSet,
       previewStateContext.editTargetKey
     );
-    return idx >= 0 ? previewStateContext.previewSet[idx].previewUrl : '';
+    return idx >= 0
+      ? [
+          previewStateContext.previewSet[idx].previewUrl,
+          previewStateContext.previewSet[idx].imgWidth,
+          previewStateContext.previewSet[idx].imgHeight
+        ]
+      : ['', 0, 0];
   }, [previewStateContext.previewSet, previewStateContext.editTargetKey]);
-  const [imageRawUrl] = useState(getPreviewUrl());
-  const [previewUrl, setPreviewUrl] = useState(getPreviewUrl());
-  const [imgWidth, setImgWidth] = useState(0);
-  const [imgHeight, setImgHeight] = useState(0);
+  const [imageRawUrl] = useState(getPreviewUrlAndSize()[0]);
+  const [previewUrl, setPreviewUrl] = useState(getPreviewUrlAndSize()[0]);
+  const [imgWidth, setImgWidth] = useState(getPreviewUrlAndSize()[1]);
+  const [imgHeight, setImgHeight] = useState(getPreviewUrlAndSize()[2]);
 
   const [qrOpened, setQrOpened] = useState(false);
 
@@ -156,21 +162,30 @@ const RenderPage = () => {
   const imgPreviewProps: {
     fitMode: ImgPreviewFitMode;
     imgGrow: ImgPreviewImgGrow;
+    initImgWidth?: number;
+    initImgHeight?: number;
     width?: number;
     height?: number;
+    skeleton?: boolean | 'once';
   } = mdDown
     ? {
         fitMode: 'portrait',
         imgGrow: 'fit',
+        initImgWidth: imgWidth,
+        initImgHeight: imgHeight,
         width: undefined,
         // 画像の縦横比によってははみ出る(ImgPreview側で調整)
-        height: 200
+        height: 200,
+        skeleton: 'once'
       }
     : {
         fitMode: 'landscape',
         imgGrow: 'fit',
+        initImgWidth: imgWidth,
+        initImgHeight: imgHeight,
         width: theme.breakpoints.values.sm - 50,
-        height: undefined
+        height: undefined,
+        skeleton: 'once'
       };
   const imgPreviewThumbProps: {
     fitMode: ImgPreviewFitMode;
