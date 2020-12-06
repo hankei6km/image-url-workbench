@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useReducer } from 'react';
+import React, { useCallback, useRef, useEffect, useReducer } from 'react';
 // import { makeStyles, useTheme } from '@material-ui/core/styles';
 // import Skeleton from '@material-ui/lab/Skeleton';
 import Box from '@material-ui/core/Box';
@@ -7,6 +7,7 @@ import Skeleton from '@material-ui/lab/Skeleton';
 
 type previewImgState = {
   state: 'loading' | 'done' | 'err';
+  skeleton: boolean | 'once';
   loadingUrl: string;
   previewUrl: string;
   imgWidth: number;
@@ -17,6 +18,7 @@ type previewImgState = {
 
 const initialState: previewImgState = {
   state: 'done',
+  skeleton: false,
   loadingUrl: '',
   previewUrl: '',
   imgWidth: 0,
@@ -59,10 +61,16 @@ function reducer(state: previewImgState, action: actType): previewImgState {
       break;
     case 'done':
       newState.state = 'done';
+      if (state.skeleton === 'once') {
+        newState.skeleton = false;
+      }
       newState.previewUrl = state.loadingUrl;
       break;
     case 'err':
       newState.state = 'err';
+      if (state.skeleton === 'once') {
+        newState.skeleton = false;
+      }
       break;
   }
   return newState;
@@ -76,9 +84,11 @@ export type ImgPreviewProps = {
   imgGrow: ImgPreviewImgGrow;
   position?: string;
   top?: number | string; // 必要なものだけ
+  initImgWidth?: number;
+  initImgHeight?: number;
   width?: number;
   height?: number;
-  skeleton?: boolean;
+  skeleton?: boolean | 'once';
   onSize?: ({ w, h }: { w: number; h: number }) => void;
 };
 
@@ -88,55 +98,85 @@ export default function ImgPreview({
   imgGrow = 'fit',
   position,
   top,
+  initImgWidth = 0,
+  initImgHeight = 0,
   width,
   height,
-  skeleton,
+  skeleton = false,
   onSize = (_e) => {}
 }: ImgPreviewProps) {
   const [state, dispatch] = useReducer(reducer, initialState, (init) => {
     const newState = { ...init };
     newState.loadingUrl = previewUrl;
     newState.state = 'loading';
+    newState.skeleton = skeleton;
+    newState.imgWidth = initImgWidth;
+    newState.imgHeight = initImgHeight;
     // setTimeout(() => dispatch({ type: 'setUrl', payload: [previewUrl] }), 1); // dispatch でないと即時反映されない?
     return newState;
   });
   const outerEl = useRef<HTMLDivElement | null>(null);
 
+  const getElementFittingSize = useCallback(
+    (imgWidth: number, imgHeight: number): [number, number] => {
+      const { width: outerWidth = 0, height: outerHeight = 0 } =
+        outerEl.current?.getBoundingClientRect() || {};
+      let w = outerWidth;
+      let h = outerHeight;
+      if (imgGrow === 'none' && imgWidth <= w && imgHeight <= outerHeight) {
+        w = imgWidth;
+        h = imgHeight;
+      } else {
+        if (fitMode === 'landscape') {
+          w = outerWidth;
+          h = (imgHeight * outerWidth) / imgWidth;
+        } else {
+          w = (imgWidth * outerHeight) / imgHeight;
+          h = outerHeight;
+        }
+        if (imgGrow === 'fit' && w > outerWidth) {
+          h = (h * outerWidth) / w;
+          w = outerWidth;
+        } else if (imgGrow !== 'y' && h > outerHeight) {
+          w = (w * outerHeight) / h;
+          h = outerHeight;
+        }
+      }
+      return [w, h];
+    },
+    [outerEl, fitMode, imgGrow]
+  );
+
+  useEffect(() => {
+    if (
+      state.state === 'loading' &&
+      state.skeleton === 'once' &&
+      state.imgWidth > 0
+    ) {
+      dispatch({
+        type: 'setSize',
+        payload: getElementFittingSize(state.imgWidth, state.imgHeight)
+      });
+    }
+  }, [
+    getElementFittingSize,
+    state.state,
+    state.skeleton,
+    state.imgWidth,
+    state.imgHeight
+  ]);
+
   useEffect(() => {
     dispatch({ type: 'setUrl', payload: [previewUrl] });
     if (previewUrl) {
-      const { width: outerWidth = 0, height: outerHeight = 0 } =
-        outerEl.current?.getBoundingClientRect() || {};
       const img = new Image();
       const handleLoad = (e: Event) => {
         if (e.target) {
-          let w = outerWidth;
-          let h = outerHeight;
-          if (
-            imgGrow === 'none' &&
-            img.width <= w &&
-            img.height <= outerHeight
-          ) {
-            w = img.width;
-            h = img.height;
-          } else {
-            if (fitMode === 'landscape') {
-              w = outerWidth;
-              h = (img.height * outerWidth) / img.width;
-            } else {
-              w = (img.width * outerHeight) / img.height;
-              h = outerHeight;
-            }
-            if (imgGrow === 'fit' && w > outerWidth) {
-              h = (h * outerWidth) / w;
-              w = outerWidth;
-            } else if (imgGrow !== 'y' && h > outerHeight) {
-              w = (w * outerHeight) / h;
-              h = outerHeight;
-            }
-          }
           dispatch({ type: 'setImgSize', payload: [img.width, img.height] });
-          dispatch({ type: 'setSize', payload: [w, h] });
+          dispatch({
+            type: 'setSize',
+            payload: getElementFittingSize(img.width, img.height)
+          });
           dispatch({ type: 'done', payload: [''] });
         }
       };
@@ -151,7 +191,7 @@ export default function ImgPreview({
       dispatch({ type: 'setSize', payload: [0, 0] });
       dispatch({ type: 'done', payload: [''] });
     }
-  }, [previewUrl, fitMode, imgGrow, width, height, outerEl]);
+  }, [previewUrl, getElementFittingSize, width, height, outerEl]);
 
   useEffect(() => {
     onSize({ w: state.imgWidth, h: state.imgHeight });
@@ -169,8 +209,12 @@ export default function ImgPreview({
           height: '100%'
         }}
       >
-        {skeleton && state.state === 'loading' ? (
-          <Skeleton variant="rect" width="100%" height="100%" />
+        {state.skeleton && state.state === 'loading' ? (
+          <Skeleton
+            variant="rect"
+            width={state.width > 0 ? state.width : '100%'}
+            height={state.height > 0 ? state.height : '100%'}
+          />
         ) : (
           <Box>
             <Box display="flex" justifyContent="center" width="100%">
