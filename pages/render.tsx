@@ -28,6 +28,7 @@ import ImgPreview, {
   ImgPreviewImgGrow
 } from '../components/ImgPreview';
 import { FragmentLinkQRcode } from '../components/FragmentLink';
+import { imageTitleInfo } from '../utils/format';
 
 // クライアント側で毎回リスト作るのも効率悪くない?
 // props 経由で渡すのは?
@@ -116,23 +117,39 @@ const RenderPage = () => {
   // ただし、PC でも md のサイズでリロードするとちらつく。
   // TODO: makeStyle で CSS の機能で試す
   const mdDown = useMediaQuery(theme.breakpoints.down('md'));
-  const getPreviewUrlAndSize = useCallback((): [string, number, number] => {
+  const initPreviewUrl = ((): string => {
+    const idx = getTargetItemIndex(
+      previewStateContext.previewSet,
+      previewStateContext.editTargetKey
+    );
+    return idx >= 0 ? previewStateContext.previewSet[idx].previewUrl : '';
+  })();
+  const [imageRawUrl] = useState(initPreviewUrl);
+  const [previewUrl, setPreviewUrl] = useState(initPreviewUrl);
+  const getPreviewSize = useCallback((): {
+    imgWidth: number;
+    imgHeight: number;
+    imgDispDensity: number;
+  } => {
     const idx = getTargetItemIndex(
       previewStateContext.previewSet,
       previewStateContext.editTargetKey
     );
     return idx >= 0
-      ? [
-          previewStateContext.previewSet[idx].previewUrl,
-          previewStateContext.previewSet[idx].imgWidth,
-          previewStateContext.previewSet[idx].imgHeight
-        ]
-      : ['', 0, 0];
+      ? {
+          imgWidth: previewStateContext.previewSet[idx].imgWidth,
+          imgHeight: previewStateContext.previewSet[idx].imgHeight,
+          imgDispDensity: previewStateContext.previewSet[idx].imgDispDensity
+        }
+      : {
+          imgWidth: 0,
+          imgHeight: 0,
+          imgDispDensity: 1
+        };
   }, [previewStateContext.previewSet, previewStateContext.editTargetKey]);
-  const [imageRawUrl] = useState(getPreviewUrlAndSize()[0]);
-  const [previewUrl, setPreviewUrl] = useState(getPreviewUrlAndSize()[0]);
-  const [imgWidth, setImgWidth] = useState(getPreviewUrlAndSize()[1]);
-  const [imgHeight, setImgHeight] = useState(getPreviewUrlAndSize()[2]);
+  const s = getPreviewSize();
+  const [imgWidth, setImgWidth] = useState(s.imgWidth);
+  const [imgHeight, setImgHeight] = useState(s.imgHeight);
   const [imgFileSize, setImgFileSize] = useState(0);
 
   const [qrOpened, setQrOpened] = useState(false);
@@ -279,14 +296,12 @@ const RenderPage = () => {
                   <Box flexGrow="1">
                     <Typography variant="body1" color="textPrimary">
                       {imgFileSize === 0 ? (
-                        <Skeleton
-                          variant="rect"
-                          width="8em"
-                        />
+                        <Skeleton variant="rect" width="8em" />
                       ) : (
-                        `${imgWidth}x${imgHeight} ${Math.round(
-                          imgFileSize / 1000
-                        )}kB`
+                        imageTitleInfo({
+                          ...getPreviewSize(),
+                          imgFileSize
+                        })
                       )}
                     </Typography>
                   </Box>

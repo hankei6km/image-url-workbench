@@ -35,6 +35,7 @@ import {
   ImportTemplateParametersSet
 } from '../src/template';
 import FragmentLink, { FragmentLinkQRcode } from '../components/FragmentLink';
+import { imageTitleInfo } from '../utils/format';
 
 const useStyles = makeStyles((theme) => ({
   tab: {
@@ -111,7 +112,12 @@ function SetItem({
                 {imgFileSize === 0 ? (
                   <Skeleton variant="rect" width="8em" />
                 ) : (
-                  `${imgWidth}x${imgHeight} ${Math.round(imgFileSize / 1000)}kB`
+                  imageTitleInfo({
+                    imgWidth,
+                    imgHeight,
+                    imgDispDensity: previewItem.imgDispDensity,
+                    imgFileSize
+                  })
                 )}
               </Box>
               <Box>
