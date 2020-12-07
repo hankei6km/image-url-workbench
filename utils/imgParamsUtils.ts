@@ -218,3 +218,15 @@ export function imgParamsInCategory(
 export function imgParamsCategories() {
   return urlParams.categoryValues;
 }
+
+export function imgDispDensity(p: ImgParamsValues): number {
+  const idx = p.findIndex(({ key }) => key === 'dpr');
+  if (idx >= 0) {
+    return Number.parseFloat(p[idx].value);
+  }
+  return 1;
+}
+
+export function imgDispDensityFromParamsString(s: string): number {
+  return imgDispDensity(imgUrlParamsParseString(s));
+}
