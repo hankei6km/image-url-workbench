@@ -104,12 +104,12 @@ function SetItem({
     <Box key={previewItem.previewUrl} my={1} p={1}>
       <Card>
         <CardHeader
-          titleTypographyProps={{ variant: 'h5' }}
+          titleTypographyProps={{ variant: 'body1' }}
           title={
-            <Box display="flex">
+            <Box display="flex" alignItems="center">
               <Box flexGrow="1">
                 {imgFileSize === 0 ? (
-                  <Skeleton variant="rect" width="10em" />
+                  <Skeleton variant="rect" width="8em" />
                 ) : (
                   `${imgWidth}x${imgHeight} ${Math.round(imgFileSize / 1000)}kB`
                 )}

@@ -279,9 +279,12 @@ const RenderPage = () => {
                   <Box flexGrow="1">
                     <Typography variant="body1" color="textPrimary">
                       {imgFileSize === 0 ? (
-                        <Skeleton variant="rect" width="11em" />
+                        <Skeleton
+                          variant="rect"
+                          width="8em"
+                        />
                       ) : (
-                        `Image size: ${imgWidth}x${imgHeight} ${Math.round(
+                        `${imgWidth}x${imgHeight} ${Math.round(
                           imgFileSize / 1000
                         )}kB`
                       )}
