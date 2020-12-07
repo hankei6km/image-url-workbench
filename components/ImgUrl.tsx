@@ -292,7 +292,6 @@ export default function ImgUrl({
                       {((p) => {
                         return p ? (
                           <Tooltip
-                            interactive
                             placement="left"
                             disableFocusListener
                             disableTouchListener
