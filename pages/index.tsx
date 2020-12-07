@@ -12,7 +12,7 @@ const IndexPage = () => {
   const router = useRouter();
 
   return (
-    <Layout title="Test Next.js Typescript Material UI">
+    <Layout title="Home">
       <Container maxWidth="md">
         <Box>
           <Box mt={1}>
