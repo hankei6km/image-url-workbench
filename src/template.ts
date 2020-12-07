@@ -13,7 +13,7 @@ export type ImportTemplateList = ImportTemplate[];
 
 export const BuiltinImportTemplate: ImportTemplateList = [
   {
-    label: 'responsive',
+    label: 'responsive(art direction)',
     sampleParameters: [
       {
         auto: 'compress',
