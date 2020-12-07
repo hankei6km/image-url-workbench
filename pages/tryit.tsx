@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export function ParametersPanel({
+export function GroupPanel({
   groupName,
   defaultExpanded = false,
   children
@@ -45,7 +45,7 @@ export function ParametersPanel({
       <Accordion elevation={0} defaultExpanded={defaultExpanded}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
-          aria-controls={`parameters panel : ${groupName}`}
+          aria-controls={`group panel : ${groupName}`}
           id={`group-${groupName}`}
           IconButtonProps={{ edge: 'end' }}
         >
@@ -91,19 +91,19 @@ const groupList: {
     group: <FragmentLinks />
   }
 ];
-const ParametersPage = () => {
+const TryItPage = () => {
   return (
     <Layout title="Try it">
       <Container maxWidth="md">
         <Box>
           {groupList.map(({ groupName, defaultExpanded, group }) => (
-            <ParametersPanel
+            <GroupPanel
               key={groupName}
               defaultExpanded={defaultExpanded}
               groupName={groupName}
             >
               {group}
-            </ParametersPanel>
+            </GroupPanel>
           ))}
         </Box>
       </Container>
@@ -111,4 +111,4 @@ const ParametersPage = () => {
   );
 };
 
-export default ParametersPage;
+export default TryItPage;
