@@ -3,7 +3,8 @@ import {
   ImgParamsValues,
   imgUrlParamsParseString,
   imgUrlParamsMergeObject,
-  imgUrlParamsToString
+  imgUrlParamsToString,
+  imgDispDensity
 } from '../utils/imgParamsUtils';
 import { ImportTemplateParametersSet } from '../src/template';
 
@@ -48,6 +49,7 @@ export type PreviewItem = {
   imageParams: ImgParamsValues;
   imgWidth: number;
   imgHeight: number;
+  imgDispDensity: number;
   media: BreakPoint;
 };
 
@@ -288,6 +290,7 @@ export function previewContextReducer(
           imageParams: q,
           imgWidth: 0,
           imgHeight: 0,
+          imgDispDensity: imgDispDensity(q),
           media: i < mediasLen ? medias[i] : 'auto'
         };
         return previewItem;
@@ -301,13 +304,15 @@ export function previewContextReducer(
     case 'addPreviewImageUrl':
       if (action.payload[0]) {
         const [u, p] = action.payload[0].split('?', 2);
+        const q = p ? imgUrlParamsParseString(p) : [];
         const previewItem: PreviewItem = {
           itemKey: `${Date.now()}`,
           previewUrl: action.payload[0],
           baseImageUrl: u,
-          imageParams: p ? imgUrlParamsParseString(p) : [],
+          imageParams: q,
           imgWidth: 0,
           imgHeight: 0,
+          imgDispDensity: imgDispDensity(q),
           media: 'auto'
         };
         newState.editTargetKey = previewItem.itemKey;
@@ -320,13 +325,15 @@ export function previewContextReducer(
     case 'setPreviewImageUrl':
       if (action.payload[0]) {
         const [u, p] = action.payload[0].split('?', 2);
+        const q = p ? imgUrlParamsParseString(p) : [];
         const previewItem: PreviewItem = {
           itemKey: state.editTargetKey,
           previewUrl: action.payload[0],
           baseImageUrl: u,
-          imageParams: p ? imgUrlParamsParseString(p) : [],
+          imageParams: q,
           imgWidth: 0,
           imgHeight: 0,
+          imgDispDensity: imgDispDensity(q),
           media: 'auto'
         };
         const idx = state.previewSet.findIndex(
@@ -380,6 +387,7 @@ export function previewContextReducer(
             imageParams: p ? imgUrlParamsParseString(p) : [],
             imgWidth: state.previewSet[idx].imgWidth,
             imgHeight: state.previewSet[idx].imgHeight,
+            imgDispDensity: state.previewSet[idx].imgDispDensity,
             media: state.previewSet[idx].media
           };
           newState.previewSet.splice(idx + 1, 0, previewItem);
