@@ -133,6 +133,7 @@ const RenderPage = () => {
   const [previewUrl, setPreviewUrl] = useState(getPreviewUrlAndSize()[0]);
   const [imgWidth, setImgWidth] = useState(getPreviewUrlAndSize()[1]);
   const [imgHeight, setImgHeight] = useState(getPreviewUrlAndSize()[2]);
+  const [imgDispDensity, setImgDispDensity] = useState(1);
   const [imgFileSize, setImgFileSize] = useState(0);
 
   const [qrOpened, setQrOpened] = useState(false);
@@ -252,9 +253,10 @@ const RenderPage = () => {
                 <ImgPreview
                   previewUrl={previewUrl}
                   {...imgPreviewThumbProps}
-                  onSize={({ w, h }) => {
+                  onSize={({ w, h, d }) => {
                     setImgWidth(w);
                     setImgHeight(h);
+                    setImgDispDensity(d);
                   }}
                   onFileSize={({ imgFileSize }) => {
                     setImgFileSize(imgFileSize);
@@ -279,14 +281,13 @@ const RenderPage = () => {
                   <Box flexGrow="1">
                     <Typography variant="body1" color="textPrimary">
                       {imgFileSize === 0 ? (
-                        <Skeleton
-                          variant="rect"
-                          width="8em"
-                        />
+                        <Skeleton variant="rect" width="8em" />
                       ) : (
-                        `${imgWidth}x${imgHeight} ${Math.round(
-                          imgFileSize / 1000
-                        )}kB`
+                        `${imgWidth}x${imgHeight} ${
+                          imgDispDensity > 0 && imgDispDensity !== 1
+                            ? `${imgDispDensity}x`
+                            : ''
+                        } ${Math.round(imgFileSize / 1000)}kB`
                       )}
                     </Typography>
                   </Box>
@@ -334,9 +335,10 @@ const RenderPage = () => {
                       position={mdDown && trigger ? 'fixed' : 'static'}
                       previewUrl={previewUrl}
                       {...imgPreviewProps}
-                      onSize={({ w, h }) => {
+                      onSize={({ w, h, d }) => {
                         setImgWidth(w);
                         setImgHeight(h);
+                        setImgDispDensity(d);
                       }}
                       onFileSize={({ imgFileSize }) => {
                         setImgFileSize(imgFileSize);
