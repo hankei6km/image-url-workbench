@@ -117,24 +117,39 @@ const RenderPage = () => {
   // ただし、PC でも md のサイズでリロードするとちらつく。
   // TODO: makeStyle で CSS の機能で試す
   const mdDown = useMediaQuery(theme.breakpoints.down('md'));
-  const getPreviewUrlAndSize = useCallback((): [string, number, number] => {
+  const initPreviewUrl = ((): string => {
+    const idx = getTargetItemIndex(
+      previewStateContext.previewSet,
+      previewStateContext.editTargetKey
+    );
+    return idx >= 0 ? previewStateContext.previewSet[idx].previewUrl : '';
+  })();
+  const [imageRawUrl] = useState(initPreviewUrl);
+  const [previewUrl, setPreviewUrl] = useState(initPreviewUrl);
+  const getPreviewSize = useCallback((): {
+    imgWidth: number;
+    imgHeight: number;
+    imgDispDensity: number;
+  } => {
     const idx = getTargetItemIndex(
       previewStateContext.previewSet,
       previewStateContext.editTargetKey
     );
     return idx >= 0
-      ? [
-          previewStateContext.previewSet[idx].previewUrl,
-          previewStateContext.previewSet[idx].imgWidth,
-          previewStateContext.previewSet[idx].imgHeight
-        ]
-      : ['', 0, 0];
+      ? {
+          imgWidth: previewStateContext.previewSet[idx].imgWidth,
+          imgHeight: previewStateContext.previewSet[idx].imgHeight,
+          imgDispDensity: previewStateContext.previewSet[idx].imgDispDensity
+        }
+      : {
+          imgWidth: 0,
+          imgHeight: 0,
+          imgDispDensity: 1
+        };
   }, [previewStateContext.previewSet, previewStateContext.editTargetKey]);
-  const [imageRawUrl] = useState(getPreviewUrlAndSize()[0]);
-  const [previewUrl, setPreviewUrl] = useState(getPreviewUrlAndSize()[0]);
-  const [imgWidth, setImgWidth] = useState(getPreviewUrlAndSize()[1]);
-  const [imgHeight, setImgHeight] = useState(getPreviewUrlAndSize()[2]);
-  const [imgDispDensity, setImgDispDensity] = useState(1);
+  const s = getPreviewSize();
+  const [imgWidth, setImgWidth] = useState(s.imgWidth);
+  const [imgHeight, setImgHeight] = useState(s.imgHeight);
   const [imgFileSize, setImgFileSize] = useState(0);
 
   const [qrOpened, setQrOpened] = useState(false);
@@ -254,10 +269,9 @@ const RenderPage = () => {
                 <ImgPreview
                   previewUrl={previewUrl}
                   {...imgPreviewThumbProps}
-                  onSize={({ w, h, d }) => {
+                  onSize={({ w, h }) => {
                     setImgWidth(w);
                     setImgHeight(h);
-                    setImgDispDensity(d);
                   }}
                   onFileSize={({ imgFileSize }) => {
                     setImgFileSize(imgFileSize);
@@ -285,9 +299,7 @@ const RenderPage = () => {
                         <Skeleton variant="rect" width="8em" />
                       ) : (
                         imageTitleInfo({
-                          imgWidth,
-                          imgHeight,
-                          imgDispDensity,
+                          ...getPreviewSize(),
                           imgFileSize
                         })
                       )}
@@ -337,10 +349,9 @@ const RenderPage = () => {
                       position={mdDown && trigger ? 'fixed' : 'static'}
                       previewUrl={previewUrl}
                       {...imgPreviewProps}
-                      onSize={({ w, h, d }) => {
+                      onSize={({ w, h }) => {
                         setImgWidth(w);
                         setImgHeight(h);
-                        setImgDispDensity(d);
                       }}
                       onFileSize={({ imgFileSize }) => {
                         setImgFileSize(imgFileSize);

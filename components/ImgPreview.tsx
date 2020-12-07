@@ -4,7 +4,6 @@ import React, { useCallback, useRef, useEffect, useReducer } from 'react';
 import Box from '@material-ui/core/Box';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Skeleton from '@material-ui/lab/Skeleton';
-import { imgDispDensityFromParamsString } from '../utils/imgParamsUtils';
 
 type previewImgState = {
   state: 'loading' | 'done' | 'err';
@@ -13,7 +12,6 @@ type previewImgState = {
   previewUrl: string;
   imgWidth: number;
   imgHeight: number;
-  imgDispDensity: number; //  現状では デフォルト1 、| 'unsolved' みたいなのを付ける?
   imgFileSize: number;
   width: number;
   height: number;
@@ -26,7 +24,6 @@ const initialState: previewImgState = {
   previewUrl: '',
   imgWidth: 0,
   imgHeight: 0,
-  imgDispDensity: 1,
   imgFileSize: 0,
   width: 0,
   height: 0
@@ -79,10 +76,6 @@ function reducer(state: previewImgState, action: actType): previewImgState {
       if (state.skeleton === 'once') {
         newState.skeleton = false;
       }
-      const p = state.loadingUrl.split('?', 2)[1];
-      if (p) {
-        newState.imgDispDensity = imgDispDensityFromParamsString(p);
-      }
       newState.previewUrl = state.loadingUrl;
       break;
     case 'err':
@@ -108,7 +101,7 @@ export type ImgPreviewProps = {
   width?: number;
   height?: number;
   skeleton?: boolean | 'once';
-  onSize?: ({ w, h, d }: { w: number; h: number; d: number }) => void;
+  onSize?: ({ w, h }: { w: number; h: number }) => void;
   onFileSize?: ({ imgFileSize }: { imgFileSize: number }) => void;
 };
 
@@ -235,8 +228,8 @@ export default function ImgPreview({
   }, [previewUrl, getElementFittingSize, width, height, outerEl]);
 
   useEffect(() => {
-    onSize({ w: state.imgWidth, h: state.imgHeight, d: state.imgDispDensity });
-  }, [onSize, state.imgWidth, state.imgHeight, state.imgDispDensity]);
+    onSize({ w: state.imgWidth, h: state.imgHeight });
+  }, [onSize, state.imgWidth, state.imgHeight]);
 
   useEffect(() => {
     onFileSize({ imgFileSize: state.imgFileSize });
