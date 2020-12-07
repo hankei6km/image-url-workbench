@@ -28,6 +28,7 @@ import ImgPreview, {
   ImgPreviewImgGrow
 } from '../components/ImgPreview';
 import { FragmentLinkQRcode } from '../components/FragmentLink';
+import { imageTitleInfo } from '../utils/format';
 
 // クライアント側で毎回リスト作るのも効率悪くない?
 // props 経由で渡すのは?
@@ -283,11 +284,12 @@ const RenderPage = () => {
                       {imgFileSize === 0 ? (
                         <Skeleton variant="rect" width="8em" />
                       ) : (
-                        `${imgWidth}x${imgHeight} ${
-                          imgDispDensity > 0 && imgDispDensity !== 1
-                            ? `${imgDispDensity}x`
-                            : ''
-                        } ${Math.round(imgFileSize / 1000)}kB`
+                        imageTitleInfo({
+                          imgWidth,
+                          imgHeight,
+                          imgDispDensity,
+                          imgFileSize
+                        })
                       )}
                     </Typography>
                   </Box>
