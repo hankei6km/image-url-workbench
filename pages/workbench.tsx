@@ -439,9 +439,6 @@ function ActionBar({
             >
               Add Image
             </MenuItem>
-            <MenuItem component={Link} href="/parameters">
-              View Parameters
-            </MenuItem>
           </Menu>
         </Box>
         <Box className={classes.indicatorOuter}>
@@ -477,7 +474,7 @@ function ActionBar({
               <Button
                 component={Link}
                 disableElevation={true}
-                href="/parameters"
+                href="/tryit"
                 className="MuiButton-containedPrimary"
                 disabled={!isPreviewSetReady(previewStateContext.previewSet)}
               >
@@ -610,7 +607,7 @@ const WorkbenchPage = () => {
   }, [previewDispatch, previewStateContext.previewSet]);
 
   return (
-    <Layout title="Overview">
+    <Layout title="Workbench">
       <Container maxWidth="md">
         <Box py={1}></Box>
         <ActionBar

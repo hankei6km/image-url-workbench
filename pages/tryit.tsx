@@ -93,7 +93,7 @@ const groupList: {
 ];
 const ParametersPage = () => {
   return (
-    <Layout title="Parameters">
+    <Layout title="Try it">
       <Container maxWidth="md">
         <Box>
           {groupList.map(({ groupName, defaultExpanded, group }) => (

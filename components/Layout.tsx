@@ -143,11 +143,11 @@ function HomeLabel({ asUrl }: { asUrl: string }): React.ReactElement {
 
 type TabLink = { label: string; href: string };
 type TabLinks = TabLink[];
-const tabLinksWorkBench: TabLinks = [
-  { label: 'CodePen', href: '/codepen' },
-  { label: 'Card', href: '/card' },
-  { label: 'ShellScript', href: '/shellscript' }
-];
+// const tabLinksWorkBench: TabLinks = [
+//   { label: 'CodePen', href: '/codepen' },
+//   { label: 'Card', href: '/card' },
+//   { label: 'ShellScript', href: '/shellscript' }
+// ];
 
 type BreadCrumbsItem = {
   label: React.ReactNode;
@@ -175,41 +175,17 @@ const breadCrumbsPath: BreadCrumbsPath[] = [
   },
   {
     path: [
-      { label: <HomeLabel asUrl="/parameters" />, href: '/' },
+      { label: <HomeLabel asUrl="/tryit" />, href: '/' },
       { label: 'Workbench', href: '/workbench' }
     ],
-    current: { label: 'Parameters', href: '/parameters' }
-  },
-  {
-    path: [
-      { label: <HomeLabel asUrl="/parameters" />, href: '/' },
-      { label: 'Workbench', href: '/workbench' }
-    ],
-    current: { label: 'Try it on', href: '/codepen' },
-    groupTab: tabLinksWorkBench
-  },
-  {
-    path: [
-      { label: <HomeLabel asUrl="/parameters" />, href: '/' },
-      { label: 'Workbench', href: '/workbench' }
-    ],
-    current: { label: 'Try it on', href: '/card' },
-    groupTab: tabLinksWorkBench
-  },
-  {
-    path: [
-      { label: <HomeLabel asUrl="/parameters" />, href: '/' },
-      { label: 'Workbench', href: '/workbench' }
-    ],
-    current: { label: 'Try it on', href: '/shellscript' },
-    groupTab: tabLinksWorkBench
+    current: { label: 'Try it', href: '/tryit' }
   },
   {
     path: [
       { label: <HomeLabel asUrl="/render" />, href: '/' },
       { label: 'Workbench', href: '/workbench' }
     ],
-    current: { label: 'render', href: '/render' }
+    current: { label: 'Render', href: '/render' }
   }
 ];
 
@@ -237,6 +213,7 @@ function getGroupTabValue(
 }
 
 function existGroupTabPanel(asPath: string) {
+  // 現状はグループ(タブ)がある階層はない
   return (
     asPath === '/card' || asPath === '/codepen' || asPath === '/shellscript'
   );
@@ -294,7 +271,7 @@ const Layout = ({ children, title = 'This is the default title' }: Props) => {
   return (
     <div className={classes.root}>
       <Head>
-        <title>{title}</title>
+        <title>{`${title} - ${process.env.APP_NAME}`}</title>
         <meta charSet="utf-8" />
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
