@@ -292,7 +292,6 @@ export default function ImgUrl({
                       {((p) => {
                         return p ? (
                           <Tooltip
-                            interactive
                             placement="left"
                             disableFocusListener
                             disableTouchListener
@@ -304,16 +303,21 @@ export default function ImgUrl({
                               </Box>
                             }
                           >
-                            <Button
-                              component={Link}
-                              href={p.url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              <Typography color="textSecondary">
-                                <InfoOutlinedIcon fontSize="small" />
-                              </Typography>
-                            </Button>
+                            <span>
+                              <Button
+                                component={Link}
+                                disabled={p.url ? false : true}
+                                href={p.url || ''}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                <Typography
+                                  color={p.url ? 'textSecondary' : 'inherit'}
+                                >
+                                  <InfoOutlinedIcon fontSize="small" />
+                                </Typography>
+                              </Button>
+                            </span>
                           </Tooltip>
                         ) : (
                           ''
