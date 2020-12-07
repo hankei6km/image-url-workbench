@@ -2,10 +2,6 @@
 function copyTextToClipboardExec(text: string): Error {
   let ret = undefined;
 
-  navigator.clipboard.writeText(text).then(
-    () => {},
-    () => {}
-  );
   const textArea = document.createElement('textarea');
 
   textArea.style.position = 'fixed';
