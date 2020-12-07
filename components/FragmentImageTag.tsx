@@ -120,11 +120,13 @@ const FragmentImageTag = () => {
   }, [previewStateContext.previewSet, defaultItem, altText, linkText, newTab]);
 
   useEffect(() => {
-    // const withoutDefault = previewStateContext.previewSet.filter(
-    //   ({ itemKey }) => itemKey !== defaultItem.itemKey
-    // );
+    const dpr = previewStateContext.previewSet.some(
+      ({ imgDispDensity }) => imgDispDensity !== 1
+    );
+
     const srcSet: string[] = previewStateContext.previewSet.map(
-      ({ previewUrl, imgWidth }) => `${previewUrl} ${imgWidth}w`
+      ({ previewUrl, imgWidth, imgDispDensity }) =>
+        dpr ? `${previewUrl} ${imgDispDensity}x` : `${previewUrl} ${imgWidth}w`
     );
     const sizes: string[] = previewStateContext.previewSet.map(
       ({ imgWidth, media }) =>
@@ -134,7 +136,7 @@ const FragmentImageTag = () => {
       <img
         src={defaultItem.previewUrl}
         srcSet={srcSet.length > 1 ? srcSet.join(', ') : undefined}
-        sizes={sizes.length > 1 ? sizes.join(', ') : undefined}
+        sizes={!dpr && sizes.length > 1 ? sizes.join(', ') : undefined}
         alt={altText}
       />
     );
