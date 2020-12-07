@@ -12,6 +12,7 @@ type previewImgState = {
   previewUrl: string;
   imgWidth: number;
   imgHeight: number;
+  imgFileSize: number;
   width: number;
   height: number;
 };
@@ -23,6 +24,7 @@ const initialState: previewImgState = {
   previewUrl: '',
   imgWidth: 0,
   imgHeight: 0,
+  imgFileSize: 0,
   width: 0,
   height: 0
 };
@@ -31,12 +33,17 @@ type actSetSizeType = {
   type: 'setImgSize' | 'setSize';
   payload: [number, number];
 };
+type actSetFileSizeType = {
+  type: 'setImgFileSize';
+  payload: [number];
+};
 type actType =
   | {
       type: 'setUrl' | 'setSize' | 'loading' | 'done' | 'err';
       payload: [string];
     }
-  | actSetSizeType;
+  | actSetSizeType
+  | actSetFileSizeType;
 function reducer(state: previewImgState, action: actType): previewImgState {
   const newState: previewImgState = { ...state };
   switch (action.type) {
@@ -53,6 +60,11 @@ function reducer(state: previewImgState, action: actType): previewImgState {
     case 'setSize':
       newState.width = action.payload[0] as number;
       newState.height = action.payload[1] as number;
+      break;
+    case 'setImgFileSize':
+      if (state.state === 'done') {
+        newState.imgFileSize = action.payload[0] as number;
+      }
       break;
     case 'loading':
       if (newState.loadingUrl) {
@@ -90,6 +102,7 @@ export type ImgPreviewProps = {
   height?: number;
   skeleton?: boolean | 'once';
   onSize?: ({ w, h }: { w: number; h: number }) => void;
+  onFileSize?: ({ imgFileSize }: { imgFileSize: number }) => void;
 };
 
 export default function ImgPreview({
@@ -103,7 +116,8 @@ export default function ImgPreview({
   width,
   height,
   skeleton = false,
-  onSize = (_e) => {}
+  onSize = (_e) => {},
+  onFileSize = (_e) => {}
 }: ImgPreviewProps) {
   const [state, dispatch] = useReducer(reducer, initialState, (init) => {
     const newState = { ...init };
@@ -172,12 +186,31 @@ export default function ImgPreview({
       const img = new Image();
       const handleLoad = (e: Event) => {
         if (e.target) {
-          dispatch({ type: 'setImgSize', payload: [img.width, img.height] });
-          dispatch({
-            type: 'setSize',
-            payload: getElementFittingSize(img.width, img.height)
-          });
-          dispatch({ type: 'done', payload: [''] });
+          // img.filesize は undefined
+          // https://stackoverflow.com/questions/1310378/determining-image-file-size-dimensions-via-javascript
+          // https://stackoverflow.com/questions/20907523/how-do-you-get-the-file-size-of-an-image-on-the-web-page-with-javascript
+          // これは動かなかった https://stackoverflow.com/questions/28430115/javascript-get-size-in-bytes-from-html-img-src/45409613
+          // disk cache を使うはずだから転送は発生しないとは思うが、
+          // width x height 含めて api を準備してサーバー側で処理することも検討か?:
+          fetch(previewUrl)
+            .then(
+              (response) => response.blob(),
+              (err) => dispatch({ type: 'err', payload: [err] })
+            )
+            .then((data) => {
+              if (data) {
+                dispatch({
+                  type: 'setImgSize',
+                  payload: [img.width, img.height]
+                });
+                dispatch({
+                  type: 'setSize',
+                  payload: getElementFittingSize(img.width, img.height)
+                });
+                dispatch({ type: 'done', payload: [''] });
+                dispatch({ type: 'setImgFileSize', payload: [data.size] });
+              }
+            });
         }
       };
       img.addEventListener('load', handleLoad);
@@ -190,12 +223,17 @@ export default function ImgPreview({
       dispatch({ type: 'setImgSize', payload: [0, 0] });
       dispatch({ type: 'setSize', payload: [0, 0] });
       dispatch({ type: 'done', payload: [''] });
+      dispatch({ type: 'setImgFileSize', payload: [0] });
     }
   }, [previewUrl, getElementFittingSize, width, height, outerEl]);
 
   useEffect(() => {
     onSize({ w: state.imgWidth, h: state.imgHeight });
   }, [onSize, state.imgWidth, state.imgHeight]);
+
+  useEffect(() => {
+    onFileSize({ imgFileSize: state.imgFileSize });
+  }, [onFileSize, state.imgFileSize]);
 
   return (
     <Box width={'100%'} height={height || '100%'} position={position} top={top}>

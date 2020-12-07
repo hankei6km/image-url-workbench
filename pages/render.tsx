@@ -133,6 +133,7 @@ const RenderPage = () => {
   const [previewUrl, setPreviewUrl] = useState(getPreviewUrlAndSize()[0]);
   const [imgWidth, setImgWidth] = useState(getPreviewUrlAndSize()[1]);
   const [imgHeight, setImgHeight] = useState(getPreviewUrlAndSize()[2]);
+  const [imgFileSize, setImgFileSize] = useState(0);
 
   const [qrOpened, setQrOpened] = useState(false);
 
@@ -255,6 +256,9 @@ const RenderPage = () => {
                     setImgWidth(w);
                     setImgHeight(h);
                   }}
+                  onFileSize={({ imgFileSize }) => {
+                    setImgFileSize(imgFileSize);
+                  }}
                 />
               </Box>
             )}
@@ -274,10 +278,15 @@ const RenderPage = () => {
                 <Box p={1} className={classes.imageHeaderOuter}>
                   <Box flexGrow="1">
                     <Typography variant="body1" color="textPrimary">
-                      {imgWidth === 0 ? (
-                        <Skeleton variant="rect" width="11em" />
+                      {imgFileSize === 0 ? (
+                        <Skeleton
+                          variant="rect"
+                          width="8em"
+                        />
                       ) : (
-                        `Image size: ${imgWidth}x${imgHeight}`
+                        `${imgWidth}x${imgHeight} ${Math.round(
+                          imgFileSize / 1000
+                        )}kB`
                       )}
                     </Typography>
                   </Box>
@@ -328,6 +337,9 @@ const RenderPage = () => {
                       onSize={({ w, h }) => {
                         setImgWidth(w);
                         setImgHeight(h);
+                      }}
+                      onFileSize={({ imgFileSize }) => {
+                        setImgFileSize(imgFileSize);
                       }}
                     />
                   </Box>
