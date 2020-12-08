@@ -14,6 +14,108 @@ export type ImportTemplateList = ImportTemplate[];
 
 export const BuiltinImportTemplate: ImportTemplateList = [
   {
+    label: 'palin',
+    shortDescription: 'auto=compress 指定のみ',
+    sampleParameters: [
+      {
+        auto: 'compress'
+      }
+    ],
+    parameters: [
+      {
+        auto: 'compress'
+      }
+    ],
+    medias: ['auto', 'auto']
+  },
+  {
+    label: 'stylize',
+    shortDescription: 'blur',
+    sampleParameters: [
+      {
+        auto: 'compress',
+        blur: '70'
+      }
+    ],
+    parameters: [
+      {
+        auto: 'compress',
+        blur: '70'
+      }
+    ],
+    medias: ['auto', 'auto']
+  },
+  {
+    label: 'stylize',
+    shortDescription: 'duotone',
+    sampleParameters: [
+      {
+        auto: 'compress',
+        duotone: '000080,FA8072',
+        'duotone-alpha': '100'
+      }
+    ],
+    parameters: [
+      {
+        auto: 'compress',
+        duotone: '000080,FA8072',
+        'duotone-alpha': '100'
+      }
+    ],
+    medias: ['auto', 'auto']
+  },
+  {
+    label: 'stylize',
+    shortDescription: 'monochrome(light)',
+    sampleParameters: [
+      {
+        auto: 'compress',
+        monochrome: 'ff9b9b9b'
+      }
+    ],
+    parameters: [
+      {
+        auto: 'compress',
+        monochrome: 'ff9b9b9b'
+      }
+    ],
+    medias: ['auto', 'auto']
+  },
+  {
+    label: 'stylize',
+    shortDescription: 'monochrome(dark)',
+    sampleParameters: [
+      {
+        auto: 'compress',
+        monochrome: 'ff4a4a4a'
+      }
+    ],
+    parameters: [
+      {
+        auto: 'compress',
+        monochrome: 'ff4a4a4a'
+      }
+    ],
+    medias: ['auto', 'auto']
+  },
+  {
+    label: 'stylize',
+    shortDescription: 'sepia tone',
+    sampleParameters: [
+      {
+        auto: 'compress',
+        sepia: '80'
+      }
+    ],
+    parameters: [
+      {
+        auto: 'compress',
+        sepia: '80'
+      }
+    ],
+    medias: ['auto', 'auto']
+  },
+  {
     label: 'responsive',
     shortDescription: '解像度別に4画像作成 (500x300)',
     sampleParameters: [
