@@ -269,7 +269,6 @@ export function previewContextReducer(
     case 'setImageBaseUrl':
       newState.previewSetKind = action.payload[0];
       newState.imageBaseUrl = action.payload[1];
-      newState.templateIdx = -1;
       break;
     case 'importPreviewSet':
       newState.previewSetKind = action.payload[0];

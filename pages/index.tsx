@@ -26,7 +26,11 @@ const IndexPage = () => {
 
   const [open, setOpen] = useState<'' | 'template'>('');
 
-  const [imageBaseUrl, setImageBaseUrl] = useState('');
+  const [imageBaseUrl, setImageBaseUrl] = useState(
+    previewStateContext.previewSetKind === 'data'
+      ? previewStateContext.imageBaseUrl
+      : ''
+  );
   const [previewSetKind, setPreviewSetKind] = useState<'' | 'data' | 'sample'>(
     ''
   );
@@ -143,6 +147,7 @@ const IndexPage = () => {
           <Box mt={1}>
             <ImportPanel
               label="Enter image url or select sample"
+              defaultValue={imageBaseUrl}
               onSelect={({ value }) => {
                 setImageBaseUrl(value);
                 setPreviewSetKind('data');

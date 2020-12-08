@@ -9,11 +9,12 @@ import ImgBaseUrl, {
 
 type Props = {
   label: string;
+  defaultValue?: string;
   onSelect: ({ value }: { value: string }) => void;
 };
 
-const ImportPanel = ({ label, onSelect }: Props) => {
-  const [imageBaseUrl, setImageBaseUrl] = useState('');
+const ImportPanel = ({ label, defaultValue = '', onSelect }: Props) => {
+  const [imageBaseUrl, setImageBaseUrl] = useState(defaultValue);
 
   return (
     <Box display="flex" alignItems="flex-end">
