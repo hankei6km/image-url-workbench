@@ -20,6 +20,9 @@ yarn-error.log*
 # vscode
 /.vscode
 
+# codesandbox
+/.codesandbox
+
 .vercel
 /tmp
 /open_source_licenses.*
