@@ -39,7 +39,7 @@ const processorHtml = unified()
   .use(rehypeStringify)
   .freeze();
 
-const FragmentImageTag = () => {
+const FragmentImgTag = () => {
   const previewStateContext = useContext(PreviewContext);
   const previewDispatch = useContext(PreviewDispatch);
 
@@ -60,7 +60,6 @@ const FragmentImageTag = () => {
     previewStateContext.tagFragment.linkText
   );
   const [newTab, setNewTab] = useState(previewStateContext.tagFragment.newTab);
-  const [pictureHtml, setPictureHtml] = useState('');
   const [imgHtml, setImgHtml] = useState('');
 
   useEffect(() => {
@@ -76,48 +75,6 @@ const FragmentImageTag = () => {
       });
     }
   }, [previewStateContext.previewSet, previewStateContext.defaultTargetKey]);
-
-  useEffect(() => {
-    const pictureElement = (
-      <picture>
-        {previewStateContext.previewSet
-          .filter(({ itemKey }) => itemKey !== defaultItem.itemKey)
-          .map(({ previewUrl, imgWidth, media }, i) => {
-            const mw = breakPointValue(media, imgWidth);
-            return (
-              <source
-                key={i}
-                // src={`${previewUrl}`}
-                srcSet={`${previewUrl} ${imgWidth}w`}
-                sizes={`(min-width: ${mw}px) ${imgWidth}px`}
-                media={`(min-width: ${mw}px)`}
-              />
-            );
-          })}
-        <img src={defaultItem.previewUrl} alt={altText} />
-      </picture>
-    );
-    const t = newTab
-      ? {
-          target: '_blank',
-          rel: 'noopener noreferrer'
-        }
-      : {};
-    const elm = linkText ? (
-      <a href={linkText} {...t}>
-        {pictureElement}
-      </a>
-    ) : (
-      pictureElement
-    );
-    const html = ReactDomServer.renderToStaticMarkup(elm);
-    processorHtml.process(html, (err, file) => {
-      if (err) {
-        console.error(err);
-      }
-      setPictureHtml(String(file));
-    });
-  }, [previewStateContext.previewSet, defaultItem, altText, linkText, newTab]);
 
   useEffect(() => {
     const dpr = previewStateContext.previewSet.some(
@@ -153,6 +110,7 @@ const FragmentImageTag = () => {
     ) : (
       imgElement
     );
+
     const html = ReactDomServer.renderToStaticMarkup(elm);
     processorHtml.process(html, (err, file) => {
       if (err) {
@@ -175,17 +133,6 @@ const FragmentImageTag = () => {
         <TryItOn
           title="CodePen"
           linkButtons={[
-            <CodePenDefineForm
-              title="picture tag"
-              html={pictureHtml}
-              buttonLabel={'picture tag'}
-              buttonProps={{
-                color: 'primary',
-                variant: 'contained',
-                disableElevation: true,
-                endIcon: <OpenInNewIcon />
-              }}
-            />,
             <CodePenDefineForm
               title="img tag"
               html={imgHtml}
@@ -253,9 +200,6 @@ const FragmentImageTag = () => {
       </Box>
       <Box>
         <Box p={1}>
-          <FragmentTextField naked label="picture tag" value={pictureHtml} />
-        </Box>
-        <Box p={1}>
           <FragmentTextField naked label="img tag" value={imgHtml} />
         </Box>
       </Box>
@@ -263,4 +207,4 @@ const FragmentImageTag = () => {
   );
 };
 
-export default FragmentImageTag;
+export default FragmentImgTag;
