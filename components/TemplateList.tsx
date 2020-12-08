@@ -50,11 +50,13 @@ type Props = {
   }) => void;
 };
 
-const TemplateList = ({ defaultIdx = -1, onTemplate }: Props) => {
+const TemplateList = ({ defaultIdx = 0, onTemplate }: Props) => {
   const classes = useStyles();
   //  const [open, setOpen] = useState(defaultIdx < 0);
   const [templateIdx, setTemplateIdx] = useState(
-    defaultIdx >= 0 ? defaultIdx : 0
+    0 <= defaultIdx && defaultIdx < BuiltinImportTemplate.length
+      ? defaultIdx
+      : 0
   );
 
   useEffect(() => {
