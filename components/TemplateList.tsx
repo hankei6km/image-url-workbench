@@ -75,7 +75,7 @@ const TemplateList = ({ defaultIdx = 0, onTemplate }: Props) => {
           {BuiltinImportTemplate.map((v, i) => (
             <ListItem key={v.label} button onClick={() => setTemplateIdx(i)}>
               <ListItemIcon>{templateIdx === i && <CheckIcon />}</ListItemIcon>
-              <ListItemText primary={v.label} />
+              <ListItemText primary={v.label} secondary={v.shortDescription} />
             </ListItem>
           ))}
         </List>

@@ -4,6 +4,7 @@ export type ImportTemplateParameters = { [key: string]: string };
 export type ImportTemplateParametersSet = ImportTemplateParameters[];
 export type ImportTemplate = {
   label: string;
+  shortDescription?: string;
   sampleParameters: ImportTemplateParametersSet;
   parameters: ImportTemplateParametersSet;
   medias: BreakPoint[];
@@ -13,7 +14,8 @@ export type ImportTemplateList = ImportTemplate[];
 
 export const BuiltinImportTemplate: ImportTemplateList = [
   {
-    label: 'responsive(resolutions)',
+    label: 'responsive',
+    shortDescription: '解像度別に4画像作成 (500x300)',
     sampleParameters: [
       {
         auto: 'compress',
@@ -95,7 +97,9 @@ export const BuiltinImportTemplate: ImportTemplateList = [
     medias: ['auto', 'auto', 'auto', 'auto']
   },
   {
-    label: 'responsive(art direction)',
+    label: 'responsive',
+    shortDescription:
+      'アートディレクション用に4画像作成(モバイルデバイス用含む)',
     sampleParameters: [
       {
         auto: 'compress',
@@ -161,7 +165,8 @@ export const BuiltinImportTemplate: ImportTemplateList = [
     medias: [1280, 960, 600, 320]
   },
   {
-    label: 'card(twitter)',
+    label: 'teitter card',
+    shortDescription: 'Teitter Card用に画像サイズ等を調整',
     sampleParameters: [
       {
         ar: '1.91:1',
