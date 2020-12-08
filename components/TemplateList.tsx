@@ -67,7 +67,7 @@ const TemplateList = ({ defaultIdx = 0, onTemplate }: Props) => {
         <List component="nav" aria-label="template list">
           {BuiltinImportTemplate.map((v, i) => (
             <ListItem
-              key={v.label}
+              key={i}
               button
               onClick={() => {
                 setTemplateIdx(i);
