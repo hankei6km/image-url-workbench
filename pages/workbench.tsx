@@ -329,7 +329,8 @@ const useActionBarStyles = makeStyles((theme) => ({
     }
   },
   indicatorOuter: {
-    display: 'flex',
+    // display: 'flex',
+    display: 'none', //一時的に非表示
     flexDirection: 'row',
     alignItems: 'center',
     marginLeft: theme.spacing(1),
