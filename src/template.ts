@@ -13,6 +13,88 @@ export type ImportTemplateList = ImportTemplate[];
 
 export const BuiltinImportTemplate: ImportTemplateList = [
   {
+    label: 'responsive(resolutions)',
+    sampleParameters: [
+      {
+        auto: 'compress',
+        dpr: '3',
+        fit: 'crop',
+        h: '300',
+        txt: 'sample image 500 3x',
+        'txt-color': 'efffffff',
+        'txt-pad': '38',
+        'txt-shad': '1',
+        'txt-size': '33',
+        w: '500'
+      },
+      {
+        auto: 'compress',
+        dpr: '2',
+        fit: 'crop',
+        h: '300',
+        txt: 'sample image 500 2x',
+        'txt-color': 'efffffff',
+        'txt-pad': '38',
+        'txt-shad': '1',
+        'txt-size': '33',
+        w: '500'
+      },
+      {
+        auto: 'compress',
+        dpr: '1.5',
+        fit: 'crop',
+        h: '300',
+        txt: 'sample image 500 1.5x',
+        'txt-color': 'efffffff',
+        'txt-pad': '38',
+        'txt-shad': '1',
+        'txt-size': '33',
+        w: '500'
+      },
+      {
+        auto: 'compress',
+        fit: 'crop',
+        h: '300',
+        txt: 'sample image 500',
+        'txt-color': 'efffffff',
+        'txt-pad': '38',
+        'txt-shad': '1',
+        'txt-size': '33',
+        w: '500'
+      }
+    ],
+    parameters: [
+      {
+        auto: 'compress',
+        dpr: '3',
+        fit: 'crop',
+        h: '300',
+        w: '500'
+      },
+      {
+        auto: 'compress',
+        dpr: '2',
+        fit: 'crop',
+        h: '300',
+        w: '500'
+      },
+      {
+        auto: 'compress',
+        dpr: '1.5',
+        fit: 'crop',
+        h: '300',
+        w: '500'
+      },
+      {
+        auto: 'compress',
+        fit: 'crop',
+        h: '300',
+        w: '500'
+      }
+    ],
+    medias: ['auto', 'auto', 'auto', 'auto']
+  },
+  {
     label: 'responsive(art direction)',
     sampleParameters: [
       {
