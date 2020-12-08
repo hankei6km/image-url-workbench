@@ -34,8 +34,11 @@ const IndexPage = () => {
   const [templateIdx, setTemplateIdx] = useState(
     previewStateContext.templateIdx >= 0 ? previewStateContext.templateIdx : 0
   );
-  const [templateLabel, setTemplateLabel] = useState('');
-  const [templateShortDescription, setTemplateShortDescription] = useState('');
+  const item = getImportTemplateItem(templateIdx);
+  const [templateLabel, setTemplateLabel] = useState(item ? item.label : '');
+  const [templateShortDescription, setTemplateShortDescription] = useState(
+    item ? item.shortDescription || '' : ''
+  );
 
   const [sampleParametersSet, setSampleParametersSet] = useState<
     ImportTemplateParametersSet
