@@ -14,7 +14,7 @@ export type ImportTemplateList = ImportTemplate[];
 
 export const BuiltinImportTemplate: ImportTemplateList = [
   {
-    label: 'palin',
+    label: 'plain',
     shortDescription: 'auto=compress 指定のみ',
     sampleParameters: [
       {
