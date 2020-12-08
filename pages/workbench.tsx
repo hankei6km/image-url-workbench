@@ -329,7 +329,8 @@ const useActionBarStyles = makeStyles((theme) => ({
     }
   },
   indicatorOuter: {
-    display: 'flex',
+    // display: 'flex',
+    display: 'none', //一時的に非表示
     flexDirection: 'row',
     alignItems: 'center',
     marginLeft: theme.spacing(1),
@@ -529,67 +530,6 @@ const WorkbenchPage = () => {
   const previewDispatch = useContext(PreviewDispatch);
   const router = useRouter();
 
-  const [templateIdx, seTtemplateIdx] = useState(-1);
-  const [sampleParametersSet, setSampleParametersSet] = useState<
-    ImportTemplateParametersSet
-  >([]);
-  const [parametersSet, setParametersSet] = useState<
-    ImportTemplateParametersSet
-  >([]);
-  const [medias, setMedias] = useState<BreakPoint[]>([]);
-
-  useEffect(() => {
-    return () =>
-      previewDispatch({
-        type: 'setTemplateIdx',
-        payload: [templateIdx]
-      });
-  }, [previewDispatch, templateIdx]);
-
-  useEffect(() => {
-    if (
-      previewStateContext.imageBaseUrl !== '' &&
-      previewStateContext.previewSetState !== 'edited'
-    ) {
-      previewDispatch({
-        type: 'resetPreviewSet',
-        payload: []
-      });
-      switch (previewStateContext.previewSetKind) {
-        case 'data':
-          previewDispatch({
-            type: 'importPreviewSet',
-            payload: [
-              'data',
-              previewStateContext.imageBaseUrl,
-              parametersSet,
-              medias
-            ]
-          });
-          break;
-        case 'sample':
-          previewDispatch({
-            type: 'importPreviewSet',
-            payload: [
-              'sample',
-              previewStateContext.imageBaseUrl,
-              sampleParametersSet,
-              medias
-            ]
-          });
-          break;
-      }
-    }
-  }, [
-    previewDispatch,
-    previewStateContext.imageBaseUrl,
-    previewStateContext.previewSetState,
-    previewStateContext.previewSetKind,
-    parametersSet,
-    sampleParametersSet,
-    medias
-  ]);
-
   // useEffect(() => {
   //   if (sampleImageBaseUrl !== '') {
   //     previewDispatch({
@@ -616,21 +556,7 @@ const WorkbenchPage = () => {
     <Layout title="Workbench">
       <Container maxWidth="md">
         <Box py={1}></Box>
-        <ActionBar
-          onTemplate={({
-            templateIdx: idx,
-            sampleParametersSet,
-            parametersSet,
-            medias
-          }) => {
-            if (templateIdx !== idx) {
-              seTtemplateIdx(idx);
-              setSampleParametersSet(sampleParametersSet);
-              setParametersSet(parametersSet);
-              setMedias(medias);
-            }
-          }}
-        />
+        <ActionBar onTemplate={(_e) => {}} />
         <Box>
           {previewStateContext.previewSet.map((v) => (
             <SetItem
