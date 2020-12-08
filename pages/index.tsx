@@ -6,6 +6,7 @@ import Box from '@material-ui/core/Box';
 import { PreviewDispatch } from '../components/PreviewContext';
 import ImportPanel from '../components/ImportPanel';
 import SamplePanel from '../components/SamplePanel';
+import TemplateList from '../components/TemplateList';
 
 const IndexPage = () => {
   const previewDispatch = useContext(PreviewDispatch);
@@ -37,6 +38,9 @@ const IndexPage = () => {
                 router.push('/workbench');
               }}
             />
+          </Box>
+          <Box>
+            <TemplateList defaultIdx={0} onTemplate={(_e) => {}} />
           </Box>
         </Box>
       </Container>
