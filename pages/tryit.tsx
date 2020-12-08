@@ -8,7 +8,7 @@ import AccordionDetails from '@material-ui/core/AccordionDetails';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import FragmentImageTag from '../components/FragmentImageTag';
+import FragmentImgTag from '../components/FragmentImgTag';
 import FragmentPictureTag from '../components/FragmentPictureTag';
 import FragmentCard from '../components/FragmentCard';
 import FragmentDownload from '../components/FragmentDownload';
@@ -68,11 +68,11 @@ const groupList: {
   group: React.ReactNode;
 }[] = [
   {
-    groupName: 'Preview image tag',
-    group: <FragmentImageTag />
+    groupName: 'Preview <img> tag',
+    group: <FragmentImgTag />
   },
   {
-    groupName: 'Preview <Picture> tag',
+    groupName: 'Preview <picture> tag',
     group: <FragmentPictureTag />
   },
   {
