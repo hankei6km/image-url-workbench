@@ -9,6 +9,7 @@ import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import FragmentImageTag from '../components/FragmentImageTag';
+import FragmentPictureTag from '../components/FragmentPictureTag';
 import FragmentCard from '../components/FragmentCard';
 import FragmentDownload from '../components/FragmentDownload';
 import FragmentMake from '../components/FragmentMake';
@@ -69,6 +70,10 @@ const groupList: {
   {
     groupName: 'Preview image tag',
     group: <FragmentImageTag />
+  },
+  {
+    groupName: 'Preview <Picture> tag',
+    group: <FragmentPictureTag />
   },
   {
     groupName: 'Preview Twitter Card',
