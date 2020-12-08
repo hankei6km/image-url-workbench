@@ -59,21 +59,27 @@ const TemplateList = ({ defaultIdx = 0, onTemplate }: Props) => {
       : 0
   );
 
-  useEffect(() => {
-    onTemplate({
-      templateIdx: templateIdx,
-      sampleParametersSet: BuiltinImportTemplate[templateIdx].sampleParameters,
-      parametersSet: BuiltinImportTemplate[templateIdx].parameters,
-      medias: BuiltinImportTemplate[templateIdx].medias
-    });
-  }, [onTemplate, templateIdx]);
+  useEffect(() => {}, [onTemplate, templateIdx]);
 
   return (
     <Box className={classes.root}>
       <Box className={classes.selectorOuter}>
         <List component="nav" aria-label="template list">
           {BuiltinImportTemplate.map((v, i) => (
-            <ListItem key={v.label} button onClick={() => setTemplateIdx(i)}>
+            <ListItem
+              key={v.label}
+              button
+              onClick={() => {
+                setTemplateIdx(i);
+                onTemplate({
+                  templateIdx: i,
+                  sampleParametersSet:
+                    BuiltinImportTemplate[i].sampleParameters,
+                  parametersSet: BuiltinImportTemplate[i].parameters,
+                  medias: BuiltinImportTemplate[i].medias
+                });
+              }}
+            >
               <ListItemIcon>{templateIdx === i && <CheckIcon />}</ListItemIcon>
               <ListItemText primary={v.label} secondary={v.shortDescription} />
             </ListItem>

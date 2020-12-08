@@ -215,3 +215,7 @@ export const BuiltinImportTemplate: ImportTemplateList = [
     medias: ['auto', 'auto']
   }
 ];
+
+export function getImportTemplateItem(templateIdx: number): ImportTemplate {
+  return BuiltinImportTemplate[templateIdx];
+}
