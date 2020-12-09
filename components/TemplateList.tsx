@@ -12,26 +12,11 @@ import {
 } from '../src/template';
 import { BreakPoint } from './PreviewContext';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center'
-  },
-  selectorOuter: {
-    marginTop: theme.spacing(1),
-    '& .MuiPaper-root': {
-      position: 'static',
-      // flexGrow: 1,
-      width: '100%',
-      display: 'flex',
-      '& .MuiTab-root': {
-        textTransform: 'none',
-        [theme.breakpoints.up('sm')]: {
-          minWidth: 240
-        }
-      }
-    }
   }
 }));
 
@@ -63,29 +48,26 @@ const TemplateList = ({ defaultIdx = 0, onTemplate }: Props) => {
 
   return (
     <Box className={classes.root}>
-      <Box className={classes.selectorOuter}>
-        <List component="nav" aria-label="template list">
-          {BuiltinImportTemplate.map((v, i) => (
-            <ListItem
-              key={i}
-              button
-              onClick={() => {
-                setTemplateIdx(i);
-                onTemplate({
-                  templateIdx: i,
-                  sampleParametersSet:
-                    BuiltinImportTemplate[i].sampleParameters,
-                  parametersSet: BuiltinImportTemplate[i].parameters,
-                  medias: BuiltinImportTemplate[i].medias
-                });
-              }}
-            >
-              <ListItemIcon>{templateIdx === i && <CheckIcon />}</ListItemIcon>
-              <ListItemText primary={v.label} secondary={v.shortDescription} />
-            </ListItem>
-          ))}
-        </List>
-      </Box>
+      <List component="nav" aria-label="template list">
+        {BuiltinImportTemplate.map((v, i) => (
+          <ListItem
+            key={i}
+            button
+            onClick={() => {
+              setTemplateIdx(i);
+              onTemplate({
+                templateIdx: i,
+                sampleParametersSet: BuiltinImportTemplate[i].sampleParameters,
+                parametersSet: BuiltinImportTemplate[i].parameters,
+                medias: BuiltinImportTemplate[i].medias
+              });
+            }}
+          >
+            <ListItemIcon>{templateIdx === i && <CheckIcon />}</ListItemIcon>
+            <ListItemText primary={v.label} secondary={v.shortDescription} />
+          </ListItem>
+        ))}
+      </List>
     </Box>
   );
 };
