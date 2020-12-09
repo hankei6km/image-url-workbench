@@ -10,10 +10,16 @@ import ImgBaseUrl, {
 type Props = {
   label: string;
   defaultValue?: string;
+  disabled?: boolean;
   onSelect: ({ value }: { value: string }) => void;
 };
 
-const ImportPanel = ({ label, defaultValue = '', onSelect }: Props) => {
+const ImportPanel = ({
+  label,
+  defaultValue = '',
+  disabled = false,
+  onSelect
+}: Props) => {
   const [imageBaseUrl, setImageBaseUrl] = useState(defaultValue);
 
   return (
@@ -22,10 +28,10 @@ const ImportPanel = ({ label, defaultValue = '', onSelect }: Props) => {
         <ImgBaseUrl
           label={label}
           baseUrl={imageBaseUrl}
+          disabled={disabled}
           onEnterKey={(_e: BaseUrlOnEnterKeyEvent) => {
             // onSelect({ value: e.value });
             onSelect({ value: imageBaseUrl });
-            setImageBaseUrl('');
           }}
           onChange={(e: BaseUrlOnChangeEvent) => setImageBaseUrl(e.value)}
         />
@@ -36,10 +42,9 @@ const ImportPanel = ({ label, defaultValue = '', onSelect }: Props) => {
           variant="contained"
           size="small"
           startIcon={<AddPhotoAlternateIcon fontSize="small" />}
-          disabled={imageBaseUrl === ''}
+          disabled={disabled}
           onClick={() => {
             onSelect({ value: imageBaseUrl });
-            setImageBaseUrl('');
           }}
         >
           New

@@ -24,6 +24,7 @@ const IndexPage = () => {
   const previewDispatch = useContext(PreviewDispatch);
   const router = useRouter();
 
+  const [selected, setSelected] = useState(false);
   const [open, setOpen] = useState<'' | 'template'>('');
 
   const [imageBaseUrl, setImageBaseUrl] = useState(
@@ -104,6 +105,12 @@ const IndexPage = () => {
     medias
   ]);
 
+  useEffect(() => {
+    if (selected) {
+      router.push('/workbench');
+    }
+  }, [router, selected]);
+
   return (
     <Layout title="Home">
       <Container maxWidth="md">
@@ -148,10 +155,11 @@ const IndexPage = () => {
             <ImportPanel
               label="Enter image url or select sample"
               defaultValue={imageBaseUrl}
+              disabled={selected}
               onSelect={({ value }) => {
                 setImageBaseUrl(value);
                 setPreviewSetKind('data');
-                router.push('/workbench');
+                setSelected(true);
               }}
             />
           </Box>
@@ -160,7 +168,7 @@ const IndexPage = () => {
               onSelect={({ value }) => {
                 setImageBaseUrl(value);
                 setPreviewSetKind('sample');
-                router.push('/workbench');
+                setSelected(true);
               }}
             />
           </Box>
