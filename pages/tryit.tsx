@@ -84,7 +84,7 @@ const groupList: {
     group: <FragmentDownload />
   },
   {
-    groupName: 'Make images by using current parameters.',
+    groupName: 'Make images by using current parameters',
     group: <FragmentMake />
   },
   {
