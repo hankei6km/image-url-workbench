@@ -44,12 +44,12 @@ const useStyles = makeStyles((theme) => ({
         justifyContent: 'center',
         '& > .homeHeader': {
           justifyContent: 'center',
-          '& .MuiBox-root': {
+          '& > .MuiBox-root': {
             width: '100%',
             maxWidth: theme.breakpoints.values.md,
             display: 'flex',
             alignItems: 'center',
-            '% > .homeHeaderTitle': {
+            '& > .homeHeaderTitle': {
               flexGrow: 1
             }
           }

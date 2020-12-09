@@ -382,9 +382,14 @@ function ActionBar({
   const [templateIdx, seTtemplateIdx] = useState(
     previewStateContext.templateIdx >= 0 ? previewStateContext.templateIdx : 0
   );
+  const [disabledTryIt, setDisabledTryIt] = useState(true);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [open, setOpen] = useState<'' | 'add' | 'template' | 'exiting'>('');
   const [nextOpen, setNextOpen] = useState<'' | 'add' | 'template'>('');
+
+  useEffect(() => {
+    setDisabledTryIt(!isPreviewSetReady(previewStateContext.previewSet));
+  }, [previewStateContext]);
 
   const handleClickCommand = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -482,8 +487,13 @@ function ActionBar({
                 component={Link}
                 disableElevation={true}
                 href="/tryit"
-                className="MuiButton-containedPrimary"
-                disabled={!isPreviewSetReady(previewStateContext.previewSet)}
+                color="primary"
+                className={
+                  disabledTryIt
+                    ? 'MuiButton-contained Mui-disabled'
+                    : 'MuiButton-containedPrimary'
+                }
+                disabled={disabledTryIt}
               >
                 Try it
               </Button>
