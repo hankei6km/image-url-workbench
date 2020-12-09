@@ -1,14 +1,28 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 import Paper from '@material-ui/core/Card';
 import Collapse from '@material-ui/core/Collapse';
-import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import CodeIcon from '@material-ui/icons/Code';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
 import { useSnackbar } from 'notistack';
+import { Light as SyntaxHighlighter } from 'react-syntax-highlighter';
+// https://stackoverflow.com/questions/58966891/nextjs-unexpected-token-import
+import bash from 'react-syntax-highlighter/dist/cjs/languages/hljs/bash';
+import json from 'react-syntax-highlighter/dist/cjs/languages/hljs/json';
+import { androidstudio } from 'react-syntax-highlighter/dist/cjs/styles/hljs';
 import copyTextToClipboard from '../utils/clipboard';
+
+const useStyles = makeStyles((theme) => ({
+  codeOuter: {
+    fontSize: theme.typography.h6.fontSize
+  }
+}));
+
+SyntaxHighlighter.registerLanguage('bash', bash);
+SyntaxHighlighter.registerLanguage('json', json);
 
 // type Props = {} & TextFieldProps;
 type InnerProps = {
@@ -16,6 +30,7 @@ type InnerProps = {
   defaultOpened?: boolean;
   label: React.ReactNode;
   value: string;
+  language?: string;
 };
 type Props = {
   summary?: React.ReactNode;
@@ -26,9 +41,10 @@ const FragmentTextFieldInner = ({
   defaultOpened = false,
   label,
   value,
-  ...others
+  language = ''
 }: InnerProps) => {
-  const inputRef = useRef<HTMLTextAreaElement>();
+  const classes = useStyles();
+
   const [open, setOpen] = useState(defaultOpened);
   const { enqueueSnackbar } = useSnackbar();
 
@@ -61,24 +77,16 @@ const FragmentTextFieldInner = ({
         </IconButton>
       </Box>
       <Collapse in={open}>
-        <TextField
-          inputRef={inputRef}
-          variant="outlined"
-          fullWidth={true}
-          multiline={true}
-          value={value}
-          onSelect={(_e) => {
-            if (
-              inputRef &&
-              (inputRef as React.MutableRefObject<HTMLTextAreaElement>).current
-            ) {
-              (inputRef as React.MutableRefObject<
-                HTMLTextAreaElement
-              >).current.select();
-            }
-          }}
-          {...others}
-        />
+        <Box className={classes.codeOuter}>
+          <SyntaxHighlighter
+            wrapLines
+            wrapLongLines
+            style={androidstudio}
+            language={language}
+          >
+            {value}
+          </SyntaxHighlighter>
+        </Box>
       </Collapse>
     </Box>
   );

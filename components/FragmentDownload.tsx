@@ -55,6 +55,7 @@ const FragmentDownload = () => {
           naked
           label="commands"
           value={downloadImagesCommands}
+          language="bash"
         />
       </Box>
     </Box>

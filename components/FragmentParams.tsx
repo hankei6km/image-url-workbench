@@ -55,6 +55,7 @@ const FragmentParams = () => {
           naked
           label="query (array)"
           value={imgParameters}
+          language="json"
         />
       </Box>
       <Box p={1} display="none">
@@ -63,6 +64,7 @@ const FragmentParams = () => {
           naked
           label="query-plain (array)"
           value={imgParametersPlain}
+          language="json"
         />
       </Box>
     </Box>

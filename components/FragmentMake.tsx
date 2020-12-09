@@ -1,24 +1,11 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import PreviewContext from '../components/PreviewContext';
 import FragmentTextField from '../components/FragmentTextField';
 import shellescape from 'shell-escape';
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    '& code': {
-      padding: '.2em .4em',
-      margin: 0,
-      backgroundColor: theme.palette.grey[200], // TODO: dark 対応(このままだと多分見えにくい)
-      borderRadius: 6
-    }
-  }
-}));
-
 const FragmentMake = () => {
-  const classes = useStyles();
   const previewStateContext = useContext(PreviewContext);
   const [makeVariantsScript, setMakeVariantsScript] = useState('');
   const [assetHostName, setAssetHostName] = useState('');
@@ -67,7 +54,7 @@ ${commands.join('\n')}
   }, [previewStateContext.previewSet]);
 
   return (
-    <Box mx={1} className={classes.root}>
+    <Box mx={1}>
       <Box mx={1} p={1}>
         <Typography variant="h6">Usage</Typography>
         <Typography component={'span'} variant="body1">
@@ -89,6 +76,7 @@ ${commands.join('\n')}
           naked
           label="code"
           value={makeVariantsScript}
+          language="bash"
         />
       </Box>
     </Box>

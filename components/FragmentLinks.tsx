@@ -33,6 +33,7 @@ const FragmentLinks = () => {
           naked
           label="url (array)"
           value={imgUrl}
+          language="json"
         />
       </Box>
       <Box p={1}>
@@ -41,6 +42,7 @@ const FragmentLinks = () => {
           naked
           label="path (array)"
           value={imgPath}
+          language="json"
         />
       </Box>
     </Box>
