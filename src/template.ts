@@ -1,8 +1,14 @@
 import { BreakPoint } from '../components/PreviewContext';
 
+// 'basic': auto 等の外観には影響はないが、ファイルサイズ等に影響のあるような項目の指定。インポート時に使う
+// 'effective': セピア調等の効果を複数の項目に適用する。workbench 上の各項目に適用させることに使う
+// 'responsive': １つの項目から画像のサイズ(ピクセル数)が異なる項目を作成する。複数の項目に適用はしない
+// 'card': ソーシャルカード(Twitter Card)用にサイズの調整等を行う。'effective' でも良いか?
+export type ImportTemplateKind = 'basic' | 'effective' | 'responsive' | 'card';
 export type ImportTemplateParameters = { [key: string]: string };
 export type ImportTemplateParametersSet = ImportTemplateParameters[];
 export type ImportTemplate = {
+  kind: ImportTemplateKind[];
   label: string;
   shortDescription?: string;
   sampleParameters: ImportTemplateParametersSet;
@@ -14,6 +20,7 @@ export type ImportTemplateList = ImportTemplate[];
 
 export const BuiltinImportTemplate: ImportTemplateList = [
   {
+    kind: ['basic'],
     label: 'plain',
     shortDescription: 'auto=compress 指定のみ',
     sampleParameters: [
@@ -29,6 +36,7 @@ export const BuiltinImportTemplate: ImportTemplateList = [
     medias: ['auto', 'auto']
   },
   {
+    kind: ['basic', 'effective'],
     label: 'stylize',
     shortDescription: 'blur',
     sampleParameters: [
@@ -46,6 +54,7 @@ export const BuiltinImportTemplate: ImportTemplateList = [
     medias: ['auto', 'auto']
   },
   {
+    kind: ['basic', 'effective'],
     label: 'stylize',
     shortDescription: 'duotone',
     sampleParameters: [
@@ -65,6 +74,7 @@ export const BuiltinImportTemplate: ImportTemplateList = [
     medias: ['auto', 'auto']
   },
   {
+    kind: ['basic', 'effective'],
     label: 'stylize',
     shortDescription: 'monochrome(light)',
     sampleParameters: [
@@ -82,6 +92,7 @@ export const BuiltinImportTemplate: ImportTemplateList = [
     medias: ['auto', 'auto']
   },
   {
+    kind: ['basic', 'effective'],
     label: 'stylize',
     shortDescription: 'monochrome(dark)',
     sampleParameters: [
@@ -99,6 +110,7 @@ export const BuiltinImportTemplate: ImportTemplateList = [
     medias: ['auto', 'auto']
   },
   {
+    kind: ['basic', 'effective'],
     label: 'stylize',
     shortDescription: 'sepia tone',
     sampleParameters: [
@@ -116,6 +128,7 @@ export const BuiltinImportTemplate: ImportTemplateList = [
     medias: ['auto', 'auto']
   },
   {
+    kind: ['basic', 'responsive'],
     label: 'responsive',
     shortDescription: '解像度別に4画像作成 (500x300)',
     sampleParameters: [
@@ -199,6 +212,7 @@ export const BuiltinImportTemplate: ImportTemplateList = [
     medias: ['auto', 'auto', 'auto', 'auto']
   },
   {
+    kind: ['basic', 'responsive'],
     label: 'responsive',
     shortDescription:
       'アートディレクション用に4画像作成(モバイルデバイス用含む)',
@@ -267,6 +281,7 @@ export const BuiltinImportTemplate: ImportTemplateList = [
     medias: [1280, 960, 600, 320]
   },
   {
+    kind: ['basic', 'card'],
     label: 'teitter card',
     shortDescription: 'Teitter Card用に画像サイズ等を調整',
     sampleParameters: [
