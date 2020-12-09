@@ -37,7 +37,7 @@ type Props = {
   naked?: boolean;
 } & InnerProps;
 
-const FragmentTextFieldInner = ({
+const FragmentCodePannelInner = ({
   defaultOpened = false,
   label,
   value,
@@ -92,13 +92,13 @@ const FragmentTextFieldInner = ({
   );
 };
 
-const FragmentTextField = ({
+const FragmentCodePanel = ({
   summary = '',
   naked = false,
   ...others
 }: Props) => {
   if (naked) {
-    return <FragmentTextFieldInner {...others} />;
+    return <FragmentCodePannelInner {...others} />;
   }
   return (
     <Box>
@@ -106,7 +106,7 @@ const FragmentTextField = ({
         <Box mx={1} p={1}>
           <Box>{summary}</Box>
           <Box my={1}>
-            <FragmentTextFieldInner {...others} />
+            <FragmentCodePannelInner {...others} />
           </Box>
         </Box>
       </Paper>
@@ -114,4 +114,4 @@ const FragmentTextField = ({
   );
 };
 
-export default FragmentTextField;
+export default FragmentCodePanel;

@@ -4,7 +4,7 @@ import QRCode from 'qrcode';
 import PreviewContext, {
   getTargetItemIndex
 } from '../components/PreviewContext';
-import FragmentTextField from '../components/FragmentTextField';
+import FragmentCodePanel from '../components/FragmentCodePannel';
 
 export const FragmentLinkQRcode = ({ url }: { url: string }) => {
   const previewStateContext = useContext(PreviewContext);
@@ -57,10 +57,10 @@ const FragmentLink = ({ itemKey }: { itemKey: string }) => {
   return (
     <Box mx={1}>
       <Box p={1}>
-        <FragmentTextField defaultOpened naked label="url" value={imgUrl} />
+        <FragmentCodePanel defaultOpened naked label="url" value={imgUrl} />
       </Box>
       <Box p={1}>
-        <FragmentTextField defaultOpened naked label="path" value={imgPath} />
+        <FragmentCodePanel defaultOpened naked label="path" value={imgPath} />
       </Box>
     </Box>
   );

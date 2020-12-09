@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import Box from '@material-ui/core/Box';
 import PreviewContext from '../components/PreviewContext';
-import FragmentTextField from '../components/FragmentTextField';
+import FragmentCodePanel from '../components/FragmentCodePannel';
 
 const FragmentLinks = () => {
   const previewStateContext = useContext(PreviewContext);
@@ -28,7 +28,7 @@ const FragmentLinks = () => {
   return (
     <Box mx={1}>
       <Box p={1}>
-        <FragmentTextField
+        <FragmentCodePanel
           defaultOpened
           naked
           label="url (array)"
@@ -37,7 +37,7 @@ const FragmentLinks = () => {
         />
       </Box>
       <Box p={1}>
-        <FragmentTextField
+        <FragmentCodePanel
           defaultOpened
           naked
           label="path (array)"

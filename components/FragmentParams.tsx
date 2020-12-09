@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import Box from '@material-ui/core/Box';
 import PreviewContext from '../components/PreviewContext';
-import FragmentTextField from '../components/FragmentTextField';
+import FragmentCodePanel from '../components/FragmentCodePannel';
 import { imgUrlParamsToString } from '../utils/imgParamsUtils';
 
 const FragmentParams = () => {
@@ -42,7 +42,7 @@ const FragmentParams = () => {
   return (
     <Box mx={1}>
       <Box p={1}>
-        <FragmentTextField
+        <FragmentCodePanel
           defaultOpened
           naked
           label="json"
@@ -50,7 +50,7 @@ const FragmentParams = () => {
         />
       </Box>
       <Box p={1}>
-        <FragmentTextField
+        <FragmentCodePanel
           defaultOpened
           naked
           label="query (array)"
@@ -59,7 +59,7 @@ const FragmentParams = () => {
         />
       </Box>
       <Box p={1} display="none">
-        <FragmentTextField
+        <FragmentCodePanel
           defaultOpened
           naked
           label="query-plain (array)"

@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import PreviewContext from '../components/PreviewContext';
-import FragmentTextField from '../components/FragmentTextField';
+import FragmentCodePanel from '../components/FragmentCodePannel';
 import shellescape from 'shell-escape';
 
 const FragmentMake = () => {
@@ -71,7 +71,7 @@ ${commands.join('\n')}
         </Typography>
       </Box>
       <Box p={1}>
-        <FragmentTextField
+        <FragmentCodePanel
           defaultOpened
           naked
           label="code"
