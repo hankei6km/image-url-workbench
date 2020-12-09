@@ -14,10 +14,14 @@ const breakpoints = createBreakpoints({});
 const theme = createMuiTheme({
   palette: {
     primary: {
-      main: '#556cd6'
+      light: '#3b4b95',
+      main: '#556cd6',
+      dark: '#7789de'
     },
     secondary: {
-      main: '#19857b'
+      light: '#115d56',
+      main: '#19857b',
+      dark: '#479d95'
     },
     error: {
       main: red.A400
