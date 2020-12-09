@@ -134,7 +134,9 @@ function ImgParamsTextField({
   const [value, setValue] = useState(defaultValue || '');
 
   useEffect(() => {
-    setValue(paramsValue);
+    if (paramsValue) {
+      setValue(paramsValue);
+    }
   }, [paramsValue]);
 
   return (
