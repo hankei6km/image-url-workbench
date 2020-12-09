@@ -20,7 +20,7 @@ import PreviewContext, {
   breakPointValue
 } from '../components/PreviewContext';
 import DebTextField from '../components/DebTextField';
-import FragmentTextField from '../components/FragmentTextField';
+import FragmentCodePanel from '../components/FragmentCodePannel';
 import { ImgParamsValues } from '../utils/imgParamsUtils';
 import merge from 'deepmerge';
 import gh from 'hast-util-sanitize/lib/github.json';
@@ -198,7 +198,12 @@ const FragmentPictureTag = () => {
       </Box>
       <Box>
         <Box p={1}>
-          <FragmentTextField naked label="picture tag" value={pictureHtml} />
+          <FragmentCodePanel
+            naked
+            label="picture tag"
+            value={pictureHtml}
+            language="html"
+          />
         </Box>
       </Box>
     </Box>

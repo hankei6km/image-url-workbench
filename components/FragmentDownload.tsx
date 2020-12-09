@@ -3,7 +3,7 @@ import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import { basename, extname } from 'path';
 import PreviewContext from '../components/PreviewContext';
-import FragmentTextField from '../components/FragmentTextField';
+import FragmentCodePanel from '../components/FragmentCodePannel';
 import shellescape from 'shell-escape';
 
 const FragmentDownload = () => {
@@ -50,11 +50,12 @@ const FragmentDownload = () => {
         </Typography>
       </Box>
       <Box p={1}>
-        <FragmentTextField
+        <FragmentCodePanel
           defaultOpened
           naked
           label="commands"
           value={downloadImagesCommands}
+          language="bash"
         />
       </Box>
     </Box>

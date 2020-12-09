@@ -28,7 +28,7 @@ import PreviewContext, {
   getTargetItemIndex
 } from '../components/PreviewContext';
 import DebTextField from '../components/DebTextField';
-import FragmentTextField from '../components/FragmentTextField';
+import FragmentCodePanel from '../components/FragmentCodePannel';
 import ImgPreview from '../components/ImgPreview';
 import Link from '../components/Link';
 import TryItOn from '../components/TryItOn';
@@ -265,7 +265,7 @@ const FragmentCard = () => {
         </Accordion>
       </Box>
       <Box my={1} p={1}>
-        <FragmentTextField
+        <FragmentCodePanel
           id="card-preview-url"
           summary={
             <Card elevation={0}>
