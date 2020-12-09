@@ -12,6 +12,7 @@ export type BaseUrlOnEnterKeyEvent = { value: string };
 type BaseUrlParamsProps = {
   label: string;
   baseUrl: string;
+  disabled?: boolean;
   onChange: (e: BaseUrlOnChangeEvent) => void;
   onEnterKey?: (e: BaseUrlOnEnterKeyEvent) => void;
 };
@@ -19,6 +20,7 @@ type BaseUrlParamsProps = {
 export default function ImgBaseUrl({
   label,
   baseUrl,
+  disabled = false,
   onChange,
   onEnterKey = (_e) => {}
 }: BaseUrlParamsProps) {
@@ -57,6 +59,7 @@ export default function ImgBaseUrl({
         value={value}
         fullWidth
         helperText={errMsg}
+        disabled={disabled}
         onKeyPress={(e) => {
           if (e.key === 'Enter') {
             if (errMsg === '' && value) {

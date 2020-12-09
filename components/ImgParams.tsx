@@ -130,10 +130,13 @@ function ImgParamsTextField({
   paramsExpect,
   onChange
 }: ImgParamsTextFieldProps) {
-  const [value, setValue] = useState('');
+  const { defaultValue, ...p } = paramsKeyToSpread(paramsKey, paramsExpect);
+  const [value, setValue] = useState(defaultValue || '');
 
   useEffect(() => {
-    setValue(paramsValue);
+    if (paramsValue) {
+      setValue(paramsValue);
+    }
   }, [paramsValue]);
 
   return (
@@ -141,7 +144,7 @@ function ImgParamsTextField({
       variant="outlined"
       value={value}
       id={`${paramsKey}(${paramsExpect.type})`}
-      {...paramsKeyToSpread(paramsKey, paramsExpect)}
+      {...p}
       fullWidth
       onChange={(e) => {
         setValue(e.target.value);
