@@ -8,7 +8,9 @@ import ListItemText from '@material-ui/core/ListItemText';
 import CheckIcon from '@material-ui/icons/Check';
 import {
   BuiltinImportTemplate,
-  ImportTemplateParametersSet
+  ImportTemplateParametersSet,
+  ImportTemplateKind,
+  ImportTemplate
 } from '../src/template';
 import { BreakPoint } from './PreviewContext';
 
@@ -20,8 +22,30 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
+type IndexedTemplateList = (ImportTemplate & { idx: number })[];
+
+const indexedTemplateList = BuiltinImportTemplate.map((v, idx) => ({
+  ...v,
+  idx
+}));
+
+function getTemplateList(
+  list: IndexedTemplateList,
+  kind: ImportTemplateKind[]
+): IndexedTemplateList {
+  if (kind.length > 0) {
+    return list.filter(({ kind: v }) => v.some((v) => kind.indexOf(v) >= 0));
+  }
+  return list.slice();
+}
+
+function getIdxFromList(idx: number, list: IndexedTemplateList): number {
+  return list.findIndex((v) => v.idx === idx);
+}
+
 type Props = {
   defaultIdx: number;
+  kind?: ImportTemplateKind[];
   onTemplate: ({
     templateIdx,
     sampleParametersSet,
@@ -35,31 +59,34 @@ type Props = {
   }) => void;
 };
 
-const TemplateList = ({ defaultIdx = 0, onTemplate }: Props) => {
+const TemplateList = ({ defaultIdx = 0, kind = [], onTemplate }: Props) => {
   const classes = useStyles();
   //  const [open, setOpen] = useState(defaultIdx < 0);
-  const [templateIdx, setTemplateIdx] = useState(
-    0 <= defaultIdx && defaultIdx < BuiltinImportTemplate.length
-      ? defaultIdx
-      : 0
-  );
+  const templateList = getTemplateList(indexedTemplateList, kind);
+  const idx = getIdxFromList(defaultIdx, templateList);
+  const [templateIdx, setTemplateIdx] = useState(idx >= 0 ? idx : 0);
 
-  useEffect(() => {}, [onTemplate, templateIdx]);
+  useEffect(() => {
+    if (templateIdx >= templateList.length) {
+      setTemplateIdx(0);
+    }
+  }, [templateIdx, templateList.length]);
 
   return (
     <Box className={classes.root}>
       <List component="nav" aria-label="template list">
-        {BuiltinImportTemplate.map((v, i) => (
+        {templateList.map((v, i) => (
           <ListItem
             key={i}
             button
             onClick={() => {
               setTemplateIdx(i);
+              const t = templateList[i];
               onTemplate({
-                templateIdx: i,
-                sampleParametersSet: BuiltinImportTemplate[i].sampleParameters,
-                parametersSet: BuiltinImportTemplate[i].parameters,
-                medias: BuiltinImportTemplate[i].medias
+                templateIdx: t.idx,
+                sampleParametersSet: templateList[i].sampleParameters,
+                parametersSet: templateList[i].parameters,
+                medias: templateList[i].medias
               });
             }}
           >
