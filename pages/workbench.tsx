@@ -366,12 +366,10 @@ function ActionBar({
 }: {
   onTemplate: ({
     templateIdx,
-    sampleParametersSet,
     parametersSet,
     medias
   }: {
     templateIdx: number;
-    sampleParametersSet: ImportTemplateParametersSet;
     parametersSet: ImportTemplateParametersSet;
     medias: BreakPoint[];
   }) => void;
@@ -558,16 +556,10 @@ function ActionBar({
               previewStateContext.previewSetState === 'edited' ||
               previewStateContext.imageBaseUrl === ''
             }
-            onTemplate={({
-              templateIdx: idx,
-              sampleParametersSet,
-              parametersSet,
-              medias
-            }) => {
+            onTemplate={({ templateIdx: idx, parametersSet, medias }) => {
               seTtemplateIdx(idx);
               onTemplate({
                 templateIdx: idx,
-                sampleParametersSet: sampleParametersSet,
                 parametersSet: parametersSet,
                 medias: medias
               });
@@ -581,16 +573,12 @@ function ActionBar({
             defaultIdx={0}
             disableSelected
             kind={['responsive']}
-            onTemplate={({ parametersSet, sampleParametersSet, medias }) => {
+            onTemplate={({ parametersSet, medias }) => {
               setNextOpen('responsive');
-              const ps =
-                previewStateContext.previewSetKind === 'data'
-                  ? parametersSet
-                  : sampleParametersSet;
               previewStateContext.previewSet.forEach((v) => {
                 previewDispatch({
                   type: 'makeVariantImages',
-                  payload: [v.itemKey, ps, medias]
+                  payload: [v.itemKey, parametersSet, medias]
                 });
               });
             }}
@@ -603,16 +591,12 @@ function ActionBar({
             defaultIdx={0}
             disableSelected
             kind={['effective', 'card']}
-            onTemplate={({ parametersSet, sampleParametersSet, medias }) => {
+            onTemplate={({ parametersSet, medias }) => {
               setNextOpen('effect');
-              const ps =
-                previewStateContext.previewSetKind === 'data'
-                  ? parametersSet
-                  : sampleParametersSet;
               previewStateContext.previewSet.forEach((v) => {
                 previewDispatch({
                   type: 'mergeParametersToImageUrl',
-                  payload: [v.itemKey, ps, medias]
+                  payload: [v.itemKey, parametersSet, medias]
                 });
               });
             }}

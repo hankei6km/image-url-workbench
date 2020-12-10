@@ -45,9 +45,6 @@ const IndexPage = () => {
     item ? item.shortDescription || '' : ''
   );
 
-  const [sampleParametersSet, setSampleParametersSet] = useState<
-    ImportTemplateParametersSet
-  >([]);
   const [parametersSet, setParametersSet] = useState<
     ImportTemplateParametersSet
   >([]);
@@ -62,7 +59,6 @@ const IndexPage = () => {
     if (item) {
       setTemplateLabel(item.label);
       setTemplateShortDescription(item.shortDescription || '');
-      setSampleParametersSet(item.sampleParameters);
       setParametersSet(item.parameters);
       setMedias(item.medias);
     }
@@ -79,20 +75,10 @@ const IndexPage = () => {
           type: 'resetPreviewSet',
           payload: []
         });
-        switch (previewSetKind) {
-          case 'data':
-            previewDispatch({
-              type: 'importPreviewSet',
-              payload: ['data', imageBaseUrl, parametersSet, medias]
-            });
-            break;
-          case 'sample':
-            previewDispatch({
-              type: 'importPreviewSet',
-              payload: ['sample', imageBaseUrl, sampleParametersSet, medias]
-            });
-            break;
-        }
+        previewDispatch({
+          type: 'importPreviewSet',
+          payload: ['data', imageBaseUrl, parametersSet, medias]
+        });
       }
     };
   }, [
@@ -101,7 +87,6 @@ const IndexPage = () => {
     imageBaseUrl,
     previewSetKind,
     parametersSet,
-    sampleParametersSet,
     medias
   ]);
 

@@ -49,12 +49,10 @@ type Props = {
   disableSelected?: boolean;
   onTemplate: ({
     templateIdx,
-    sampleParametersSet,
     parametersSet,
     medias
   }: {
     templateIdx: number;
-    sampleParametersSet: ImportTemplateParametersSet;
     parametersSet: ImportTemplateParametersSet;
     medias: BreakPoint[];
   }) => void;
@@ -90,7 +88,6 @@ const TemplateList = ({
               const t = templateList[i];
               onTemplate({
                 templateIdx: t.idx,
-                sampleParametersSet: templateList[i].sampleParameters,
                 parametersSet: templateList[i].parameters,
                 medias: templateList[i].medias
               });
