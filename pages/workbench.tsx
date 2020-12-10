@@ -383,10 +383,10 @@ function ActionBar({
   const [disabledTryIt, setDisabledTryIt] = useState(true);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [open, setOpen] = useState<
-    '' | 'add' | 'template' | 'effect' | 'responsive' | 'exiting'
+    '' | 'add' | 'template' | 'size' | 'effect' | 'responsive' | 'exiting'
   >('');
   const [nextOpen, setNextOpen] = useState<
-    '' | 'add' | 'template' | 'responsive' | 'effect'
+    '' | 'add' | 'template' | 'size' | 'responsive' | 'effect'
   >('');
 
   useEffect(() => {
@@ -533,6 +533,17 @@ function ActionBar({
         </Box>
         <Box className={classes.tryItOnOuter}>
           <Button
+            color="default"
+            disableElevation={true}
+            variant="outlined"
+            disabled={disabledTryIt}
+            onClick={() => setNextOpen('size')}
+          >
+            Size
+          </Button>
+        </Box>
+        <Box className={classes.tryItOnOuter}>
+          <Button
             component={Link}
             disableElevation={true}
             href="/tryit"
@@ -590,9 +601,27 @@ function ActionBar({
           <TemplateList
             defaultIdx={0}
             disableSelected
-            kind={['effective', 'card']}
+            kind={['effective']}
             onTemplate={({ parametersSet, medias }) => {
               setNextOpen('effect');
+              previewStateContext.previewSet.forEach((v) => {
+                previewDispatch({
+                  type: 'mergeParametersToImageUrl',
+                  payload: [v.itemKey, parametersSet, medias]
+                });
+              });
+            }}
+          />
+        </Collapse>
+      </Box>
+      <Box>
+        <Collapse in={open === 'size'} onExited={handleExited}>
+          <TemplateList
+            defaultIdx={0}
+            disableSelected
+            kind={['size', 'card']}
+            onTemplate={({ parametersSet, medias }) => {
+              setNextOpen('size');
               previewStateContext.previewSet.forEach((v) => {
                 previewDispatch({
                   type: 'mergeParametersToImageUrl',

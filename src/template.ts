@@ -1,10 +1,16 @@
 import { BreakPoint } from '../components/PreviewContext';
 
 // 'basic': auto 等の外観には影響はないが、ファイルサイズ等に影響のあるような項目の指定。インポート時に使う
-// 'effective': セピア調等の効果を複数の項目に適用する。workbench 上の各項目に適用させることに使う
+// 'size': 画像のサイズ変更を行う。workbench 上の各項目に上書きで適用
+// 'effective': セピア調等の効果を複数の項目に適用する。workbench 上の各項目に上書きで適用
 // 'responsive': １つの項目から画像のサイズ(ピクセル数)が異なる項目を作成する。複数の項目に適用はしない
 // 'card': ソーシャルカード(Twitter Card)用にサイズの調整等を行う。'effective' でも良いか?
-export type ImportTemplateKind = 'basic' | 'effective' | 'responsive' | 'card';
+export type ImportTemplateKind =
+  | 'basic'
+  | 'size'
+  | 'effective'
+  | 'responsive'
+  | 'card';
 export type ImportTemplateParameters = { [key: string]: string };
 export type ImportTemplateParametersSet = ImportTemplateParameters[];
 export type ImportTemplate = {
@@ -27,22 +33,10 @@ export const BuiltinImportTemplate: ImportTemplateList = [
         auto: 'compress'
       }
     ],
-    medias: ['auto', 'auto']
-  },
-  {
-    kind: ['basic', 'effective'],
-    label: 'stylize',
-    shortDescription: 'blur',
-    parameters: [
-      {
-        auto: 'compress',
-        blur: '70'
-      }
-    ],
     medias: ['auto']
   },
   {
-    kind: ['basic', 'effective'],
+    kind: ['basic', 'size'],
     label: 'size',
     shortDescription: '画像を 500x300 へサイズ変更',
     parameters: [
@@ -57,7 +51,7 @@ export const BuiltinImportTemplate: ImportTemplateList = [
     medias: ['auto']
   },
   {
-    kind: ['basic', 'effective'],
+    kind: ['basic', 'size'],
     label: 'size',
     shortDescription: '画像を 500x300 へサイズ変更(left)',
     parameters: [
@@ -72,7 +66,7 @@ export const BuiltinImportTemplate: ImportTemplateList = [
     medias: ['auto']
   },
   {
-    kind: ['basic', 'effective'],
+    kind: ['basic', 'size'],
     label: 'size',
     shortDescription: '画像を 500x300 へサイズ変更(right)',
     parameters: [
@@ -87,7 +81,7 @@ export const BuiltinImportTemplate: ImportTemplateList = [
     medias: ['auto']
   },
   {
-    kind: ['basic', 'effective'],
+    kind: ['basic', 'size'],
     label: 'size',
     shortDescription: '画像を 500x300 へサイズ変更(entropy)',
     parameters: [
@@ -97,6 +91,18 @@ export const BuiltinImportTemplate: ImportTemplateList = [
         fit: 'crop',
         h: '300',
         w: '500'
+      }
+    ],
+    medias: ['auto']
+  },
+  {
+    kind: ['basic', 'effective'],
+    label: 'stylize',
+    shortDescription: 'blur',
+    parameters: [
+      {
+        auto: 'compress',
+        blur: '70'
       }
     ],
     medias: ['auto']
