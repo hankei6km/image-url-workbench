@@ -137,8 +137,8 @@ type actTypeMergeParametersToImageUrl = {
   payload: [string, ImportTemplateParametersSet, BreakPoint[]];
 };
 
-type actTypeMakeVariantImage = {
-  type: 'makeVariantImage';
+type actTypeMakeVariantImages = {
+  type: 'makeVariantImages';
   payload: [string, ImportTemplateParametersSet, BreakPoint[]];
 };
 
@@ -187,7 +187,7 @@ type actType =
   | actTypeSetPreviewImageSize
   | actTypeSetPreviewImageMedia
   | actTypeMergeParametersToImageUrl
-  | actTypeMakeVariantImage
+  | actTypeMakeVariantImages
   | actTypeClonePreviewImageUrl
   | actTypeSetCard
   | actTypeSetTagFragment
@@ -253,7 +253,7 @@ function nextPreviewSetState(
     case 'mergeParametersToImageUrl':
       ret = 'edited';
       break;
-    case 'makeVariantImage':
+    case 'makeVariantImages':
       ret = 'edited';
       break;
     case 'clonePreviewImageUrl':
@@ -436,6 +436,37 @@ export function previewContextReducer(
           newState.previewSet[idx].imgDispDensity = imgDispDensity(q);
           newState.previewSet[idx].media = action.payload[2][0];
           newState.editTargetKey = state.previewSet[idx].itemKey;
+        }
+      }
+      break;
+    case 'makeVariantImages':
+      if (action.payload[0]) {
+        const idx = getTargetItemIndex(state.previewSet, action.payload[0]);
+        if (idx >= 0) {
+          const item = state.previewSet[idx];
+          const medias = action.payload[2] || [];
+          const mediasLen = medias.length;
+          newState.previewSet = action.payload[1].map((v, i) => {
+            const q = imgUrlParamsMergeObject(item.imageParams, v);
+            const s = imgUrlParamsToString(q);
+            const paramsString = s ? `?${s}` : '';
+            const previewItem: PreviewItem = {
+              itemKey: `${Date.now()}-${i}`,
+              previewUrl: `${item.baseImageUrl}${paramsString}`,
+              baseImageUrl: item.baseImageUrl,
+              imageParams: q,
+              imgWidth: 0,
+              imgHeight: 0,
+              imgDispDensity: imgDispDensity(q),
+              media: i < mediasLen ? medias[i] : 'auto'
+            };
+            return previewItem;
+          });
+          const l = newState.previewSet.length;
+          if (l > 0) {
+            newState.editTargetKey = newState.previewSet[0].itemKey;
+            newState.defaultTargetKey = newState.previewSet[l - 1].itemKey;
+          }
         }
       }
       break;

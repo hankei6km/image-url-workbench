@@ -514,7 +514,9 @@ function ActionBar({
             color="default"
             disableElevation={true}
             variant="outlined"
-            disabled={disabledTryIt}
+            disabled={
+              disabledTryIt || previewStateContext.previewSet.length !== 1
+            }
             onClick={() => setNextOpen('responsive')}
           >
             Responsive
@@ -579,8 +581,18 @@ function ActionBar({
             defaultIdx={0}
             disableSelected
             kind={['responsive']}
-            onTemplate={(_e) => {
+            onTemplate={({ parametersSet, sampleParametersSet, medias }) => {
               setNextOpen('responsive');
+              const ps =
+                previewStateContext.previewSetKind === 'data'
+                  ? parametersSet
+                  : sampleParametersSet;
+              previewStateContext.previewSet.forEach((v) => {
+                previewDispatch({
+                  type: 'makeVariantImages',
+                  payload: [v.itemKey, ps, medias]
+                });
+              });
             }}
           />
         </Collapse>
@@ -593,10 +605,6 @@ function ActionBar({
             kind={['effective', 'card']}
             onTemplate={({ parametersSet, sampleParametersSet, medias }) => {
               setNextOpen('effect');
-              // previewDispatch({
-              //   type: 'resetPreviewSet',
-              //   payload: []
-              // });
               const ps =
                 previewStateContext.previewSetKind === 'data'
                   ? parametersSet
