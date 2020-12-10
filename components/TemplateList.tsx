@@ -8,35 +8,45 @@ import ListItemText from '@material-ui/core/ListItemText';
 import CheckIcon from '@material-ui/icons/Check';
 import {
   BuiltinImportTemplate,
-  ImportTemplateParametersSet
+  ImportTemplateParametersSet,
+  ImportTemplateKind,
+  ImportTemplate
 } from '../src/template';
 import { BreakPoint } from './PreviewContext';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center'
-  },
-  selectorOuter: {
-    marginTop: theme.spacing(1),
-    '& .MuiPaper-root': {
-      position: 'static',
-      // flexGrow: 1,
-      width: '100%',
-      display: 'flex',
-      '& .MuiTab-root': {
-        textTransform: 'none',
-        [theme.breakpoints.up('sm')]: {
-          minWidth: 240
-        }
-      }
-    }
   }
 }));
 
+type IndexedTemplateList = (ImportTemplate & { idx: number })[];
+
+const indexedTemplateList = BuiltinImportTemplate.map((v, idx) => ({
+  ...v,
+  idx
+}));
+
+function getTemplateList(
+  list: IndexedTemplateList,
+  kind: ImportTemplateKind[]
+): IndexedTemplateList {
+  if (kind.length > 0) {
+    return list.filter(({ kind: v }) => v.some((v) => kind.indexOf(v) >= 0));
+  }
+  return list.slice();
+}
+
+function getIdxFromList(idx: number, list: IndexedTemplateList): number {
+  return list.findIndex((v) => v.idx === idx);
+}
+
 type Props = {
   defaultIdx: number;
+  kind?: ImportTemplateKind[];
+  disableSelected?: boolean;
   onTemplate: ({
     templateIdx,
     sampleParametersSet,
@@ -50,42 +60,49 @@ type Props = {
   }) => void;
 };
 
-const TemplateList = ({ defaultIdx = 0, onTemplate }: Props) => {
+const TemplateList = ({
+  defaultIdx = 0,
+  disableSelected = false,
+  kind = [],
+  onTemplate
+}: Props) => {
   const classes = useStyles();
   //  const [open, setOpen] = useState(defaultIdx < 0);
-  const [templateIdx, setTemplateIdx] = useState(
-    0 <= defaultIdx && defaultIdx < BuiltinImportTemplate.length
-      ? defaultIdx
-      : 0
-  );
+  const templateList = getTemplateList(indexedTemplateList, kind);
+  const idx = getIdxFromList(defaultIdx, templateList);
+  const [templateIdx, setTemplateIdx] = useState(idx >= 0 ? idx : 0);
 
-  useEffect(() => {}, [onTemplate, templateIdx]);
+  useEffect(() => {
+    if (templateIdx >= templateList.length) {
+      setTemplateIdx(0);
+    }
+  }, [templateIdx, templateList.length]);
 
   return (
     <Box className={classes.root}>
-      <Box className={classes.selectorOuter}>
-        <List component="nav" aria-label="template list">
-          {BuiltinImportTemplate.map((v, i) => (
-            <ListItem
-              key={i}
-              button
-              onClick={() => {
-                setTemplateIdx(i);
-                onTemplate({
-                  templateIdx: i,
-                  sampleParametersSet:
-                    BuiltinImportTemplate[i].sampleParameters,
-                  parametersSet: BuiltinImportTemplate[i].parameters,
-                  medias: BuiltinImportTemplate[i].medias
-                });
-              }}
-            >
+      <List component="nav" aria-label="template list">
+        {templateList.map((v, i) => (
+          <ListItem
+            key={i}
+            button
+            onClick={() => {
+              setTemplateIdx(i);
+              const t = templateList[i];
+              onTemplate({
+                templateIdx: t.idx,
+                sampleParametersSet: templateList[i].sampleParameters,
+                parametersSet: templateList[i].parameters,
+                medias: templateList[i].medias
+              });
+            }}
+          >
+            {!disableSelected && (
               <ListItemIcon>{templateIdx === i && <CheckIcon />}</ListItemIcon>
-              <ListItemText primary={v.label} secondary={v.shortDescription} />
-            </ListItem>
-          ))}
-        </List>
-      </Box>
+            )}
+            <ListItemText primary={v.label} secondary={v.shortDescription} />
+          </ListItem>
+        ))}
+      </List>
     </Box>
   );
 };

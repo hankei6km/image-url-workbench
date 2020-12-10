@@ -6,7 +6,10 @@ import {
   imgUrlParamsToString,
   imgDispDensity
 } from '../utils/imgParamsUtils';
-import { ImportTemplateParametersSet } from '../src/template';
+import {
+  ImportTemplateParametersSet,
+  ImportTemplateParameters
+} from '../src/template';
 
 export type CardType = 'summary' | 'summary_large_image';
 
@@ -42,6 +45,18 @@ export function breakPointValue(
   return media;
 }
 
+export const getTargetItemIndex = (
+  previewSet: PreviewItem[],
+  targetKey: string
+): number => previewSet.findIndex(({ itemKey }) => itemKey === targetKey);
+
+export const isPreviewSetReady = (previewSet: PreviewItem[]): boolean =>
+  previewSet.every(({ imgWidth, imgHeight }) => imgWidth > 0 && imgHeight > 0);
+
+export const PreviewDispatch = React.createContext<React.Dispatch<actType>>(
+  (_a: actType) => {}
+);
+
 export type PreviewItem = {
   itemKey: string;
   previewUrl: string;
@@ -61,6 +76,8 @@ type PreviewContextState = {
   assets: string[];
   templateIdx: number;
   imageBaseUrl: string;
+  baseParameterSet: ImportTemplateParameters[];
+  baseMedias: BreakPoint[];
   editTargetKey: string; // 編集対象の item を取得するときに selector がほしくなるよね(redux でなくても使える?)
   defaultTargetKey: string;
   card: Card;
@@ -115,6 +132,16 @@ type actTypeSetPreviewImageMedia = {
   payload: [string, BreakPoint];
 };
 
+type actTypeMergeParametersToImageUrl = {
+  type: 'mergeParametersToImageUrl';
+  payload: [string, ImportTemplateParametersSet, BreakPoint[]];
+};
+
+type actTypeMakeVariantImages = {
+  type: 'makeVariantImages';
+  payload: [string, ImportTemplateParametersSet, BreakPoint[]];
+};
+
 type actTypeClonePreviewImageUrl = {
   type: 'clonePreviewImageUrl';
   payload: [string];
@@ -159,6 +186,8 @@ type actType =
   | actTypeSetPreviewImageUrl
   | actTypeSetPreviewImageSize
   | actTypeSetPreviewImageMedia
+  | actTypeMergeParametersToImageUrl
+  | actTypeMakeVariantImages
   | actTypeClonePreviewImageUrl
   | actTypeSetCard
   | actTypeSetTagFragment
@@ -172,6 +201,8 @@ export const previewContextInitialState: PreviewContextState = {
   assets: [],
   templateIdx: -1,
   imageBaseUrl: '',
+  baseParameterSet: [],
+  baseMedias: [],
   editTargetKey: '',
   defaultTargetKey: '',
   card: {
@@ -217,6 +248,12 @@ function nextPreviewSetState(
       ret = state.previewSetState;
       break;
     case 'setPreviewImageMedia':
+      ret = 'edited';
+      break;
+    case 'mergeParametersToImageUrl':
+      ret = 'edited';
+      break;
+    case 'makeVariantImages':
       ret = 'edited';
       break;
     case 'clonePreviewImageUrl':
@@ -272,6 +309,9 @@ export function previewContextReducer(
       break;
     case 'importPreviewSet':
       newState.previewSetKind = action.payload[0];
+      newState.imageBaseUrl = action.payload[1];
+      newState.baseParameterSet = action.payload[2];
+      newState.baseMedias = action.payload[3];
       const medias = action.payload[3] || [];
       const mediasLen = medias.length;
       newState.previewSet = action.payload[2].map((v, i) => {
@@ -371,6 +411,65 @@ export function previewContextReducer(
         }
       }
       break;
+    case 'mergeParametersToImageUrl':
+      if (
+        action.payload[0] &&
+        action.payload[1].length === 1 &&
+        action.payload[2].length === 1
+      ) {
+        const idx = getTargetItemIndex(state.previewSet, action.payload[0]);
+        if (idx >= 0) {
+          const item = state.previewSet[idx];
+          const q = imgUrlParamsMergeObject(
+            item.imageParams,
+            action.payload[1][0]
+          );
+          const s = imgUrlParamsToString(q);
+          const paramsString = s ? `?${s}` : '';
+
+          newState.previewSet[
+            idx
+          ].previewUrl = `${item.baseImageUrl}${paramsString}`;
+          newState.previewSet[idx].imageParams = q;
+          newState.previewSet[idx].imgWidth = 0;
+          newState.previewSet[idx].imgHeight = 0;
+          newState.previewSet[idx].imgDispDensity = imgDispDensity(q);
+          newState.previewSet[idx].media = action.payload[2][0];
+          newState.editTargetKey = state.previewSet[idx].itemKey;
+        }
+      }
+      break;
+    case 'makeVariantImages':
+      if (action.payload[0]) {
+        const idx = getTargetItemIndex(state.previewSet, action.payload[0]);
+        if (idx >= 0) {
+          const item = state.previewSet[idx];
+          const medias = action.payload[2] || [];
+          const mediasLen = medias.length;
+          newState.previewSet = action.payload[1].map((v, i) => {
+            const q = imgUrlParamsMergeObject(item.imageParams, v);
+            const s = imgUrlParamsToString(q);
+            const paramsString = s ? `?${s}` : '';
+            const previewItem: PreviewItem = {
+              itemKey: `${Date.now()}-${i}`,
+              previewUrl: `${item.baseImageUrl}${paramsString}`,
+              baseImageUrl: item.baseImageUrl,
+              imageParams: q,
+              imgWidth: 0,
+              imgHeight: 0,
+              imgDispDensity: imgDispDensity(q),
+              media: i < mediasLen ? medias[i] : 'auto'
+            };
+            return previewItem;
+          });
+          const l = newState.previewSet.length;
+          if (l > 0) {
+            newState.editTargetKey = newState.previewSet[0].itemKey;
+            newState.defaultTargetKey = newState.previewSet[l - 1].itemKey;
+          }
+        }
+      }
+      break;
     case 'clonePreviewImageUrl':
       if (action.payload[0]) {
         const idx = state.previewSet.findIndex(
@@ -428,17 +527,6 @@ export function previewContextReducer(
   return newState;
 }
 
-export const getTargetItemIndex = (
-  previewSet: PreviewItem[],
-  targetKey: string
-): number => previewSet.findIndex(({ itemKey }) => itemKey === targetKey);
-
-export const isPreviewSetReady = (previewSet: PreviewItem[]): boolean =>
-  previewSet.every(({ imgWidth, imgHeight }) => imgWidth > 0 && imgHeight > 0);
-
-export const PreviewDispatch = React.createContext<React.Dispatch<actType>>(
-  (_a: actType) => {}
-);
-
 const PreviewContext = React.createContext(previewContextInitialState);
+
 export default PreviewContext;
