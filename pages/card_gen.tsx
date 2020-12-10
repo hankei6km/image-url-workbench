@@ -59,8 +59,8 @@ const CardGenPage = ({
         payload: []
       });
       previewDispatch({
-        type: 'addPreviewImageUrl',
-        payload: [data.imageUrl]
+        type: 'setImageBaseUrl',
+        payload: ['data', data.imageUrl]
       });
     }
   }, [previewDispatch, dataImageUrlErr, data.imageUrl]);
@@ -73,7 +73,7 @@ const CardGenPage = ({
   }, [previewDispatch, data.cardType, data.title, data.description]);
 
   useEffect(() => {
-    router.push('/render');
+    router.push('/');
   }, [router]);
 
   return (
