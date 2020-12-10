@@ -46,6 +46,7 @@ function getIdxFromList(idx: number, list: IndexedTemplateList): number {
 type Props = {
   defaultIdx: number;
   kind?: ImportTemplateKind[];
+  disableSelected?: boolean;
   onTemplate: ({
     templateIdx,
     sampleParametersSet,
@@ -59,7 +60,12 @@ type Props = {
   }) => void;
 };
 
-const TemplateList = ({ defaultIdx = 0, kind = [], onTemplate }: Props) => {
+const TemplateList = ({
+  defaultIdx = 0,
+  disableSelected = false,
+  kind = [],
+  onTemplate
+}: Props) => {
   const classes = useStyles();
   //  const [open, setOpen] = useState(defaultIdx < 0);
   const templateList = getTemplateList(indexedTemplateList, kind);
@@ -90,7 +96,9 @@ const TemplateList = ({ defaultIdx = 0, kind = [], onTemplate }: Props) => {
               });
             }}
           >
-            <ListItemIcon>{templateIdx === i && <CheckIcon />}</ListItemIcon>
+            {!disableSelected && (
+              <ListItemIcon>{templateIdx === i && <CheckIcon />}</ListItemIcon>
+            )}
             <ListItemText primary={v.label} secondary={v.shortDescription} />
           </ListItem>
         ))}

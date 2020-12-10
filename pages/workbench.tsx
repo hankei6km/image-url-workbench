@@ -35,6 +35,7 @@ import {
   ImportTemplateParametersSet
 } from '../src/template';
 import FragmentLink, { FragmentLinkQRcode } from '../components/FragmentLink';
+import TemplateList from '../components/TemplateList';
 import { imageTitleInfo } from '../utils/format';
 
 const useStyles = makeStyles((theme) => ({
@@ -341,11 +342,9 @@ const useActionBarStyles = makeStyles((theme) => ({
   },
   tryItOnOuter: {
     display: 'flex',
-    '& > .MuiBox-root': {
-      marginRight: theme.spacing(1),
-      '& .MuiButton-root': {
-        textTransform: 'none'
-      }
+    marginRight: theme.spacing(1),
+    '& .MuiButton-root': {
+      textTransform: 'none'
     }
   },
   templateLabel: {
@@ -384,8 +383,12 @@ function ActionBar({
   );
   const [disabledTryIt, setDisabledTryIt] = useState(true);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [open, setOpen] = useState<'' | 'add' | 'template' | 'exiting'>('');
-  const [nextOpen, setNextOpen] = useState<'' | 'add' | 'template'>('');
+  const [open, setOpen] = useState<
+    '' | 'add' | 'template' | 'effect' | 'responsive' | 'exiting'
+  >('');
+  const [nextOpen, setNextOpen] = useState<
+    '' | 'add' | 'template' | 'responsive' | 'effect'
+  >('');
 
   useEffect(() => {
     setDisabledTryIt(!isPreviewSetReady(previewStateContext.previewSet));
@@ -481,24 +484,42 @@ function ActionBar({
           </Button>
         </Box>
         <Box className={classes.tryItOnOuter}>
-          <Box>
-            <Box>
-              <Button
-                component={Link}
-                disableElevation={true}
-                href="/tryit"
-                color="primary"
-                className={
-                  disabledTryIt
-                    ? 'MuiButton-contained Mui-disabled'
-                    : 'MuiButton-containedPrimary'
-                }
-                disabled={disabledTryIt}
-              >
-                Try it
-              </Button>
-            </Box>
-          </Box>
+          <Button
+            color="default"
+            disableElevation={true}
+            variant="outlined"
+            disabled={disabledTryIt}
+            onClick={() => setNextOpen('responsive')}
+          >
+            Responsive
+          </Button>
+        </Box>
+        <Box className={classes.tryItOnOuter}>
+          <Button
+            color="default"
+            disableElevation={true}
+            variant="outlined"
+            disabled={disabledTryIt}
+            onClick={() => setNextOpen('effect')}
+          >
+            Effect
+          </Button>
+        </Box>
+        <Box className={classes.tryItOnOuter}>
+          <Button
+            component={Link}
+            disableElevation={true}
+            href="/tryit"
+            color="primary"
+            className={
+              disabledTryIt
+                ? 'MuiButton-contained Mui-disabled'
+                : 'MuiButton-containedPrimary'
+            }
+            disabled={disabledTryIt}
+          >
+            Try it
+          </Button>
         </Box>
       </Box>
       <Box>
@@ -522,6 +543,30 @@ function ActionBar({
                 parametersSet: parametersSet,
                 medias: medias
               });
+            }}
+          />
+        </Collapse>
+      </Box>
+      <Box>
+        <Collapse in={open === 'responsive'} onExited={handleExited}>
+          <TemplateList
+            defaultIdx={0}
+            disableSelected
+            kind={['responsive']}
+            onTemplate={(_e) => {
+              setNextOpen('responsive');
+            }}
+          />
+        </Collapse>
+      </Box>
+      <Box>
+        <Collapse in={open === 'effect'} onExited={handleExited}>
+          <TemplateList
+            defaultIdx={0}
+            disableSelected
+            kind={['effective', 'card']}
+            onTemplate={(_e) => {
+              setNextOpen('effect');
             }}
           />
         </Collapse>
