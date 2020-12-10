@@ -42,6 +42,18 @@ export function breakPointValue(
   return media;
 }
 
+export const getTargetItemIndex = (
+  previewSet: PreviewItem[],
+  targetKey: string
+): number => previewSet.findIndex(({ itemKey }) => itemKey === targetKey);
+
+export const isPreviewSetReady = (previewSet: PreviewItem[]): boolean =>
+  previewSet.every(({ imgWidth, imgHeight }) => imgWidth > 0 && imgHeight > 0);
+
+export const PreviewDispatch = React.createContext<React.Dispatch<actType>>(
+  (_a: actType) => {}
+);
+
 export type PreviewItem = {
   itemKey: string;
   previewUrl: string;
@@ -115,6 +127,16 @@ type actTypeSetPreviewImageMedia = {
   payload: [string, BreakPoint];
 };
 
+type actTypeMergeParametersToImageUrl = {
+  type: 'mergeParametersToImageUrl';
+  payload: [string, ImportTemplateParametersSet, BreakPoint[]];
+};
+
+type actTypeMakeVariantImage = {
+  type: 'makeVariantImage';
+  payload: [string, ImportTemplateParametersSet, BreakPoint[]];
+};
+
 type actTypeClonePreviewImageUrl = {
   type: 'clonePreviewImageUrl';
   payload: [string];
@@ -159,6 +181,8 @@ type actType =
   | actTypeSetPreviewImageUrl
   | actTypeSetPreviewImageSize
   | actTypeSetPreviewImageMedia
+  | actTypeMergeParametersToImageUrl
+  | actTypeMakeVariantImage
   | actTypeClonePreviewImageUrl
   | actTypeSetCard
   | actTypeSetTagFragment
@@ -217,6 +241,12 @@ function nextPreviewSetState(
       ret = state.previewSetState;
       break;
     case 'setPreviewImageMedia':
+      ret = 'edited';
+      break;
+    case 'mergeParametersToImageUrl':
+      ret = 'edited';
+      break;
+    case 'makeVariantImage':
       ret = 'edited';
       break;
     case 'clonePreviewImageUrl':
@@ -371,6 +401,36 @@ export function previewContextReducer(
         }
       }
       break;
+    case 'mergeParametersToImageUrl':
+      console.log(action.payload[1].length);
+      console.log(action.payload[2].length);
+      if (
+        action.payload[0] &&
+        action.payload[1].length === 1 &&
+        action.payload[2].length === 1
+      ) {
+        const idx = getTargetItemIndex(state.previewSet, action.payload[0]);
+        if (idx >= 0) {
+          const item = state.previewSet[idx];
+          const q = imgUrlParamsMergeObject(
+            item.imageParams,
+            action.payload[1][0]
+          );
+          const s = imgUrlParamsToString(q);
+          const paramsString = s ? `?${s}` : '';
+
+          newState.previewSet[
+            idx
+          ].previewUrl = `${item.baseImageUrl}${paramsString}`;
+          newState.previewSet[idx].imageParams = q;
+          newState.previewSet[idx].imgWidth = 0;
+          newState.previewSet[idx].imgHeight = 0;
+          newState.previewSet[idx].imgDispDensity = imgDispDensity(q);
+          newState.previewSet[idx].media = action.payload[2][0];
+          newState.editTargetKey = state.previewSet[idx].itemKey;
+        }
+      }
+      break;
     case 'clonePreviewImageUrl':
       if (action.payload[0]) {
         const idx = state.previewSet.findIndex(
@@ -428,17 +488,6 @@ export function previewContextReducer(
   return newState;
 }
 
-export const getTargetItemIndex = (
-  previewSet: PreviewItem[],
-  targetKey: string
-): number => previewSet.findIndex(({ itemKey }) => itemKey === targetKey);
-
-export const isPreviewSetReady = (previewSet: PreviewItem[]): boolean =>
-  previewSet.every(({ imgWidth, imgHeight }) => imgWidth > 0 && imgHeight > 0);
-
-export const PreviewDispatch = React.createContext<React.Dispatch<actType>>(
-  (_a: actType) => {}
-);
-
 const PreviewContext = React.createContext(previewContextInitialState);
+
 export default PreviewContext;

@@ -378,6 +378,7 @@ function ActionBar({
 }) {
   const classes = useActionBarStyles();
   const previewStateContext = useContext(PreviewContext);
+  const previewDispatch = useContext(PreviewDispatch);
   const [templateIdx, seTtemplateIdx] = useState(
     previewStateContext.templateIdx >= 0 ? previewStateContext.templateIdx : 0
   );
@@ -565,8 +566,22 @@ function ActionBar({
             defaultIdx={0}
             disableSelected
             kind={['effective', 'card']}
-            onTemplate={(_e) => {
+            onTemplate={({ parametersSet, sampleParametersSet, medias }) => {
               setNextOpen('effect');
+              // previewDispatch({
+              //   type: 'resetPreviewSet',
+              //   payload: []
+              // });
+              const ps =
+                previewStateContext.previewSetKind === 'data'
+                  ? parametersSet
+                  : sampleParametersSet;
+              previewStateContext.previewSet.forEach((v) => {
+                previewDispatch({
+                  type: 'mergeParametersToImageUrl',
+                  payload: [v.itemKey, ps, medias]
+                });
+              });
             }}
           />
         </Collapse>

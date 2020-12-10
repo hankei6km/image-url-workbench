@@ -51,7 +51,7 @@ export const BuiltinImportTemplate: ImportTemplateList = [
         blur: '70'
       }
     ],
-    medias: ['auto', 'auto']
+    medias: ['auto']
   },
   {
     kind: ['basic', 'effective'],
@@ -71,7 +71,7 @@ export const BuiltinImportTemplate: ImportTemplateList = [
         'duotone-alpha': '100'
       }
     ],
-    medias: ['auto', 'auto']
+    medias: ['auto']
   },
   {
     kind: ['basic', 'effective'],
@@ -89,7 +89,7 @@ export const BuiltinImportTemplate: ImportTemplateList = [
         monochrome: 'ff9b9b9b'
       }
     ],
-    medias: ['auto', 'auto']
+    medias: ['auto']
   },
   {
     kind: ['basic', 'effective'],
@@ -125,7 +125,7 @@ export const BuiltinImportTemplate: ImportTemplateList = [
         sepia: '80'
       }
     ],
-    medias: ['auto', 'auto']
+    medias: ['auto']
   },
   {
     kind: ['basic', 'responsive'],
