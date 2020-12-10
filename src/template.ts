@@ -55,6 +55,102 @@ export const BuiltinImportTemplate: ImportTemplateList = [
   },
   {
     kind: ['basic', 'effective'],
+    label: 'size',
+    shortDescription: '画像を 500x300 へサイズ変更',
+    sampleParameters: [
+      {
+        auto: 'compress',
+        crop: 'entropy',
+        fit: 'crop',
+        h: '300',
+        w: '500'
+      }
+    ],
+    parameters: [
+      {
+        auto: 'compress',
+        crop: 'entropy',
+        fit: 'crop',
+        h: '300',
+        w: '500'
+      }
+    ],
+    medias: ['auto']
+  },
+  {
+    kind: ['basic', 'effective'],
+    label: 'size',
+    shortDescription: '画像を 500x300 へサイズ変更(left)',
+    sampleParameters: [
+      {
+        auto: 'compress',
+        crop: 'left',
+        fit: 'crop',
+        h: '300',
+        w: '500'
+      }
+    ],
+    parameters: [
+      {
+        auto: 'compress',
+        crop: 'left',
+        fit: 'crop',
+        h: '300',
+        w: '500'
+      }
+    ],
+    medias: ['auto']
+  },
+  {
+    kind: ['basic', 'effective'],
+    label: 'size',
+    shortDescription: '画像を 500x300 へサイズ変更(right)',
+    sampleParameters: [
+      {
+        auto: 'compress',
+        crop: 'right',
+        fit: 'crop',
+        h: '300',
+        w: '500'
+      }
+    ],
+    parameters: [
+      {
+        auto: 'compress',
+        crop: 'right',
+        fit: 'crop',
+        h: '300',
+        w: '500'
+      }
+    ],
+    medias: ['auto']
+  },
+  {
+    kind: ['basic', 'effective'],
+    label: 'size',
+    shortDescription: '画像を 500x300 へサイズ変更(entropy)',
+    sampleParameters: [
+      {
+        auto: 'compress',
+        crop: 'entropy',
+        fit: 'crop',
+        h: '300',
+        w: '500'
+      }
+    ],
+    parameters: [
+      {
+        auto: 'compress',
+        crop: 'entropy',
+        fit: 'crop',
+        h: '300',
+        w: '500'
+      }
+    ],
+    medias: ['auto']
+  },
+  {
+    kind: ['basic', 'effective'],
     label: 'stylize',
     shortDescription: 'duotone',
     sampleParameters: [
