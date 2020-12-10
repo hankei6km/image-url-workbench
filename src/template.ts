@@ -55,6 +55,102 @@ export const BuiltinImportTemplate: ImportTemplateList = [
   },
   {
     kind: ['basic', 'effective'],
+    label: 'size',
+    shortDescription: '画像を 500x300 へサイズ変更',
+    sampleParameters: [
+      {
+        auto: 'compress',
+        crop: 'entropy',
+        fit: 'crop',
+        h: '300',
+        w: '500'
+      }
+    ],
+    parameters: [
+      {
+        auto: 'compress',
+        crop: 'entropy',
+        fit: 'crop',
+        h: '300',
+        w: '500'
+      }
+    ],
+    medias: ['auto']
+  },
+  {
+    kind: ['basic', 'effective'],
+    label: 'size',
+    shortDescription: '画像を 500x300 へサイズ変更(left)',
+    sampleParameters: [
+      {
+        auto: 'compress',
+        crop: 'left',
+        fit: 'crop',
+        h: '300',
+        w: '500'
+      }
+    ],
+    parameters: [
+      {
+        auto: 'compress',
+        crop: 'left',
+        fit: 'crop',
+        h: '300',
+        w: '500'
+      }
+    ],
+    medias: ['auto']
+  },
+  {
+    kind: ['basic', 'effective'],
+    label: 'size',
+    shortDescription: '画像を 500x300 へサイズ変更(right)',
+    sampleParameters: [
+      {
+        auto: 'compress',
+        crop: 'right',
+        fit: 'crop',
+        h: '300',
+        w: '500'
+      }
+    ],
+    parameters: [
+      {
+        auto: 'compress',
+        crop: 'right',
+        fit: 'crop',
+        h: '300',
+        w: '500'
+      }
+    ],
+    medias: ['auto']
+  },
+  {
+    kind: ['basic', 'effective'],
+    label: 'size',
+    shortDescription: '画像を 500x300 へサイズ変更(entropy)',
+    sampleParameters: [
+      {
+        auto: 'compress',
+        crop: 'entropy',
+        fit: 'crop',
+        h: '300',
+        w: '500'
+      }
+    ],
+    parameters: [
+      {
+        auto: 'compress',
+        crop: 'entropy',
+        fit: 'crop',
+        h: '300',
+        w: '500'
+      }
+    ],
+    medias: ['auto']
+  },
+  {
+    kind: ['basic', 'effective'],
     label: 'stylize',
     shortDescription: 'duotone',
     sampleParameters: [
@@ -107,7 +203,7 @@ export const BuiltinImportTemplate: ImportTemplateList = [
         monochrome: 'ff4a4a4a'
       }
     ],
-    medias: ['auto', 'auto']
+    medias: ['auto']
   },
   {
     kind: ['basic', 'effective'],
@@ -298,19 +394,6 @@ export const BuiltinImportTemplate: ImportTemplateList = [
         'txt-shad': '1',
         'txt-size': '50',
         w: '600'
-      },
-      {
-        ar: '1:1.91',
-        auto: 'compress',
-        crop: 'entropy',
-        fit: 'crop',
-        txt: 'sample card',
-        'txt-align': 'center,middle',
-        'txt-color': 'efffffff',
-        'txt-font': 'American Typewriter Condensed,Bold',
-        'txt-shad': '1',
-        'txt-size': '40',
-        w: '314'
       }
     ],
     parameters: [
@@ -320,13 +403,6 @@ export const BuiltinImportTemplate: ImportTemplateList = [
         crop: 'entropy',
         fit: 'crop',
         w: '600'
-      },
-      {
-        ar: '1:1.91',
-        auto: 'compress',
-        crop: 'entropy',
-        fit: 'crop',
-        w: '314'
       }
     ],
     medias: ['auto', 'auto']
