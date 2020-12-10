@@ -490,6 +490,31 @@ function ActionBar({
             disableElevation={true}
             variant="outlined"
             disabled={disabledTryIt}
+            onClick={() => {
+              previewDispatch({
+                type: 'resetPreviewSet',
+                payload: []
+              });
+              previewDispatch({
+                type: 'importPreviewSet',
+                payload: [
+                  previewStateContext.previewSetKind,
+                  previewStateContext.imageBaseUrl,
+                  previewStateContext.baseParameterSet,
+                  previewStateContext.baseMedias
+                ]
+              });
+            }}
+          >
+            Reset
+          </Button>
+        </Box>
+        <Box className={classes.tryItOnOuter}>
+          <Button
+            color="default"
+            disableElevation={true}
+            variant="outlined"
+            disabled={disabledTryIt}
             onClick={() => setNextOpen('responsive')}
           >
             Responsive

@@ -6,7 +6,10 @@ import {
   imgUrlParamsToString,
   imgDispDensity
 } from '../utils/imgParamsUtils';
-import { ImportTemplateParametersSet } from '../src/template';
+import {
+  ImportTemplateParametersSet,
+  ImportTemplateParameters
+} from '../src/template';
 
 export type CardType = 'summary' | 'summary_large_image';
 
@@ -73,6 +76,8 @@ type PreviewContextState = {
   assets: string[];
   templateIdx: number;
   imageBaseUrl: string;
+  baseParameterSet: ImportTemplateParameters[];
+  baseMedias: BreakPoint[];
   editTargetKey: string; // 編集対象の item を取得するときに selector がほしくなるよね(redux でなくても使える?)
   defaultTargetKey: string;
   card: Card;
@@ -196,6 +201,8 @@ export const previewContextInitialState: PreviewContextState = {
   assets: [],
   templateIdx: -1,
   imageBaseUrl: '',
+  baseParameterSet: [],
+  baseMedias: [],
   editTargetKey: '',
   defaultTargetKey: '',
   card: {
@@ -302,6 +309,9 @@ export function previewContextReducer(
       break;
     case 'importPreviewSet':
       newState.previewSetKind = action.payload[0];
+      newState.imageBaseUrl = action.payload[1];
+      newState.baseParameterSet = action.payload[2];
+      newState.baseMedias = action.payload[3];
       const medias = action.payload[3] || [];
       const mediasLen = medias.length;
       newState.previewSet = action.payload[2].map((v, i) => {
@@ -402,8 +412,6 @@ export function previewContextReducer(
       }
       break;
     case 'mergeParametersToImageUrl':
-      console.log(action.payload[1].length);
-      console.log(action.payload[2].length);
       if (
         action.payload[0] &&
         action.payload[1].length === 1 &&
