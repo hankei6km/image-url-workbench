@@ -40,12 +40,10 @@ type Props = {
   defaultIdx: number;
   onTemplate: ({
     templateIdx,
-    sampleParametersSet,
     parametersSet,
     medias
   }: {
     templateIdx: number;
-    sampleParametersSet: ImportTemplateParametersSet;
     parametersSet: ImportTemplateParametersSet;
     medias: BreakPoint[];
   }) => void;
@@ -65,7 +63,6 @@ const TemplatePanel = ({
   useEffect(() => {
     onTemplate({
       templateIdx: templateIdx,
-      sampleParametersSet: BuiltinImportTemplate[templateIdx].sampleParameters,
       parametersSet: BuiltinImportTemplate[templateIdx].parameters,
       medias: BuiltinImportTemplate[templateIdx].medias
     });
