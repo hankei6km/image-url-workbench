@@ -60,7 +60,7 @@ const CardGenPage = ({
       });
       previewDispatch({
         type: 'setImageBaseUrl',
-        payload: ['data', data.imageUrl]
+        payload: ['recv', data.imageUrl]
       });
     }
   }, [previewDispatch, dataImageUrlErr, data.imageUrl]);

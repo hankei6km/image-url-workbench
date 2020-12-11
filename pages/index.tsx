@@ -9,7 +9,8 @@ import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import PreviewContext, {
   PreviewDispatch,
-  BreakPoint
+  BreakPoint,
+  PreviewSetKind
 } from '../components/PreviewContext';
 import ImportPanel from '../components/ImportPanel';
 import SamplePanel from '../components/SamplePanel';
@@ -28,13 +29,11 @@ const IndexPage = () => {
   const [open, setOpen] = useState<'' | 'template'>('');
 
   const [imageBaseUrl, setImageBaseUrl] = useState(
-    previewStateContext.previewSetKind === 'data'
+    previewStateContext.previewSetKind === 'recv'
       ? previewStateContext.imageBaseUrl
       : ''
   );
-  const [previewSetKind, setPreviewSetKind] = useState<'' | 'data' | 'sample'>(
-    ''
-  );
+  const [previewSetKind, setPreviewSetKind] = useState<PreviewSetKind>('');
 
   const [templateIdx, setTemplateIdx] = useState(
     previewStateContext.templateIdx >= 0 ? previewStateContext.templateIdx : 0

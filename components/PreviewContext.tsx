@@ -68,7 +68,7 @@ export type PreviewItem = {
   media: BreakPoint;
 };
 
-export type PreviewSetKind = '' | 'sample' | 'data';
+export type PreviewSetKind = '' | 'sample' | 'recv'|'data';
 export type PreviewSetState = '' | 'pre-init' | 'init' | 'edited';
 
 type PreviewContextState = {
