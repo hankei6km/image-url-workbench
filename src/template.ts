@@ -227,12 +227,41 @@ export const BuiltinImportTemplate: ImportTemplateList = [
       {
         ar: '1.91:1',
         auto: 'compress',
+        fit: 'crop',
+        w: '600'
+      }
+    ],
+    medias: ['auto']
+  },
+  {
+    kind: [ 'card'],
+    label: 'teitter card',
+    shortDescription: 'Teitter Card用に画像サイズ等を調整(entropy)',
+    parameters: [
+      {
+        ar: '1.91:1',
+        auto: 'compress',
         crop: 'entropy',
         fit: 'crop',
         w: '600'
       }
     ],
-    medias: ['auto', 'auto']
+    medias: ['auto']
+  },
+  {
+    kind: [ 'card'],
+    label: 'teitter card',
+    shortDescription: 'Teitter Card用に画像サイズ等を調整(face)',
+    parameters: [
+      {
+        ar: '1.91:1',
+        auto: 'compress',
+        crop: 'face',
+        fit: 'crop',
+        w: '600'
+      }
+    ],
+    medias: ['auto']
   }
 ];
 
