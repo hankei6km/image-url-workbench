@@ -32,7 +32,8 @@ import TemplatePanel from '../components/TemplatePanel';
 import ImgPreview from '../components/ImgPreview';
 import {
   BuiltinImportTemplate,
-  ImportTemplateParametersSet
+  ImportTemplateParametersSet,
+  ImportTemplateKind
 } from '../src/template';
 import FragmentLink, { FragmentLinkQRcode } from '../components/FragmentLink';
 import TemplateList from '../components/TemplateList';
@@ -361,6 +362,58 @@ const useActionBarStyles = makeStyles((theme) => ({
   }
 }));
 
+function ActionBarTemplateList({
+  opened,
+  kind,
+  act,
+  onExited,
+  onExit
+}: {
+  opened: boolean;
+  kind: ImportTemplateKind[];
+  act: 'mergeParametersToImageUrl' | 'makeVariantImages';
+  onExited: () => void;
+  onExit: () => void;
+}) {
+  const previewStateContext = useContext(PreviewContext);
+  const previewDispatch = useContext(PreviewDispatch);
+
+  const [parametersSet, setParametersSet] = useState<
+    ImportTemplateParametersSet
+  >([]);
+  const [medias, setMedias] = useState<BreakPoint[]>([]);
+
+  return (
+    <Box>
+      <Collapse
+        in={opened}
+        onExited={() => {
+          onExited();
+          if (parametersSet.length > 0) {
+            previewStateContext.previewSet.forEach((v) => {
+              previewDispatch({
+                type: act,
+                payload: [v.itemKey, parametersSet, medias]
+              });
+            });
+          }
+        }}
+      >
+        <TemplateList
+          defaultIdx={0}
+          disableSelected
+          kind={kind}
+          onTemplate={({ parametersSet, medias }) => {
+            setParametersSet(parametersSet);
+            setMedias(medias);
+            onExit();
+          }}
+        />
+      </Collapse>
+    </Box>
+  );
+}
+
 function ActionBar({
   onTemplate
 }: {
@@ -599,76 +652,40 @@ function ActionBar({
         </Collapse>
       </Box>
       <Box>
-        <Collapse in={open === 'card'} onExited={handleExited}>
-          <TemplateList
-            defaultIdx={0}
-            disableSelected
-            kind={['card']}
-            onTemplate={({ parametersSet, medias }) => {
-              setNextOpen('card');
-              previewStateContext.previewSet.forEach((v) => {
-                previewDispatch({
-                  type: 'mergeParametersToImageUrl',
-                  payload: [v.itemKey, parametersSet, medias]
-                });
-              });
-            }}
-          />
-        </Collapse>
+        <ActionBarTemplateList
+          opened={open === 'card'}
+          kind={['card']}
+          act={'mergeParametersToImageUrl'}
+          onExit={() => setNextOpen('card')}
+          onExited={handleExited}
+        />
       </Box>
       <Box>
-        <Collapse in={open === 'responsive'} onExited={handleExited}>
-          <TemplateList
-            defaultIdx={0}
-            disableSelected
-            kind={['responsive']}
-            onTemplate={({ parametersSet, medias }) => {
-              setNextOpen('responsive');
-              previewStateContext.previewSet.forEach((v) => {
-                previewDispatch({
-                  type: 'makeVariantImages',
-                  payload: [v.itemKey, parametersSet, medias]
-                });
-              });
-            }}
-          />
-        </Collapse>
+        <ActionBarTemplateList
+          opened={open === 'responsive'}
+          kind={['responsive']}
+          act={'makeVariantImages'}
+          onExit={() => setNextOpen('responsive')}
+          onExited={handleExited}
+        />
       </Box>
       <Box>
-        <Collapse in={open === 'effect'} onExited={handleExited}>
-          <TemplateList
-            defaultIdx={0}
-            disableSelected
-            kind={['effective']}
-            onTemplate={({ parametersSet, medias }) => {
-              setNextOpen('effect');
-              previewStateContext.previewSet.forEach((v) => {
-                previewDispatch({
-                  type: 'mergeParametersToImageUrl',
-                  payload: [v.itemKey, parametersSet, medias]
-                });
-              });
-            }}
-          />
-        </Collapse>
+        <ActionBarTemplateList
+          opened={open === 'effect'}
+          kind={['effective']}
+          act={'mergeParametersToImageUrl'}
+          onExit={() => setNextOpen('effect')}
+          onExited={handleExited}
+        />
       </Box>
       <Box>
-        <Collapse in={open === 'size'} onExited={handleExited}>
-          <TemplateList
-            defaultIdx={0}
-            disableSelected
-            kind={['size']}
-            onTemplate={({ parametersSet, medias }) => {
-              setNextOpen('size');
-              previewStateContext.previewSet.forEach((v) => {
-                previewDispatch({
-                  type: 'mergeParametersToImageUrl',
-                  payload: [v.itemKey, parametersSet, medias]
-                });
-              });
-            }}
-          />
-        </Collapse>
+        <ActionBarTemplateList
+          opened={open === 'size'}
+          kind={['size']}
+          act={'mergeParametersToImageUrl'}
+          onExit={() => setNextOpen('size')}
+          onExited={handleExited}
+        />
       </Box>
       <Box>
         <Collapse in={open === 'add'} onExited={handleExited}>
