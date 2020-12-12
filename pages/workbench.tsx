@@ -393,7 +393,7 @@ function ActionBar({
     | 'exiting'
   >('');
   const [nextOpen, setNextOpen] = useState<
-    '' | 'add' | 'template' | 'size' | 'responsive' | 'effect' | 'card'
+    '' | 'add' | 'template' | 'size' | 'responsive' | 'effect' | 'card' | 'exit'
   >('');
 
   useEffect(() => {
@@ -426,7 +426,7 @@ function ActionBar({
         case 'exiting':
           break;
         default:
-          if (open === nextOpen) {
+          if (open === nextOpen || nextOpen === 'exit') {
             setNextOpen('');
           }
           setOpen('exiting');
@@ -605,7 +605,7 @@ function ActionBar({
             disableSelected
             kind={['card']}
             onTemplate={({ parametersSet, medias }) => {
-              setNextOpen('card');
+              setNextOpen('exit');
               previewStateContext.previewSet.forEach((v) => {
                 previewDispatch({
                   type: 'mergeParametersToImageUrl',
@@ -623,7 +623,7 @@ function ActionBar({
             disableSelected
             kind={['responsive']}
             onTemplate={({ parametersSet, medias }) => {
-              setNextOpen('responsive');
+              setNextOpen('exit');
               previewStateContext.previewSet.forEach((v) => {
                 previewDispatch({
                   type: 'makeVariantImages',
@@ -641,7 +641,7 @@ function ActionBar({
             disableSelected
             kind={['effective']}
             onTemplate={({ parametersSet, medias }) => {
-              setNextOpen('effect');
+              setNextOpen('exit');
               previewStateContext.previewSet.forEach((v) => {
                 previewDispatch({
                   type: 'mergeParametersToImageUrl',
@@ -659,7 +659,7 @@ function ActionBar({
             disableSelected
             kind={['size']}
             onTemplate={({ parametersSet, medias }) => {
-              setNextOpen('size');
+              setNextOpen('exit');
               previewStateContext.previewSet.forEach((v) => {
                 previewDispatch({
                   type: 'mergeParametersToImageUrl',
