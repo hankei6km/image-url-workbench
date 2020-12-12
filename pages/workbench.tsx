@@ -103,7 +103,7 @@ function SetItem({
   };
 
   return (
-    <Box key={previewItem.previewUrl} my={1} p={1}>
+    <Box my={1} p={1}>
       <Card>
         <CardHeader
           titleTypographyProps={{ variant: 'body1' }}
@@ -160,7 +160,7 @@ function SetItem({
                     width: undefined,
                     height: 400
                   }}
-                  skeleton={true}
+                  skeleton={'once'}
                   onSize={({ w, h }) => {
                     setImgWidth(w);
                     setImgHeight(h);
