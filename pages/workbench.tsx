@@ -15,6 +15,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Button from '@material-ui/core/Button';
 import Skeleton from '@material-ui/lab/Skeleton';
 import Typography from '@material-ui/core/Typography';
@@ -393,7 +394,7 @@ function ActionBar({
     | 'exiting'
   >('');
   const [nextOpen, setNextOpen] = useState<
-    '' | 'add' | 'template' | 'size' | 'responsive' | 'effect' | 'card' | 'exit'
+    '' | 'add' | 'template' | 'size' | 'responsive' | 'effect' | 'card' 
   >('');
 
   useEffect(() => {
@@ -426,7 +427,7 @@ function ActionBar({
         case 'exiting':
           break;
         default:
-          if (open === nextOpen || nextOpen === 'exit') {
+          if (open === nextOpen) {
             setNextOpen('');
           }
           setOpen('exiting');
@@ -600,74 +601,98 @@ function ActionBar({
       </Box>
       <Box>
         <Collapse in={open === 'card'} onExited={handleExited}>
-          <TemplateList
-            defaultIdx={0}
-            disableSelected
-            kind={['card']}
-            onTemplate={({ parametersSet, medias }) => {
-              setNextOpen('exit');
-              previewStateContext.previewSet.forEach((v) => {
-                previewDispatch({
-                  type: 'mergeParametersToImageUrl',
-                  payload: [v.itemKey, parametersSet, medias]
-                });
-              });
-            }}
-          />
+          <ClickAwayListener
+            onClickAway={() => open === 'card' && setNextOpen('card')}
+          >
+            <div>
+              <TemplateList
+                defaultIdx={0}
+                disableSelected
+                kind={['card']}
+                onTemplate={({ parametersSet, medias }) => {
+                  setNextOpen('card');
+                  previewStateContext.previewSet.forEach((v) => {
+                    previewDispatch({
+                      type: 'mergeParametersToImageUrl',
+                      payload: [v.itemKey, parametersSet, medias]
+                    });
+                  });
+                }}
+              />
+            </div>
+          </ClickAwayListener>
         </Collapse>
       </Box>
       <Box>
         <Collapse in={open === 'responsive'} onExited={handleExited}>
-          <TemplateList
-            defaultIdx={0}
-            disableSelected
-            kind={['responsive']}
-            onTemplate={({ parametersSet, medias }) => {
-              setNextOpen('exit');
-              previewStateContext.previewSet.forEach((v) => {
-                previewDispatch({
-                  type: 'makeVariantImages',
-                  payload: [v.itemKey, parametersSet, medias]
-                });
-              });
-            }}
-          />
+          <ClickAwayListener
+            onClickAway={() => open === 'responsive' && setNextOpen('responsive')}
+          >
+            <div>
+              <TemplateList
+                defaultIdx={0}
+                disableSelected
+                kind={['responsive']}
+                onTemplate={({ parametersSet, medias }) => {
+                  setNextOpen('respoinsive');
+                  previewStateContext.previewSet.forEach((v) => {
+                    previewDispatch({
+                      type: 'makeVariantImages',
+                      payload: [v.itemKey, parametersSet, medias]
+                    });
+                  });
+                }}
+              />
+            </div>
+          </ClickAwayListener>
         </Collapse>
       </Box>
       <Box>
         <Collapse in={open === 'effect'} onExited={handleExited}>
-          <TemplateList
-            defaultIdx={0}
-            disableSelected
-            kind={['effective']}
-            onTemplate={({ parametersSet, medias }) => {
-              setNextOpen('exit');
-              previewStateContext.previewSet.forEach((v) => {
-                previewDispatch({
-                  type: 'mergeParametersToImageUrl',
-                  payload: [v.itemKey, parametersSet, medias]
-                });
-              });
-            }}
-          />
+          <ClickAwayListener
+            onClickAway={() => open === 'effect' && setNextOpen('effect')}
+          >
+            <div>
+              <TemplateList
+                defaultIdx={0}
+                disableSelected
+                kind={['effective']}
+                onTemplate={({ parametersSet, medias }) => {
+                  setNextOpen('effect');
+                  previewStateContext.previewSet.forEach((v) => {
+                    previewDispatch({
+                      type: 'mergeParametersToImageUrl',
+                      payload: [v.itemKey, parametersSet, medias]
+                    });
+                  });
+                }}
+              />
+            </div>
+          </ClickAwayListener>
         </Collapse>
       </Box>
       <Box>
         <Collapse in={open === 'size'} onExited={handleExited}>
-          <TemplateList
-            defaultIdx={0}
-            disableSelected
-            kind={['size']}
-            onTemplate={({ parametersSet, medias }) => {
-              setNextOpen('exit');
-              previewStateContext.previewSet.forEach((v) => {
-                previewDispatch({
-                  type: 'mergeParametersToImageUrl',
-                  payload: [v.itemKey, parametersSet, medias]
-                });
-              });
-            }}
-          />
+          <ClickAwayListener
+            onClickAway={() => open === 'size' && setNextOpen('size')}
+          >
+            <div>
+              <TemplateList
+                defaultIdx={0}
+                disableSelected
+                kind={['size']}
+                onTemplate={({ parametersSet, medias }) => {
+                  setNextOpen('size');
+                  previewStateContext.previewSet.forEach((v) => {
+                    previewDispatch({
+                      type: 'mergeParametersToImageUrl',
+                      payload: [v.itemKey, parametersSet, medias]
+                    });
+                  });
+                }}
+              />
+            </div>
+          </ClickAwayListener>
         </Collapse>
       </Box>
       <Box>
