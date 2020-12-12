@@ -36,7 +36,7 @@ export const BuiltinImportTemplate: ImportTemplateList = [
     medias: ['auto']
   },
   {
-    kind: [ 'size'],
+    kind: ['size'],
     label: 'size',
     shortDescription: '画像を 500x300 へサイズ変更',
     parameters: [
@@ -51,7 +51,7 @@ export const BuiltinImportTemplate: ImportTemplateList = [
     medias: ['auto']
   },
   {
-    kind: [ 'size'],
+    kind: ['size'],
     label: 'size',
     shortDescription: '画像を 500x300 へサイズ変更(left)',
     parameters: [
@@ -66,7 +66,7 @@ export const BuiltinImportTemplate: ImportTemplateList = [
     medias: ['auto']
   },
   {
-    kind: [ 'size'],
+    kind: ['size'],
     label: 'size',
     shortDescription: '画像を 500x300 へサイズ変更(right)',
     parameters: [
@@ -81,7 +81,7 @@ export const BuiltinImportTemplate: ImportTemplateList = [
     medias: ['auto']
   },
   {
-    kind: [ 'size'],
+    kind: ['size'],
     label: 'size',
     shortDescription: '画像を 500x300 へサイズ変更(entropy)',
     parameters: [
@@ -96,7 +96,7 @@ export const BuiltinImportTemplate: ImportTemplateList = [
     medias: ['auto']
   },
   {
-    kind: [ 'effective'],
+    kind: ['effective'],
     label: 'stylize',
     shortDescription: 'blur',
     parameters: [
@@ -108,7 +108,7 @@ export const BuiltinImportTemplate: ImportTemplateList = [
     medias: ['auto']
   },
   {
-    kind: [ 'effective'],
+    kind: ['effective'],
     label: 'stylize',
     shortDescription: 'duotone',
     parameters: [
@@ -121,7 +121,7 @@ export const BuiltinImportTemplate: ImportTemplateList = [
     medias: ['auto']
   },
   {
-    kind: [ 'effective'],
+    kind: ['effective'],
     label: 'stylize',
     shortDescription: 'monochrome(light)',
     parameters: [
@@ -133,7 +133,7 @@ export const BuiltinImportTemplate: ImportTemplateList = [
     medias: ['auto']
   },
   {
-    kind: [ 'effective'],
+    kind: ['effective'],
     label: 'stylize',
     shortDescription: 'monochrome(dark)',
     parameters: [
@@ -145,7 +145,7 @@ export const BuiltinImportTemplate: ImportTemplateList = [
     medias: ['auto']
   },
   {
-    kind: [ 'effective'],
+    kind: ['effective'],
     label: 'stylize',
     shortDescription: 'sepia tone',
     parameters: [
@@ -157,7 +157,7 @@ export const BuiltinImportTemplate: ImportTemplateList = [
     medias: ['auto']
   },
   {
-    kind: [ 'responsive'],
+    kind: ['responsive'],
     label: 'responsive',
     shortDescription: '解像度別に4画像作成 (500x300)',
     parameters: [
@@ -192,7 +192,7 @@ export const BuiltinImportTemplate: ImportTemplateList = [
     medias: ['auto', 'auto', 'auto', 'auto']
   },
   {
-    kind: [ 'responsive'],
+    kind: ['responsive'],
     label: 'responsive',
     shortDescription:
       'アートディレクション用に4画像作成(モバイルデバイス用含む)',
@@ -220,7 +220,7 @@ export const BuiltinImportTemplate: ImportTemplateList = [
     medias: [1280, 960, 600, 320]
   },
   {
-    kind: [ 'card'],
+    kind: ['card'],
     label: 'teitter card',
     shortDescription: 'Teitter Card用に画像サイズ等を調整',
     parameters: [
@@ -234,7 +234,7 @@ export const BuiltinImportTemplate: ImportTemplateList = [
     medias: ['auto']
   },
   {
-    kind: [ 'card'],
+    kind: ['card'],
     label: 'teitter card',
     shortDescription: 'Teitter Card用に画像サイズ等を調整(entropy)',
     parameters: [
@@ -249,14 +249,14 @@ export const BuiltinImportTemplate: ImportTemplateList = [
     medias: ['auto']
   },
   {
-    kind: [ 'card'],
+    kind: ['card'],
     label: 'teitter card',
     shortDescription: 'Teitter Card用に画像サイズ等を調整(face)',
     parameters: [
       {
         ar: '1.91:1',
         auto: 'compress',
-        crop: 'face',
+        crop: 'faces',
         fit: 'crop',
         w: '600'
       }
