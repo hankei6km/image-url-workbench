@@ -383,10 +383,17 @@ function ActionBar({
   const [disabledTryIt, setDisabledTryIt] = useState(true);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [open, setOpen] = useState<
-    '' | 'add' | 'template' | 'size' | 'effect' | 'responsive' | 'exiting'
+    | ''
+    | 'add'
+    | 'template'
+    | 'size'
+    | 'effect'
+    | 'responsive'
+    | 'card'
+    | 'exiting'
   >('');
   const [nextOpen, setNextOpen] = useState<
-    '' | 'add' | 'template' | 'size' | 'responsive' | 'effect'
+    '' | 'add' | 'template' | 'size' | 'responsive' | 'effect' | 'card'
   >('');
 
   useEffect(() => {
@@ -515,6 +522,19 @@ function ActionBar({
             disabled={
               disabledTryIt || previewStateContext.previewSet.length !== 1
             }
+            onClick={() => setNextOpen('card')}
+          >
+            Card
+          </Button>
+        </Box>
+        <Box className={classes.tryItOnOuter}>
+          <Button
+            color="default"
+            disableElevation={true}
+            variant="outlined"
+            disabled={
+              disabledTryIt || previewStateContext.previewSet.length !== 1
+            }
             onClick={() => setNextOpen('responsive')}
           >
             Responsive
@@ -579,6 +599,24 @@ function ActionBar({
         </Collapse>
       </Box>
       <Box>
+        <Collapse in={open === 'card'} onExited={handleExited}>
+          <TemplateList
+            defaultIdx={0}
+            disableSelected
+            kind={['card']}
+            onTemplate={({ parametersSet, medias }) => {
+              setNextOpen('card');
+              previewStateContext.previewSet.forEach((v) => {
+                previewDispatch({
+                  type: 'mergeParametersToImageUrl',
+                  payload: [v.itemKey, parametersSet, medias]
+                });
+              });
+            }}
+          />
+        </Collapse>
+      </Box>
+      <Box>
         <Collapse in={open === 'responsive'} onExited={handleExited}>
           <TemplateList
             defaultIdx={0}
@@ -619,7 +657,7 @@ function ActionBar({
           <TemplateList
             defaultIdx={0}
             disableSelected
-            kind={['size', 'card']}
+            kind={['size']}
             onTemplate={({ parametersSet, medias }) => {
               setNextOpen('size');
               previewStateContext.previewSet.forEach((v) => {
