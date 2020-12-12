@@ -394,7 +394,7 @@ function ActionBar({
     | 'exiting'
   >('');
   const [nextOpen, setNextOpen] = useState<
-    '' | 'add' | 'template' | 'size' | 'responsive' | 'effect' | 'card' 
+    '' | 'add' | 'template' | 'size' | 'responsive' | 'effect' | 'card'
   >('');
 
   useEffect(() => {
@@ -626,7 +626,9 @@ function ActionBar({
       <Box>
         <Collapse in={open === 'responsive'} onExited={handleExited}>
           <ClickAwayListener
-            onClickAway={() => open === 'responsive' && setNextOpen('responsive')}
+            onClickAway={() =>
+              open === 'responsive' && setNextOpen('responsive')
+            }
           >
             <div>
               <TemplateList
@@ -634,7 +636,7 @@ function ActionBar({
                 disableSelected
                 kind={['responsive']}
                 onTemplate={({ parametersSet, medias }) => {
-                  setNextOpen('respoinsive');
+                  setNextOpen('responsive');
                   previewStateContext.previewSet.forEach((v) => {
                     previewDispatch({
                       type: 'makeVariantImages',
