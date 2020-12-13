@@ -11,11 +11,12 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import FragmentImgTag from '../components/FragmentImgTag';
 import FragmentPictureTag from '../components/FragmentPictureTag';
 import FragmentCard from '../components/FragmentCard';
+import FragmentMakeTestbedImgTag from '../components/FragmentMakeTestbedImgTag';
+import FragmentMakeTestbedPictureTag from '../components/FragmentMakeTestbedPictTag';
 import FragmentDownload from '../components/FragmentDownload';
 import FragmentMake from '../components/FragmentMake';
 import FragmentLinks from '../components/FragmentLinks';
 import FragmentParams from '../components/FragmentParams';
-import FragmentMakeTestbedImgTag from '../components/FragmentMakeTestbedImgTag';
 
 const useStyles = makeStyles((theme) => ({
   groupName: {
@@ -83,6 +84,10 @@ const groupList: {
   {
     groupName: 'Make testbed for <img> tag by using current parameters',
     group: <FragmentMakeTestbedImgTag />
+  },
+  {
+    groupName: 'Make testbed for <picture> tag by using current parameters',
+    group: <FragmentMakeTestbedPictureTag />
   },
   {
     groupName: 'Download images from the current workbench',
