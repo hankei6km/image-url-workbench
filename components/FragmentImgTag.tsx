@@ -5,6 +5,10 @@ import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import FormControl from '@material-ui/core/FormControl';
+import FormLabel from '@material-ui/core/FormLabel';
 import Switch from '@material-ui/core/Switch';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -60,6 +64,7 @@ const FragmentImgTag = () => {
     previewStateContext.tagFragment.linkText
   );
   const [newTab, setNewTab] = useState(previewStateContext.tagFragment.newTab);
+  const [srcsetDescriptor, setSrcsetDescriptor] = useState<'' | 'w' | 'x'>('');
   const [imgHtml, setImgHtml] = useState('');
 
   useEffect(() => {
@@ -77,9 +82,11 @@ const FragmentImgTag = () => {
   }, [previewStateContext.previewSet, previewStateContext.defaultTargetKey]);
 
   useEffect(() => {
-    const dpr = previewStateContext.previewSet.some(
-      ({ imgDispDensity }) => imgDispDensity !== 1
-    );
+    const dpr =
+      srcsetDescriptor !== 'w' &&
+      previewStateContext.previewSet.some(
+        ({ imgDispDensity }) => imgDispDensity !== 1
+      );
 
     const srcSet: string[] = previewStateContext.previewSet.map(
       ({ previewUrl, imgWidth, imgDispDensity }) =>
@@ -118,7 +125,14 @@ const FragmentImgTag = () => {
       }
       setImgHtml(String(file));
     });
-  }, [previewStateContext.previewSet, defaultItem, altText, linkText, newTab]);
+  }, [
+    previewStateContext.previewSet,
+    srcsetDescriptor,
+    defaultItem,
+    altText,
+    linkText,
+    newTab
+  ]);
 
   useEffect(() => {
     previewDispatch({
@@ -147,6 +161,45 @@ const FragmentImgTag = () => {
           ]}
         />
       </Box>
+      <Box mx={2} p={1}>
+        <FormControl component="fieldset">
+          <FormLabel component="legend">
+            <Typography color="textSecondary">srcset descriptor</Typography>
+          </FormLabel>
+          <RadioGroup
+            aria-label="srcset descriptor"
+            name="descriptor"
+            value={srcsetDescriptor}
+            onChange={(e) => {
+              if (
+                e.target.value === '' ||
+                e.target.value === 'w' ||
+                e.target.value === 'x'
+              ) {
+                setSrcsetDescriptor(e.target.value);
+              }
+            }}
+          >
+            <Box p={1}>
+              <FormControlLabel
+                value=""
+                control={<Radio color="default" />}
+                label="Auto"
+              />
+              <FormControlLabel
+                value="w"
+                control={<Radio color="default" />}
+                label="w"
+              />
+              <FormControlLabel
+                value="x"
+                control={<Radio color="default" />}
+                label="x"
+              />
+            </Box>
+          </RadioGroup>
+        </FormControl>
+      </Box>
       <Box p={1} mb={2}>
         <Accordion elevation={0}>
           <AccordionSummary
@@ -158,7 +211,7 @@ const FragmentImgTag = () => {
           </AccordionSummary>
           <AccordionDetails>
             <Box width="100%">
-              <Box px={2} mt={-1} mb={2} width="100%">
+              <Box px={2} mb={2} width="100%">
                 <DebTextField
                   label="alt text"
                   fullWidth
