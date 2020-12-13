@@ -15,6 +15,7 @@ import FragmentDownload from '../components/FragmentDownload';
 import FragmentMake from '../components/FragmentMake';
 import FragmentLinks from '../components/FragmentLinks';
 import FragmentParams from '../components/FragmentParams';
+import FragmentMakeTestbedImgTag from '../components/FragmentMakeTestbedImgTag';
 
 const useStyles = makeStyles((theme) => ({
   groupName: {
@@ -78,6 +79,10 @@ const groupList: {
   {
     groupName: 'Preview Twitter Card',
     group: <FragmentCard />
+  },
+  {
+    groupName: 'Make testbed for <img> tag by using current parameters',
+    group: <FragmentMakeTestbedImgTag />
   },
   {
     groupName: 'Download images from the current workbench',

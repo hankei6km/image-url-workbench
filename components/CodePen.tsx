@@ -15,6 +15,7 @@ const useStyles = makeStyles(() => ({
 type Props = {
   title: string;
   html: string;
+  js?: string;
   buttonLabel: string;
   buttonProps: ButtonProps;
 };
@@ -22,6 +23,7 @@ type Props = {
 const CodePenDefineForm = ({
   title,
   html,
+  js = '',
   buttonLabel,
   buttonProps
 }: Props) => {
@@ -31,7 +33,8 @@ const CodePenDefineForm = ({
   useEffect(() => {
     const o: CodePenDefinePostData = {
       title: title,
-      html: html
+      html: html,
+      js: js
     };
     setValue(JSON.stringify(o));
   }, [title, html]);
