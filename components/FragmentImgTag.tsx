@@ -82,25 +82,28 @@ const FragmentImgTag = () => {
   }, [previewStateContext.previewSet, previewStateContext.defaultTargetKey]);
 
   useEffect(() => {
+    const preViewSetWithoutDefault = previewStateContext.previewSet.filter(
+      ({ itemKey }) => itemKey !== defaultItem.itemKey
+    );
     const dpr =
       srcsetDescriptor !== 'w' &&
-      previewStateContext.previewSet.some(
+      preViewSetWithoutDefault.some(
         ({ imgDispDensity }) => imgDispDensity !== 1
       );
 
-    const srcSet: string[] = previewStateContext.previewSet.map(
+    const srcSet: string[] = preViewSetWithoutDefault.map(
       ({ previewUrl, imgWidth, imgDispDensity }) =>
         dpr ? `${previewUrl} ${imgDispDensity}x` : `${previewUrl} ${imgWidth}w`
     );
-    const sizes: string[] = previewStateContext.previewSet.map(
+    const sizes: string[] = preViewSetWithoutDefault.map(
       ({ imgWidth, media }) =>
         `(min-width: ${breakPointValue(media, imgWidth)}px) ${imgWidth}px`
     );
     const imgElement = (
       <img
         src={defaultItem.previewUrl}
-        srcSet={srcSet.length > 1 ? srcSet.join(', ') : undefined}
-        sizes={!dpr && sizes.length > 1 ? sizes.join(', ') : undefined}
+        srcSet={srcSet.length > 0 ? srcSet.join(', ') : undefined}
+        sizes={!dpr && sizes.length > 0 ? sizes.join(', ') : undefined}
         alt={altText}
       />
     );
