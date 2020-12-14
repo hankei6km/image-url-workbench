@@ -8,8 +8,10 @@ import rehypeStringify from 'rehype-stringify';
 import format from 'rehype-format';
 import rehypeSanitize from 'rehype-sanitize';
 import PreviewContext, {
+  PreviewItem,
   getTargetItemIndex,
-  breakPointValue
+  breakPointValue,
+  imgWidthCss
 } from '../components/PreviewContext';
 import FragmentCodePanel from '../components/FragmentCodePannel';
 import { ImgParamsValues } from '../utils/imgParamsUtils';
@@ -60,22 +62,44 @@ const FragmentMakeTestbedPitureTag = () => {
   }, [previewStateContext.previewSet, previewStateContext.defaultTargetKey]);
 
   useEffect(() => {
+    const preViewSetWithoutDefault = previewStateContext.previewSet.filter(
+      ({ itemKey }) => itemKey !== defaultItem.itemKey
+    );
+    const sourcesBucket: { [name: number]: PreviewItem[] } = {};
+    preViewSetWithoutDefault.forEach((v) => {
+      const w = imgWidthCss(v);
+      if (w in sourcesBucket) {
+        sourcesBucket[w].push(v);
+      } else {
+        sourcesBucket[w] = [v];
+      }
+    });
     const pictureElement = (
       <div>
         <div>
           <p id="drp" />
         </div>
         <picture>
-          {previewStateContext.previewSet
-            .filter(({ itemKey }) => itemKey !== defaultItem.itemKey)
-            .map(({ previewUrl, imgWidth, media }, i) => {
-              const mw = breakPointValue(media, imgWidth);
+          {Object.keys(sourcesBucket)
+            .map((v) => parseInt(v, 10))
+            .sort((a, b) => b - a)
+            .map((imgWidth) => {
+              // sourcesBucket[v].map(({ previewUrl, imgWidth, media }, i) => {
+              const mw = breakPointValue(
+                sourcesBucket[imgWidth][0].media,
+                imgWidthCss(sourcesBucket[imgWidth][0])
+              );
               return (
                 <source
-                  key={i}
+                  key={imgWidth}
                   // src={`${previewUrl}`}
-                  srcSet={`${previewUrl} ${imgWidth}w`}
-                  sizes={`(min-width: ${mw}px) ${imgWidth}px`}
+                  srcSet={sourcesBucket[imgWidth]
+                    .map(
+                      ({ previewUrl, imgDispDensity }) =>
+                        `${previewUrl} ${imgDispDensity}x`
+                    )
+                    .join(',')}
+                  // sizes={`(min-width: ${mw}px) ${imgWidth}px`}
                   media={`(min-width: ${mw}px)`}
                 />
               );
@@ -108,24 +132,26 @@ const FragmentMakeTestbedPitureTag = () => {
               title="testbed (picture tag)"
               html={pictureHtml}
               js={`
-              document.querySelector("#user-content-drp").innerText=\`device pixel ratio=\${window.devicePixelRatio}\`
+              document.querySelector(
+                "#user-content-drp"
+              ).innerText = \`device pixel ratio=\${window.devicePixelRatio}\`;
               const imgurl = document.querySelector("#imgurl");
               const sources = document.querySelectorAll("source");
               const sourcesParams = [];
               sources.forEach((v) => {
-                sourcesParams.push(v.srcset.split(" ", 1)[0].split("?", 2)[1]);
+                sourcesParams.push(v.srcset.split(", ").map((v) => v.split("?", 2)[1]));
               });
               const img = document.querySelector("img");
               const imgParams = img.src.split("?", 2)[1];
               const run = (e) => {
                 const u = imgurl.value.split("?", 1)[0];
                 sources.forEach((e, i) => {
-                  e.srcset = \`\${u}?\${sourcesParams[i]}\`;
+                  e.srcset = sourcesParams[i].map((v) => \`\${u}?\${v}\`);
                 });
                 img.src = \`\${u}?\${imgParams}\`;
                 e.preventDefault();
               };
-              document.querySelector("form").onsubmit = run;`}
+              document.querySelector("form").onsubmit = run; `}
               buttonLabel={'make'}
               buttonProps={{
                 color: 'primary',
