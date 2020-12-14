@@ -256,6 +256,86 @@ export const BuiltinImportTemplate: ImportTemplateList = [
   {
     kind: ['responsive'],
     label: 'responsive',
+    shortDescription: '解像度別に4画像作成 (dpr 指定のみ)',
+    parameters: [
+      {
+        dpr: '3'
+      },
+      {
+        dpr: '2'
+      },
+      {
+        dpr: '1.5'
+      },
+      {
+        dpr: '1'
+      },
+      {
+        txt: 'default'
+      }
+    ],
+    medias: ['auto', 'auto', 'auto', 'auto']
+  },
+  {
+    kind: ['responsive'],
+    label: 'responsive',
+    shortDescription: '解像度別に4画像作成 (dpr 指定のみ) デバッグラベル',
+    parameters: [
+      {
+        dpr: '3',
+        txt: '3x',
+        'txt-color': 'ffffffff',
+        'txt-font': 'sans-serif,bold',
+        'txt-line': '1',
+        'txt-line-color': 'ff4a4a4a',
+        'txt-pad': '40',
+        'txt-size': '50'
+      },
+      {
+        dpr: '2',
+        txt: '2x',
+        'txt-color': 'ffffffff',
+        'txt-font': 'sans-serif,bold',
+        'txt-line': '1',
+        'txt-line-color': 'ff4a4a4a',
+        'txt-pad': '40',
+        'txt-size': '50'
+      },
+      {
+        dpr: '1.5',
+        txt: '1.5x',
+        'txt-color': 'ffffffff',
+        'txt-font': 'sans-serif,bold',
+        'txt-line': '1',
+        'txt-line-color': 'ff4a4a4a',
+        'txt-pad': '40',
+        'txt-size': '50'
+      },
+      {
+        dpr: '1',
+        txt: '1x',
+        'txt-color': 'ffffffff',
+        'txt-font': 'sans-serif,bold',
+        'txt-line': '1',
+        'txt-line-color': 'ff4a4a4a',
+        'txt-pad': '40',
+        'txt-size': '50'
+      },
+      {
+        txt: 'default',
+        'txt-color': 'ffffffff',
+        'txt-font': 'sans-serif,bold',
+        'txt-line': '1',
+        'txt-line-color': 'ff4a4a4a',
+        'txt-pad': '40',
+        'txt-size': '50'
+      }
+    ],
+    medias: ['auto', 'auto', 'auto', 'auto']
+  },
+  {
+    kind: ['responsive'],
+    label: 'responsive',
     shortDescription: 'アートディレクション用(モバイルデバイス用に複数dpr)',
     parameters: [
       {
