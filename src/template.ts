@@ -34,10 +34,43 @@ export const BuiltinImportTemplate: ImportTemplateList = [
   {
     kind: ['basic', 'effective'],
     label: 'compress',
-    shortDescription: 'auto=compress 指定のみ',
+    shortDescription: 'auto=compress',
     parameters: [
       {
         auto: 'compress'
+      }
+    ],
+    medias: ['auto']
+  },
+  {
+    kind: ['basic', 'effective'],
+    label: 'jpeg',
+    shortDescription: '画像フォーマット jpeg',
+    parameters: [
+      {
+        fm: 'jpg'
+      }
+    ],
+    medias: ['auto']
+  },
+  {
+    kind: ['basic', 'effective'],
+    label: 'png',
+    shortDescription: '画像フォーマット png',
+    parameters: [
+      {
+        fm: 'png'
+      }
+    ],
+    medias: ['auto']
+  },
+  {
+    kind: ['basic', 'effective'],
+    label: 'webp',
+    shortDescription: '画像フォーマット webp',
+    parameters: [
+      {
+        fm: 'webp'
       }
     ],
     medias: ['auto']
