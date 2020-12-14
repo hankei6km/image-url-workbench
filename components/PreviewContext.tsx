@@ -45,6 +45,13 @@ export function breakPointValue(
   return media;
 }
 
+export function imgWidthCss(p: PreviewItem): number {
+  return p.imgWidth / p.imgDispDensity;
+}
+export function imgHeightCss(p: PreviewItem): number {
+  return p.imgHeight / p.imgDispDensity;
+}
+
 export const getTargetItemIndex = (
   previewSet: PreviewItem[],
   targetKey: string
@@ -520,7 +527,10 @@ export function previewContextReducer(
       }
       break;
     case 'sortSet':
-      newState.previewSet.sort(({ imgWidth: a }, { imgWidth: b }) => b - a);
+      newState.previewSet.sort((a, b) => {
+        const r = imgWidthCss(b) - imgWidthCss(a);
+        return r === 0 ? b.imgDispDensity - a.imgDispDensity : r;
+      });
       break;
   }
   newState.previewSetState = nextPreviewSetState(state, action);
