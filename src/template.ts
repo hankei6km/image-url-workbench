@@ -48,7 +48,6 @@ export const BuiltinImportTemplate: ImportTemplateList = [
     shortDescription: '画像を 500x300 へサイズ変更',
     parameters: [
       {
-        auto: 'compress',
         crop: 'entropy',
         fit: 'crop',
         h: '300',
@@ -63,7 +62,6 @@ export const BuiltinImportTemplate: ImportTemplateList = [
     shortDescription: '画像を 500x300 へサイズ変更(left)',
     parameters: [
       {
-        auto: 'compress',
         crop: 'left',
         fit: 'crop',
         h: '300',
@@ -78,7 +76,6 @@ export const BuiltinImportTemplate: ImportTemplateList = [
     shortDescription: '画像を 500x300 へサイズ変更(right)',
     parameters: [
       {
-        auto: 'compress',
         crop: 'right',
         fit: 'crop',
         h: '300',
@@ -93,7 +90,6 @@ export const BuiltinImportTemplate: ImportTemplateList = [
     shortDescription: '画像を 500x300 へサイズ変更(entropy)',
     parameters: [
       {
-        auto: 'compress',
         crop: 'entropy',
         fit: 'crop',
         h: '300',
@@ -108,7 +104,6 @@ export const BuiltinImportTemplate: ImportTemplateList = [
     shortDescription: 'blur',
     parameters: [
       {
-        auto: 'compress',
         blur: '70'
       }
     ],
@@ -120,7 +115,6 @@ export const BuiltinImportTemplate: ImportTemplateList = [
     shortDescription: 'duotone',
     parameters: [
       {
-        auto: 'compress',
         duotone: '000080,FA8072',
         'duotone-alpha': '100'
       }
@@ -133,7 +127,6 @@ export const BuiltinImportTemplate: ImportTemplateList = [
     shortDescription: 'monochrome(light)',
     parameters: [
       {
-        auto: 'compress',
         monochrome: 'ff9b9b9b'
       }
     ],
@@ -145,7 +138,6 @@ export const BuiltinImportTemplate: ImportTemplateList = [
     shortDescription: 'monochrome(dark)',
     parameters: [
       {
-        auto: 'compress',
         monochrome: 'ff4a4a4a'
       }
     ],
@@ -157,7 +149,6 @@ export const BuiltinImportTemplate: ImportTemplateList = [
     shortDescription: 'sepia tone',
     parameters: [
       {
-        auto: 'compress',
         sepia: '80'
       }
     ],
@@ -169,29 +160,26 @@ export const BuiltinImportTemplate: ImportTemplateList = [
     shortDescription: '解像度別に4画像作成 (500x300)',
     parameters: [
       {
-        auto: 'compress',
         dpr: '3',
-        fit: 'crop',
         h: '300',
         w: '500'
       },
       {
-        auto: 'compress',
         dpr: '2',
-        fit: 'crop',
         h: '300',
         w: '500'
       },
       {
-        auto: 'compress',
         dpr: '1.5',
-        fit: 'crop',
         h: '300',
         w: '500'
       },
       {
-        auto: 'compress',
-        fit: 'crop',
+        dpr: '1',
+        h: '300',
+        w: '500'
+      },
+      {
         h: '300',
         w: '500'
       }
@@ -201,30 +189,251 @@ export const BuiltinImportTemplate: ImportTemplateList = [
   {
     kind: ['responsive'],
     label: 'responsive',
-    shortDescription:
-      'アートディレクション用に4画像作成(モバイルデバイス用含む)',
+    shortDescription: '解像度別に4画像作成 (500x300) デバッグラベル',
     parameters: [
       {
-        auto: 'compress',
-        w: '1024'
-      },
-      {
-        auto: 'compress',
-        w: '800'
-      },
-      {
-        auto: 'compress',
+        dpr: '3',
+        h: '300',
+        txt: '500 3x',
+        'txt-color': 'ffffffff',
+        'txt-font': 'sans-serif,bold',
+        'txt-line': '1',
+        'txt-line-color': 'ff4a4a4a',
+        'txt-pad': '40',
+        'txt-size': '50',
         w: '500'
       },
       {
-        auto: 'compress',
-        crop: 'entropy',
-        fit: 'crop',
-        'max-h': '400',
-        'max-w': '300'
+        dpr: '2',
+        h: '300',
+        txt: '500 2x',
+        'txt-color': 'ffffffff',
+        'txt-font': 'sans-serif,bold',
+        'txt-line': '1',
+        'txt-line-color': 'ff4a4a4a',
+        'txt-pad': '40',
+        'txt-size': '50',
+        w: '500'
+      },
+      {
+        dpr: '1.5',
+        h: '300',
+        txt: '500 1.5x',
+        'txt-color': 'ffffffff',
+        'txt-font': 'sans-serif,bold',
+        'txt-line': '1',
+        'txt-line-color': 'ff4a4a4a',
+        'txt-pad': '40',
+        'txt-size': '50',
+        w: '500'
+      },
+      {
+        dpr: '1',
+        h: '300',
+        txt: '500 1x',
+        'txt-color': 'ffffffff',
+        'txt-font': 'sans-serif,bold',
+        'txt-line': '1',
+        'txt-line-color': 'ff4a4a4a',
+        'txt-pad': '40',
+        'txt-size': '50',
+        w: '500'
+      },
+      {
+        h: '300',
+        txt: 'default',
+        'txt-color': 'ffffffff',
+        'txt-font': 'sans-serif,bold',
+        'txt-line': '1',
+        'txt-line-color': 'ff4a4a4a',
+        'txt-pad': '40',
+        'txt-size': '50',
+        w: '500'
       }
     ],
-    medias: [1280, 960, 600, 320]
+    medias: ['auto', 'auto', 'auto', 'auto']
+  },
+  {
+    kind: ['responsive'],
+    label: 'responsive',
+    shortDescription: 'アートディレクション用(モバイルデバイス用に複数dpr)',
+    parameters: [
+      {
+        w: '1024'
+      },
+      {
+        w: '800'
+      },
+      {
+        dpr: '3',
+        w: '500'
+      },
+      {
+        dpr: '2',
+        w: '500'
+      },
+      {
+        dpr: '1',
+        w: '500'
+      },
+      {
+        dpr: '3',
+        fit: 'crop',
+        h: '400',
+        w: '300'
+      },
+      {
+        dpr: '2',
+        fit: 'crop',
+        h: '400',
+        w: '300'
+      },
+      {
+        dpr: '1',
+        fit: 'crop',
+        h: '400',
+        w: '300'
+      },
+      {
+        fit: 'crop',
+        h: '400',
+        w: '300'
+      }
+    ],
+    medias: [
+      'auto',
+      'auto',
+      'auto',
+      'auto',
+      'auto',
+      'auto',
+      'auto',
+      'auto',
+      'auto'
+    ]
+  },
+  {
+    kind: ['responsive'],
+    label: 'responsive',
+    shortDescription:
+      'アートディレクション用(モバイルデバイス用に複数dpr) デバッグラベル',
+    parameters: [
+      {
+        txt: '1024',
+        'txt-color': 'ffffffff',
+        'txt-font': 'sans-serif,bold',
+        'txt-line': '1',
+        'txt-line-color': 'ff4a4a4a',
+        'txt-pad': '80',
+        'txt-size': '120',
+        w: '1024'
+      },
+      {
+        txt: '800',
+        'txt-color': 'ffffffff',
+        'txt-font': 'sans-serif,bold',
+        'txt-line': '1',
+        'txt-line-color': 'ff4a4a4a',
+        'txt-pad': '70',
+        'txt-size': '100',
+        w: '800'
+      },
+      {
+        dpr: '3',
+        txt: '500 3x',
+        'txt-color': 'ffffffff',
+        'txt-font': 'sans-serif,bold',
+        'txt-line': '1',
+        'txt-line-color': 'ff4a4a4a',
+        'txt-pad': '50',
+        'txt-size': '50',
+        w: '500'
+      },
+      {
+        dpr: '2',
+        txt: '500 2x',
+        'txt-color': 'ffffffff',
+        'txt-font': 'sans-serif,bold',
+        'txt-line': '1',
+        'txt-line-color': 'ff4a4a4a',
+        'txt-pad': '50',
+        'txt-size': '50',
+        w: '500'
+      },
+      {
+        dpr: '1',
+        txt: '500 1x',
+        'txt-color': 'ffffffff',
+        'txt-font': 'sans-serif,bold',
+        'txt-line': '1',
+        'txt-line-color': 'ff4a4a4a',
+        'txt-pad': '50',
+        'txt-size': '50',
+        w: '500'
+      },
+      {
+        dpr: '3',
+        fit: 'crop',
+        h: '400',
+        txt: '300 3x',
+        'txt-color': 'ffffffff',
+        'txt-font': 'sans-serif,bold',
+        'txt-line': '1',
+        'txt-line-color': 'ff9b9b9b',
+        'txt-pad': '40',
+        'txt-size': '50',
+        w: '300'
+      },
+      {
+        dpr: '2',
+        fit: 'crop',
+        h: '400',
+        txt: '300 2x',
+        'txt-color': 'ffffffff',
+        'txt-font': 'sans-serif,bold',
+        'txt-line': '1',
+        'txt-line-color': 'ff9b9b9b',
+        'txt-pad': '40',
+        'txt-size': '50',
+        w: '300'
+      },
+      {
+        dpr: '1',
+        fit: 'crop',
+        h: '400',
+        txt: '300 1x',
+        'txt-color': 'ffffffff',
+        'txt-font': 'sans-serif,bold',
+        'txt-line': '1',
+        'txt-line-color': 'ff9b9b9b',
+        'txt-pad': '40',
+        'txt-size': '50',
+        w: '300'
+      },
+      {
+        fit: 'crop',
+        h: '400',
+        txt: 'default',
+        'txt-color': 'ffffffff',
+        'txt-font': 'sans-serif,bold',
+        'txt-line': '1',
+        'txt-line-color': 'ff9b9b9b',
+        'txt-pad': '40',
+        'txt-size': '60',
+        w: '300'
+      }
+    ],
+    medias: [
+      'auto',
+      'auto',
+      'auto',
+      'auto',
+      'auto',
+      'auto',
+      'auto',
+      'auto',
+      'auto'
+    ]
   },
   {
     kind: ['card'],
@@ -233,7 +442,6 @@ export const BuiltinImportTemplate: ImportTemplateList = [
     parameters: [
       {
         ar: '1.91:1',
-        auto: 'compress',
         fit: 'crop',
         w: '600'
       }
@@ -247,7 +455,6 @@ export const BuiltinImportTemplate: ImportTemplateList = [
     parameters: [
       {
         ar: '1.91:1',
-        auto: 'compress',
         crop: 'entropy',
         fit: 'crop',
         w: '600'
@@ -262,7 +469,6 @@ export const BuiltinImportTemplate: ImportTemplateList = [
     parameters: [
       {
         ar: '1.91:1',
-        auto: 'compress',
         crop: 'faces',
         fit: 'crop',
         w: '600'
