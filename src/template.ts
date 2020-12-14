@@ -516,6 +516,50 @@ export const BuiltinImportTemplate: ImportTemplateList = [
     ]
   },
   {
+    kind: ['responsive'],
+    label: 'responsive',
+    shortDescription:
+      'アートディレクション用(デフォルトは800、ビューポート600以上では580)',
+    parameters: [
+      {
+        w: '580'
+      },
+      {
+        w: '800'
+      }
+    ],
+    medias: ['auto', 'auto']
+  },
+  {
+    kind: ['responsive'],
+    label: 'responsive',
+    shortDescription:
+      'アートディレクション用(デフォルトは800、ビューポート600以上では580) デバッグラベル',
+    parameters: [
+      {
+        txt: '580',
+        'txt-color': 'ffffffff',
+        'txt-font': 'sans-serif,bold',
+        'txt-line': '1',
+        'txt-line-color': 'ff4a4a4a',
+        'txt-pad': '40',
+        'txt-size': '50',
+        w: '580'
+      },
+      {
+        txt: 'default(800)',
+        'txt-color': 'ffffffff',
+        'txt-font': 'sans-serif,bold',
+        'txt-line': '1',
+        'txt-line-color': 'ff4a4a4a',
+        'txt-pad': '40',
+        'txt-size': '50',
+        w: '800'
+      }
+    ],
+    medias: ['auto', 'auto']
+  },
+  {
     kind: ['card'],
     label: 'teitter card',
     shortDescription: 'Teitter Card用に画像サイズ等を調整',
