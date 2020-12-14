@@ -25,6 +25,13 @@ export type ImportTemplateList = ImportTemplate[];
 
 export const BuiltinImportTemplate: ImportTemplateList = [
   {
+    kind: ['basic'],
+    label: 'plain',
+    shortDescription: '',
+    parameters: [{}],
+    medias: ['auto']
+  },
+  {
     kind: ['basic', 'effective'],
     label: 'compress',
     shortDescription: 'auto=compress 指定のみ',
