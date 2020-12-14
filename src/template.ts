@@ -194,7 +194,7 @@ export const BuiltinImportTemplate: ImportTemplateList = [
       {
         dpr: '3',
         h: '300',
-        txt: '500 3x',
+        txt: '3x',
         'txt-color': 'ffffffff',
         'txt-font': 'sans-serif,bold',
         'txt-line': '1',
@@ -206,7 +206,7 @@ export const BuiltinImportTemplate: ImportTemplateList = [
       {
         dpr: '2',
         h: '300',
-        txt: '500 2x',
+        txt: '2x',
         'txt-color': 'ffffffff',
         'txt-font': 'sans-serif,bold',
         'txt-line': '1',
@@ -218,7 +218,7 @@ export const BuiltinImportTemplate: ImportTemplateList = [
       {
         dpr: '1.5',
         h: '300',
-        txt: '500 1.5x',
+        txt: '1.5x',
         'txt-color': 'ffffffff',
         'txt-font': 'sans-serif,bold',
         'txt-line': '1',
@@ -230,7 +230,7 @@ export const BuiltinImportTemplate: ImportTemplateList = [
       {
         dpr: '1',
         h: '300',
-        txt: '500 1x',
+        txt: '1x',
         'txt-color': 'ffffffff',
         'txt-font': 'sans-serif,bold',
         'txt-line': '1',
