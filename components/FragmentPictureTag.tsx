@@ -17,7 +17,9 @@ import rehypeSanitize from 'rehype-sanitize';
 import PreviewContext, {
   PreviewDispatch,
   getTargetItemIndex,
-  breakPointValue
+  breakPointValue,
+  PreviewItem,
+  imgWidthCss
 } from '../components/PreviewContext';
 import DebTextField from '../components/DebTextField';
 import FragmentCodePanel from '../components/FragmentCodePannel';
@@ -77,18 +79,40 @@ const FragmentPictureTag = () => {
   }, [previewStateContext.previewSet, previewStateContext.defaultTargetKey]);
 
   useEffect(() => {
+    const preViewSetWithoutDefault = previewStateContext.previewSet.filter(
+      ({ itemKey }) => itemKey !== defaultItem.itemKey
+    );
+    const sourcesBucket: { [name: number]: PreviewItem[] } = {};
+    preViewSetWithoutDefault.forEach((v) => {
+      const w = imgWidthCss(v);
+      if (w in sourcesBucket) {
+        sourcesBucket[w].push(v);
+      } else {
+        sourcesBucket[w] = [v];
+      }
+    });
     const pictureElement = (
       <picture>
-        {previewStateContext.previewSet
-          .filter(({ itemKey }) => itemKey !== defaultItem.itemKey)
-          .map(({ previewUrl, imgWidth, media }, i) => {
-            const mw = breakPointValue(media, imgWidth);
+        {Object.keys(sourcesBucket)
+          .map((v) => parseInt(v, 10))
+          .sort((a, b) => b - a)
+          .map((imgWidth) => {
+            // sourcesBucket[v].map(({ previewUrl, imgWidth, media }, i) => {
+            const mw = breakPointValue(
+              sourcesBucket[imgWidth][0].media,
+              imgWidthCss(sourcesBucket[imgWidth][0])
+            );
             return (
               <source
-                key={i}
+                key={imgWidth}
                 // src={`${previewUrl}`}
-                srcSet={`${previewUrl} ${imgWidth}w`}
-                sizes={`(min-width: ${mw}px) ${imgWidth}px`}
+                srcSet={sourcesBucket[imgWidth]
+                  .map(
+                    ({ previewUrl, imgDispDensity }) =>
+                      `${previewUrl} ${imgDispDensity}x`
+                  )
+                  .join(',')}
+                // sizes={`(min-width: ${mw}px) ${imgWidth}px`}
                 media={`(min-width: ${mw}px)`}
               />
             );
