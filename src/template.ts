@@ -429,6 +429,83 @@ export const BuiltinImportTemplate: ImportTemplateList = [
   {
     kind: ['responsive'],
     label: 'responsive',
+    shortDescription: 'アートディレクション用(最大800) デバッグラベル',
+    parameters: [
+      {
+        dpr: '1',
+        txt: '800 1x',
+        'txt-color': 'ffffffff',
+        'txt-font': 'sans-serif,bold',
+        'txt-line': '1',
+        'txt-line-color': 'ff4a4a4a',
+        'txt-pad': '70',
+        'txt-size': '100',
+        w: '800'
+      },
+      {
+        dpr: '1',
+        txt: '550 1x',
+        'txt-color': 'ffffffff',
+        'txt-font': 'sans-serif,bold',
+        'txt-line': '1',
+        'txt-line-color': 'ff4a4a4a',
+        'txt-pad': '50',
+        'txt-size': '50',
+        w: '550'
+      },
+      {
+        dpr: '1',
+        txt: '420 1x',
+        'txt-color': 'ffffffff',
+        'txt-font': 'sans-serif,bold',
+        'txt-line': '1',
+        'txt-line-color': 'ff4a4a4a',
+        'txt-pad': '50',
+        'txt-size': '50',
+        w: '420'
+      },
+      {
+        dpr: '1',
+        fit: 'crop',
+        h: '400',
+        txt: '380 1x',
+        'txt-color': 'ffffffff',
+        'txt-font': 'sans-serif,bold',
+        'txt-line': '1',
+        'txt-line-color': 'ff9b9b9b',
+        'txt-pad': '40',
+        'txt-size': '50',
+        w: '380'
+      },
+      {
+        dpr: '1',
+        fit: 'crop',
+        h: '400',
+        txt: '330 1x',
+        'txt-color': 'ffffffff',
+        'txt-font': 'sans-serif,bold',
+        'txt-line': '1',
+        'txt-line-color': 'ff9b9b9b',
+        'txt-pad': '40',
+        'txt-size': '50',
+        w: '330'
+      },
+      {
+        txt: 'default',
+        'txt-color': 'ffffffff',
+        'txt-font': 'sans-serif,bold',
+        'txt-line': '1',
+        'txt-line-color': 'ff9b9b9b',
+        'txt-pad': '40',
+        'txt-size': '60',
+        w: '500'
+      }
+    ],
+    medias: []
+  },
+  {
+    kind: ['responsive'],
+    label: 'responsive',
     shortDescription: 'アートディレクション用(最大800 複数dpr) デバッグラベル',
     parameters: [
       {
