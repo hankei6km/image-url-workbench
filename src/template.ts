@@ -29,7 +29,7 @@ export const BuiltinImportTemplate: ImportTemplateList = [
     label: 'plain',
     shortDescription: '',
     parameters: [{}],
-    medias: ['auto']
+    medias: []
   },
   {
     kind: ['basic', 'effective'],
@@ -40,7 +40,7 @@ export const BuiltinImportTemplate: ImportTemplateList = [
         auto: 'compress'
       }
     ],
-    medias: ['auto']
+    medias: []
   },
   {
     kind: ['basic', 'effective'],
@@ -51,7 +51,7 @@ export const BuiltinImportTemplate: ImportTemplateList = [
         fm: 'jpg'
       }
     ],
-    medias: ['auto']
+    medias: []
   },
   {
     kind: ['basic', 'effective'],
@@ -62,7 +62,7 @@ export const BuiltinImportTemplate: ImportTemplateList = [
         fm: 'png'
       }
     ],
-    medias: ['auto']
+    medias: []
   },
   {
     kind: ['basic', 'effective'],
@@ -73,7 +73,7 @@ export const BuiltinImportTemplate: ImportTemplateList = [
         fm: 'webp'
       }
     ],
-    medias: ['auto']
+    medias: []
   },
   {
     kind: ['size'],
@@ -87,7 +87,7 @@ export const BuiltinImportTemplate: ImportTemplateList = [
         w: '500'
       }
     ],
-    medias: ['auto']
+    medias: []
   },
   {
     kind: ['size'],
@@ -101,7 +101,7 @@ export const BuiltinImportTemplate: ImportTemplateList = [
         w: '500'
       }
     ],
-    medias: ['auto']
+    medias: []
   },
   {
     kind: ['size'],
@@ -115,7 +115,7 @@ export const BuiltinImportTemplate: ImportTemplateList = [
         w: '500'
       }
     ],
-    medias: ['auto']
+    medias: []
   },
   {
     kind: ['size'],
@@ -129,7 +129,7 @@ export const BuiltinImportTemplate: ImportTemplateList = [
         w: '500'
       }
     ],
-    medias: ['auto']
+    medias: []
   },
   {
     kind: ['effective'],
@@ -140,7 +140,7 @@ export const BuiltinImportTemplate: ImportTemplateList = [
         blur: '70'
       }
     ],
-    medias: ['auto']
+    medias: []
   },
   {
     kind: ['effective'],
@@ -152,7 +152,7 @@ export const BuiltinImportTemplate: ImportTemplateList = [
         'duotone-alpha': '100'
       }
     ],
-    medias: ['auto']
+    medias: []
   },
   {
     kind: ['effective'],
@@ -163,7 +163,7 @@ export const BuiltinImportTemplate: ImportTemplateList = [
         monochrome: 'ff9b9b9b'
       }
     ],
-    medias: ['auto']
+    medias: []
   },
   {
     kind: ['effective'],
@@ -174,7 +174,7 @@ export const BuiltinImportTemplate: ImportTemplateList = [
         monochrome: 'ff4a4a4a'
       }
     ],
-    medias: ['auto']
+    medias: []
   },
   {
     kind: ['effective'],
@@ -185,12 +185,12 @@ export const BuiltinImportTemplate: ImportTemplateList = [
         sepia: '80'
       }
     ],
-    medias: ['auto']
+    medias: []
   },
   {
     kind: ['responsive'],
     label: 'responsive',
-    shortDescription: '解像度別に4画像作成 (500x300)',
+    shortDescription: '解像度別(500x300)',
     parameters: [
       {
         dpr: '3',
@@ -217,12 +217,12 @@ export const BuiltinImportTemplate: ImportTemplateList = [
         w: '500'
       }
     ],
-    medias: ['auto', 'auto', 'auto', 'auto']
+    medias: []
   },
   {
     kind: ['responsive'],
     label: 'responsive',
-    shortDescription: '解像度別に4画像作成 (500x300) デバッグラベル',
+    shortDescription: '解像度別(500x300) デバッグラベル',
     parameters: [
       {
         dpr: '3',
@@ -284,12 +284,12 @@ export const BuiltinImportTemplate: ImportTemplateList = [
         w: '500'
       }
     ],
-    medias: ['auto', 'auto', 'auto', 'auto']
+    medias: []
   },
   {
     kind: ['responsive'],
     label: 'responsive',
-    shortDescription: '解像度別に4画像作成 (dpr 指定のみ)',
+    shortDescription: '解像度別(dpr 指定のみ)',
     parameters: [
       {
         dpr: '3'
@@ -307,12 +307,12 @@ export const BuiltinImportTemplate: ImportTemplateList = [
         txt: 'default'
       }
     ],
-    medias: ['auto', 'auto', 'auto', 'auto']
+    medias: []
   },
   {
     kind: ['responsive'],
     label: 'responsive',
-    shortDescription: '解像度別に4画像作成 (dpr 指定のみ) デバッグラベル',
+    shortDescription: '解像度別(dpr 指定のみ) デバッグラベル',
     parameters: [
       {
         dpr: '3',
@@ -364,85 +364,234 @@ export const BuiltinImportTemplate: ImportTemplateList = [
         'txt-size': '50'
       }
     ],
-    medias: ['auto', 'auto', 'auto', 'auto']
+    medias: []
   },
   {
     kind: ['responsive'],
     label: 'responsive',
-    shortDescription: 'アートディレクション用(モバイルデバイス用に複数dpr)',
+    shortDescription: 'アートディレクション用(最大800)',
     parameters: [
       {
-        w: '1024'
-      },
-      {
+        dpr: '1',
         w: '800'
       },
       {
-        dpr: '3',
-        w: '500'
-      },
-      {
-        dpr: '2',
-        w: '500'
+        dpr: '1',
+        w: '550'
       },
       {
         dpr: '1',
-        w: '500'
-      },
-      {
-        dpr: '3',
-        fit: 'crop',
-        h: '400',
-        w: '300'
-      },
-      {
-        dpr: '2',
-        fit: 'crop',
-        h: '400',
-        w: '300'
+        w: '420'
       },
       {
         dpr: '1',
         fit: 'crop',
         h: '400',
-        w: '300'
+        w: '380'
       },
       {
+        dpr: '1',
         fit: 'crop',
         h: '400',
-        w: '300'
+        w: '330'
+      },
+      {
+        txt: 'default'
       }
     ],
-    medias: [
-      'auto',
-      'auto',
-      'auto',
-      'auto',
-      'auto',
-      'auto',
-      'auto',
-      'auto',
-      'auto'
-    ]
+    medias: []
   },
   {
     kind: ['responsive'],
     label: 'responsive',
-    shortDescription:
-      'アートディレクション用(モバイルデバイス用に複数dpr) デバッグラベル',
+    shortDescription: 'アートディレクション用(最大800) デバッグラベル',
     parameters: [
       {
-        txt: '1024',
+        dpr: '1',
+        txt: '800 1x',
         'txt-color': 'ffffffff',
         'txt-font': 'sans-serif,bold',
         'txt-line': '1',
         'txt-line-color': 'ff4a4a4a',
-        'txt-pad': '80',
-        'txt-size': '120',
-        w: '1024'
+        'txt-pad': '70',
+        'txt-size': '100',
+        w: '800'
       },
       {
-        txt: '800',
+        dpr: '1',
+        txt: '550 1x',
+        'txt-color': 'ffffffff',
+        'txt-font': 'sans-serif,bold',
+        'txt-line': '1',
+        'txt-line-color': 'ff4a4a4a',
+        'txt-pad': '50',
+        'txt-size': '50',
+        w: '550'
+      },
+      {
+        dpr: '1',
+        txt: '420 1x',
+        'txt-color': 'ffffffff',
+        'txt-font': 'sans-serif,bold',
+        'txt-line': '1',
+        'txt-line-color': 'ff4a4a4a',
+        'txt-pad': '50',
+        'txt-size': '50',
+        w: '420'
+      },
+      {
+        dpr: '1',
+        fit: 'crop',
+        h: '400',
+        txt: '380 1x',
+        'txt-color': 'ffffffff',
+        'txt-font': 'sans-serif,bold',
+        'txt-line': '1',
+        'txt-line-color': 'ff9b9b9b',
+        'txt-pad': '40',
+        'txt-size': '50',
+        w: '380'
+      },
+      {
+        dpr: '1',
+        fit: 'crop',
+        h: '400',
+        txt: '330 1x',
+        'txt-color': 'ffffffff',
+        'txt-font': 'sans-serif,bold',
+        'txt-line': '1',
+        'txt-line-color': 'ff9b9b9b',
+        'txt-pad': '40',
+        'txt-size': '50',
+        w: '330'
+      },
+      {
+        txt: 'default',
+        'txt-color': 'ffffffff',
+        'txt-font': 'sans-serif,bold',
+        'txt-line': '1',
+        'txt-line-color': 'ff9b9b9b',
+        'txt-pad': '40',
+        'txt-size': '60',
+        w: '500'
+      }
+    ],
+    medias: []
+  },
+  {
+    kind: ['responsive'],
+    label: 'responsive',
+    shortDescription: 'アートディレクション用(最大800 複数dpr)',
+    parameters: [
+      {
+        dpr: '3',
+        w: '800'
+      },
+      {
+        dpr: '2',
+        w: '800'
+      },
+      {
+        dpr: '1',
+        w: '800'
+      },
+      {
+        dpr: '3',
+        w: '550'
+      },
+      {
+        dpr: '2',
+        w: '550'
+      },
+      {
+        dpr: '1',
+        w: '550'
+      },
+      {
+        dpr: '3',
+        w: '420'
+      },
+      {
+        dpr: '2',
+        w: '420'
+      },
+      {
+        dpr: '1',
+        w: '420'
+      },
+      {
+        dpr: '3',
+        fit: 'crop',
+        h: '400',
+        w: '380'
+      },
+      {
+        dpr: '2',
+        fit: 'crop',
+        h: '400',
+        w: '380'
+      },
+      {
+        dpr: '1',
+        fit: 'crop',
+        h: '400',
+        w: '380'
+      },
+      {
+        dpr: '3',
+        fit: 'crop',
+        h: '400',
+        w: '330'
+      },
+      {
+        dpr: '2',
+        fit: 'crop',
+        h: '400',
+        w: '330'
+      },
+      {
+        dpr: '1',
+        fit: 'crop',
+        h: '400',
+        w: '330'
+      },
+      {
+        txt: 'default',
+        w: '500'
+      }
+    ],
+    medias: []
+  },
+  {
+    kind: ['responsive'],
+    label: 'responsive',
+    shortDescription: 'アートディレクション用(最大800 複数dpr) デバッグラベル',
+    parameters: [
+      {
+        dpr: '3',
+        txt: '800 3x',
+        'txt-color': 'ffffffff',
+        'txt-font': 'sans-serif,bold',
+        'txt-line': '1',
+        'txt-line-color': 'ff4a4a4a',
+        'txt-pad': '70',
+        'txt-size': '100',
+        w: '800'
+      },
+      {
+        dpr: '2',
+        txt: '800 2x',
+        'txt-color': 'ffffffff',
+        'txt-font': 'sans-serif,bold',
+        'txt-line': '1',
+        'txt-line-color': 'ff4a4a4a',
+        'txt-pad': '70',
+        'txt-size': '100',
+        w: '800'
+      },
+      {
+        dpr: '1',
+        txt: '800 1x',
         'txt-color': 'ffffffff',
         'txt-font': 'sans-serif,bold',
         'txt-line': '1',
@@ -453,79 +602,149 @@ export const BuiltinImportTemplate: ImportTemplateList = [
       },
       {
         dpr: '3',
-        txt: '500 3x',
+        txt: '550 3x',
         'txt-color': 'ffffffff',
         'txt-font': 'sans-serif,bold',
         'txt-line': '1',
         'txt-line-color': 'ff4a4a4a',
         'txt-pad': '50',
         'txt-size': '50',
-        w: '500'
+        w: '550'
       },
       {
         dpr: '2',
-        txt: '500 2x',
+        txt: '550 2x',
         'txt-color': 'ffffffff',
         'txt-font': 'sans-serif,bold',
         'txt-line': '1',
         'txt-line-color': 'ff4a4a4a',
         'txt-pad': '50',
         'txt-size': '50',
-        w: '500'
+        w: '550'
       },
       {
         dpr: '1',
-        txt: '500 1x',
+        txt: '550 1x',
         'txt-color': 'ffffffff',
         'txt-font': 'sans-serif,bold',
         'txt-line': '1',
         'txt-line-color': 'ff4a4a4a',
         'txt-pad': '50',
         'txt-size': '50',
-        w: '500'
+        w: '550'
+      },
+      {
+        dpr: '3',
+        txt: '420 3x',
+        'txt-color': 'ffffffff',
+        'txt-font': 'sans-serif,bold',
+        'txt-line': '1',
+        'txt-line-color': 'ff4a4a4a',
+        'txt-pad': '50',
+        'txt-size': '50',
+        w: '420'
+      },
+      {
+        dpr: '2',
+        txt: '420 2x',
+        'txt-color': 'ffffffff',
+        'txt-font': 'sans-serif,bold',
+        'txt-line': '1',
+        'txt-line-color': 'ff4a4a4a',
+        'txt-pad': '50',
+        'txt-size': '50',
+        w: '420'
+      },
+      {
+        dpr: '1',
+        txt: '420 1x',
+        'txt-color': 'ffffffff',
+        'txt-font': 'sans-serif,bold',
+        'txt-line': '1',
+        'txt-line-color': 'ff4a4a4a',
+        'txt-pad': '50',
+        'txt-size': '50',
+        w: '420'
       },
       {
         dpr: '3',
         fit: 'crop',
         h: '400',
-        txt: '300 3x',
+        txt: '380 3x',
         'txt-color': 'ffffffff',
         'txt-font': 'sans-serif,bold',
         'txt-line': '1',
         'txt-line-color': 'ff9b9b9b',
         'txt-pad': '40',
         'txt-size': '50',
-        w: '300'
+        w: '380'
       },
       {
         dpr: '2',
         fit: 'crop',
         h: '400',
-        txt: '300 2x',
+        txt: '380 2x',
         'txt-color': 'ffffffff',
         'txt-font': 'sans-serif,bold',
         'txt-line': '1',
         'txt-line-color': 'ff9b9b9b',
         'txt-pad': '40',
         'txt-size': '50',
-        w: '300'
+        w: '380'
       },
       {
         dpr: '1',
         fit: 'crop',
         h: '400',
-        txt: '300 1x',
+        txt: '380 1x',
         'txt-color': 'ffffffff',
         'txt-font': 'sans-serif,bold',
         'txt-line': '1',
         'txt-line-color': 'ff9b9b9b',
         'txt-pad': '40',
         'txt-size': '50',
-        w: '300'
+        w: '380'
       },
       {
+        dpr: '3',
         fit: 'crop',
         h: '400',
+        txt: '330 3x',
+        'txt-color': 'ffffffff',
+        'txt-font': 'sans-serif,bold',
+        'txt-line': '1',
+        'txt-line-color': 'ff9b9b9b',
+        'txt-pad': '40',
+        'txt-size': '50',
+        w: '330'
+      },
+      {
+        dpr: '2',
+        fit: 'crop',
+        h: '400',
+        txt: '330 2x',
+        'txt-color': 'ffffffff',
+        'txt-font': 'sans-serif,bold',
+        'txt-line': '1',
+        'txt-line-color': 'ff9b9b9b',
+        'txt-pad': '40',
+        'txt-size': '50',
+        w: '330'
+      },
+      {
+        dpr: '1',
+        fit: 'crop',
+        h: '400',
+        txt: '330 1x',
+        'txt-color': 'ffffffff',
+        'txt-font': 'sans-serif,bold',
+        'txt-line': '1',
+        'txt-line-color': 'ff9b9b9b',
+        'txt-pad': '40',
+        'txt-size': '50',
+        w: '330'
+      },
+      {
         txt: 'default',
         'txt-color': 'ffffffff',
         'txt-font': 'sans-serif,bold',
@@ -533,51 +752,71 @@ export const BuiltinImportTemplate: ImportTemplateList = [
         'txt-line-color': 'ff9b9b9b',
         'txt-pad': '40',
         'txt-size': '60',
-        w: '300'
+        w: '500'
       }
     ],
-    medias: [
-      'auto',
-      'auto',
-      'auto',
-      'auto',
-      'auto',
-      'auto',
-      'auto',
-      'auto',
-      'auto'
-    ]
+    medias: []
   },
   {
     kind: ['responsive'],
     label: 'responsive',
-    shortDescription:
-      'アートディレクション用(デフォルトは800、ビューポート600以上では580)',
+    shortDescription: '解像度別(ビューポート760以上で複数dpr)',
     parameters: [
       {
-        w: '580'
+        dpr: '3',
+        w: '800'
+      },
+      {
+        dpr: '2',
+        w: '800'
+      },
+      {
+        dpr: '1',
+        w: '800'
       },
       {
         w: '800'
       }
     ],
-    medias: ['auto', 'auto']
+    medias: []
   },
   {
     kind: ['responsive'],
     label: 'responsive',
-    shortDescription:
-      'アートディレクション用(デフォルトは800、ビューポート600以上では580) デバッグラベル',
+    shortDescription: '解像度別(ビューポート760以上で複数dpr) デバッグラベル',
     parameters: [
       {
-        txt: '580',
+        dpr: '3',
+        txt: '800 3x',
         'txt-color': 'ffffffff',
         'txt-font': 'sans-serif,bold',
         'txt-line': '1',
         'txt-line-color': 'ff4a4a4a',
         'txt-pad': '40',
         'txt-size': '50',
-        w: '580'
+        w: '800'
+      },
+      {
+        dpr: '2',
+        txt: '800 2x',
+        'txt-color': 'ffffffff',
+        'txt-font': 'sans-serif,bold',
+        'txt-line': '1',
+        'txt-line-color': 'ff4a4a4a',
+        'txt-pad': '40',
+        'txt-size': '50',
+        w: '800'
+      },
+      {
+        dpr: '1',
+        txt: '800 1x',
+        'txt-color': 'ffffffff',
+        'txt-font': 'sans-serif,bold',
+        'txt-line': '1',
+        'txt-line-color': 'ff4a4a4a',
+        'txt-pad': '40',
+        'txt-size': '50',
+        w: '800'
       },
       {
         txt: 'default(800)',
@@ -590,7 +829,7 @@ export const BuiltinImportTemplate: ImportTemplateList = [
         w: '800'
       }
     ],
-    medias: ['auto', 'auto']
+    medias: []
   },
   {
     kind: ['card'],
@@ -603,7 +842,7 @@ export const BuiltinImportTemplate: ImportTemplateList = [
         w: '1280'
       }
     ],
-    medias: ['auto']
+    medias: []
   },
   {
     kind: ['card'],
@@ -617,7 +856,7 @@ export const BuiltinImportTemplate: ImportTemplateList = [
         w: '1280'
       }
     ],
-    medias: ['auto']
+    medias: []
   },
   {
     kind: ['card'],
@@ -631,7 +870,7 @@ export const BuiltinImportTemplate: ImportTemplateList = [
         w: '1280'
       }
     ],
-    medias: ['auto']
+    medias: []
   }
 ];
 

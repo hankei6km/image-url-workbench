@@ -25,19 +25,30 @@ type TagFragment = {
   newTab: boolean;
 };
 
-export const BreakPointValues = [320, 600, 960, 1280, 1920] as const;
-export const BreakPointAutoAndValues = ['auto', ...BreakPointValues] as const;
+export const BreakPointValues = [240, 330, 360, 410, 530, 760, 1020] as const;
+export const BreakPointAutoAndValues = [
+  'auto',
+  'fit',
+  ...BreakPointValues
+] as const;
 export type BreakPoint = typeof BreakPointAutoAndValues[number];
 
 export function breakPointValue(
   media: BreakPoint,
   imgWidth: number
 ): BreakPoint {
-  if (media === 'auto') {
+  if (media === 'auto' || media === 'fit') {
     const idx = BreakPointValues.findIndex(
       (v) => typeof v === 'number' && v >= imgWidth
     );
     if (idx >= 0) {
+      if (media === 'auto') {
+        if (idx === 0) {
+          return BreakPointValues[0];
+        } else {
+          return BreakPointValues[idx - 1];
+        }
+      }
       return BreakPointValues[idx];
     }
     return BreakPointValues[BreakPointValues.length - 1];
@@ -422,7 +433,7 @@ export function previewContextReducer(
       if (
         action.payload[0] &&
         action.payload[1].length === 1 &&
-        action.payload[2].length === 1
+        action.payload[2].length <= 1
       ) {
         const idx = getTargetItemIndex(state.previewSet, action.payload[0]);
         if (idx >= 0) {
