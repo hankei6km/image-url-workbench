@@ -190,7 +190,7 @@ export const BuiltinImportTemplate: ImportTemplateList = [
   {
     kind: ['responsive'],
     label: 'responsive',
-    shortDescription: '解像度別に4画像作成 (500x300)',
+    shortDescription: '解像度別(500x300)',
     parameters: [
       {
         dpr: '3',
@@ -222,7 +222,7 @@ export const BuiltinImportTemplate: ImportTemplateList = [
   {
     kind: ['responsive'],
     label: 'responsive',
-    shortDescription: '解像度別に4画像作成 (500x300) デバッグラベル',
+    shortDescription: '解像度別(500x300) デバッグラベル',
     parameters: [
       {
         dpr: '3',
@@ -289,7 +289,7 @@ export const BuiltinImportTemplate: ImportTemplateList = [
   {
     kind: ['responsive'],
     label: 'responsive',
-    shortDescription: '解像度別に4画像作成 (dpr 指定のみ)',
+    shortDescription: '解像度別(dpr 指定のみ)',
     parameters: [
       {
         dpr: '3'
@@ -312,7 +312,7 @@ export const BuiltinImportTemplate: ImportTemplateList = [
   {
     kind: ['responsive'],
     label: 'responsive',
-    shortDescription: '解像度別に4画像作成 (dpr 指定のみ) デバッグラベル',
+    shortDescription: '解像度別(dpr 指定のみ) デバッグラベル',
     parameters: [
       {
         dpr: '3',
@@ -760,11 +760,19 @@ export const BuiltinImportTemplate: ImportTemplateList = [
   {
     kind: ['responsive'],
     label: 'responsive',
-    shortDescription:
-      'アートディレクション用(デフォルトは800、ビューポート600以上では580)',
+    shortDescription: '解像度別(ビューポート760以上で複数dpr)',
     parameters: [
       {
-        w: '580'
+        dpr: '3',
+        w: '800'
+      },
+      {
+        dpr: '2',
+        w: '800'
+      },
+      {
+        dpr: '1',
+        w: '800'
       },
       {
         w: '800'
@@ -775,18 +783,40 @@ export const BuiltinImportTemplate: ImportTemplateList = [
   {
     kind: ['responsive'],
     label: 'responsive',
-    shortDescription:
-      'アートディレクション用(デフォルトは800、ビューポート600以上では580) デバッグラベル',
+    shortDescription: '解像度別(ビューポート760以上で複数dpr) デバッグラベル',
     parameters: [
       {
-        txt: '580',
+        dpr: '3',
+        txt: '800 3x',
         'txt-color': 'ffffffff',
         'txt-font': 'sans-serif,bold',
         'txt-line': '1',
         'txt-line-color': 'ff4a4a4a',
         'txt-pad': '40',
         'txt-size': '50',
-        w: '580'
+        w: '800'
+      },
+      {
+        dpr: '2',
+        txt: '800 2x',
+        'txt-color': 'ffffffff',
+        'txt-font': 'sans-serif,bold',
+        'txt-line': '1',
+        'txt-line-color': 'ff4a4a4a',
+        'txt-pad': '40',
+        'txt-size': '50',
+        w: '800'
+      },
+      {
+        dpr: '1',
+        txt: '800 1x',
+        'txt-color': 'ffffffff',
+        'txt-font': 'sans-serif,bold',
+        'txt-line': '1',
+        'txt-line-color': 'ff4a4a4a',
+        'txt-pad': '40',
+        'txt-size': '50',
+        w: '800'
       },
       {
         txt: 'default(800)',
