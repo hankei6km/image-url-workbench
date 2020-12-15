@@ -369,43 +369,25 @@ export const BuiltinImportTemplate: ImportTemplateList = [
   {
     kind: ['responsive'],
     label: 'responsive',
-    shortDescription: 'アートディレクション用(最大800 複数dpr)',
+    shortDescription: 'アートディレクション用(最大800)',
     parameters: [
       {
-        dpr: '3',
-        w: '800'
-      },
-      {
-        dpr: '2',
-        w: '800'
-      },
-      {
         dpr: '1',
         w: '800'
       },
       {
-        dpr: '3',
-        w: '500'
-      },
-      {
-        dpr: '2',
-        w: '500'
+        dpr: '1',
+        w: '550'
       },
       {
         dpr: '1',
-        w: '500'
+        w: '420'
       },
       {
-        dpr: '3',
+        dpr: '1',
         fit: 'crop',
         h: '400',
-        w: '330'
-      },
-      {
-        dpr: '2',
-        fit: 'crop',
-        h: '400',
-        w: '330'
+        w: '380'
       },
       {
         dpr: '1',
@@ -414,14 +396,7 @@ export const BuiltinImportTemplate: ImportTemplateList = [
         w: '330'
       },
       {
-        txt: 'default',
-        'txt-color': 'ffffffff',
-        'txt-font': 'sans-serif,bold',
-        'txt-line': '1',
-        'txt-line-color': 'ff9b9b9b',
-        'txt-pad': '40',
-        'txt-size': '60',
-        w: '500'
+        txt: 'default'
       }
     ],
     medias: []
@@ -498,6 +473,90 @@ export const BuiltinImportTemplate: ImportTemplateList = [
         'txt-line-color': 'ff9b9b9b',
         'txt-pad': '40',
         'txt-size': '60',
+        w: '500'
+      }
+    ],
+    medias: []
+  },
+  {
+    kind: ['responsive'],
+    label: 'responsive',
+    shortDescription: 'アートディレクション用(最大800 複数dpr)',
+    parameters: [
+      {
+        dpr: '3',
+        w: '800'
+      },
+      {
+        dpr: '2',
+        w: '800'
+      },
+      {
+        dpr: '1',
+        w: '800'
+      },
+      {
+        dpr: '3',
+        w: '550'
+      },
+      {
+        dpr: '2',
+        w: '550'
+      },
+      {
+        dpr: '1',
+        w: '550'
+      },
+      {
+        dpr: '3',
+        w: '420'
+      },
+      {
+        dpr: '2',
+        w: '420'
+      },
+      {
+        dpr: '1',
+        w: '420'
+      },
+      {
+        dpr: '3',
+        fit: 'crop',
+        h: '400',
+        w: '380'
+      },
+      {
+        dpr: '2',
+        fit: 'crop',
+        h: '400',
+        w: '380'
+      },
+      {
+        dpr: '1',
+        fit: 'crop',
+        h: '400',
+        w: '380'
+      },
+      {
+        dpr: '3',
+        fit: 'crop',
+        h: '400',
+        w: '330'
+      },
+      {
+        dpr: '2',
+        fit: 'crop',
+        h: '400',
+        w: '330'
+      },
+      {
+        dpr: '1',
+        fit: 'crop',
+        h: '400',
+        w: '330'
+      },
+      {
+        txt: 'default',
         w: '500'
       }
     ],
