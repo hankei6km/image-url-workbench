@@ -25,7 +25,7 @@ type TagFragment = {
   newTab: boolean;
 };
 
-export const BreakPointValues = [320, 480, 600, 960, 1280, 1920] as const;
+export const BreakPointValues = [240, 330, 360, 410, 530, 760, 1020] as const;
 export const BreakPointAutoAndValues = [
   'auto',
   'fit',
@@ -433,7 +433,7 @@ export function previewContextReducer(
       if (
         action.payload[0] &&
         action.payload[1].length === 1 &&
-        action.payload[2].length === 1
+        action.payload[2].length <= 1
       ) {
         const idx = getTargetItemIndex(state.previewSet, action.payload[0]);
         if (idx >= 0) {
