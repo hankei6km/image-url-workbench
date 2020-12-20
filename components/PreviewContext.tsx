@@ -57,10 +57,13 @@ export function breakPointValue(
 }
 
 export function imgWidthCss(p: PreviewItem): number {
-  return p.imgWidth / p.imgDispDensity;
+  // srcset のグルーピングに使うこともあるので繰り上げて揃えている.
+  // TODO; グルーピングでそろわないときがないか検証.
+  // TODO; 丸めない方が良い箇所がないか検討.
+  return Math.ceil(p.imgWidth / p.imgDispDensity);
 }
 export function imgHeightCss(p: PreviewItem): number {
-  return p.imgHeight / p.imgDispDensity;
+  return Math.ceil(p.imgHeight / p.imgDispDensity);
 }
 
 export const getTargetItemIndex = (
