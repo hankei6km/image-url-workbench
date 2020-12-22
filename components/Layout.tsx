@@ -15,7 +15,7 @@ import HomeIcon from '@material-ui/icons/Home';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    '& > .MuiPapert-root > .MuiToolbar-root , & > footer > div': {
+    '& > .MuiPapert-root > .MuiToolbar-root': {
       maxWidth: '36rem',
       padding: '0 1rem',
       margin: '0rem auto 0rem'
@@ -329,12 +329,6 @@ const Layout = ({ children, title = 'This is the default title' }: Props) => {
         <GroupTabPanel tabLinks={curPath.groupTab} asPath={router.asPath} />
       </Paper>
       <div>{children}</div>
-      <footer>
-        <hr />
-        <div>
-          <span>I'm here to stay (Footer)</span>
-        </div>
-      </footer>
     </div>
   );
 };
