@@ -98,7 +98,7 @@ export function expectIsColor(exp: ParamsExpect): boolean {
 }
 
 export function expectToList(exp: ParamsExpect): string[] | undefined {
-  if (exp.type === 'list') {
+  if (exp.possible_values) {
     return exp.possible_values;
   } else if (exp.type === 'font') {
     return urlParams.fontValues;
