@@ -331,7 +331,9 @@ function ImgParamsColor({
     </Box>
   );
 }
-
+// TODO: List という名称から変更
+// expects.type = list は  possibleValues があるからという意味ではなかった。
+// value にカンマ区切りで値を複数利用できるという意味のもよう。
 function ImgParamsList({
   possibleValues,
   paramsExpect,
@@ -354,12 +356,13 @@ function ImgParamsList({
     <Autocomplete
       multiple
       id={`keyword-${paramsKey}`}
-      options={possibleValues}
+      options={possibleValues.map((v) => `${v}`)}
       getOptionLabel={(option) => option}
       defaultValue={[]}
       value={value}
       onChange={(_event: React.ChangeEvent<{}>, newValue: string[]) => {
         if (newValue) {
+          // TODO: type = list 以外は値は１つに限定
           setValue(newValue);
           onChange({ value: newValue.join(',') });
         }
