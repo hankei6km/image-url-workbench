@@ -15,7 +15,8 @@ import format from 'rehype-format';
 import rehypeSanitize from 'rehype-sanitize';
 import PreviewContext, {
   getTargetItemIndex,
-  breakPointValue
+  breakPointValue,
+  allMatchAspectRatio
 } from '../components/PreviewContext';
 import FragmentCodePanel from '../components/FragmentCodePannel';
 import { ImgParamsValues } from '../utils/imgParamsUtils';
@@ -48,10 +49,14 @@ const FragmentMakeTestbedImgTag = () => {
     itemKey: string;
     previewUrl: string;
     imageParams: ImgParamsValues;
+    imgWidth: number;
+    imgHeight: number;
   }>({
     itemKey: '',
     previewUrl: '',
-    imageParams: []
+    imageParams: [],
+    imgWidth: 0,
+    imgHeight: 0
   });
 
   const [srcsetDescriptor, setSrcsetDescriptor] = useState<'' | 'w' | 'x'>('');
@@ -66,7 +71,9 @@ const FragmentMakeTestbedImgTag = () => {
       setDefaultItem({
         itemKey: previewStateContext.defaultTargetKey,
         previewUrl: previewStateContext.previewSet[idx].previewUrl,
-        imageParams: previewStateContext.previewSet[idx].imageParams
+        imageParams: previewStateContext.previewSet[idx].imageParams,
+        imgWidth: previewStateContext.previewSet[idx].imgWidth,
+        imgHeight: previewStateContext.previewSet[idx].imgHeight
       });
     }
   }, [previewStateContext.previewSet, previewStateContext.defaultTargetKey]);
@@ -91,6 +98,9 @@ const FragmentMakeTestbedImgTag = () => {
       ({ imgWidth, media }) =>
         `(min-width: ${breakPointValue(media, imgWidth)}px) ${imgWidth}px`
     );
+    const addAttrWidthHeigth = allMatchAspectRatio(
+      previewStateContext.previewSet
+    );
     const imgElement = (
       <div>
         <div>
@@ -102,6 +112,8 @@ const FragmentMakeTestbedImgTag = () => {
           srcSet={srcSet.length > 0 ? srcSet.join(', ') : undefined}
           sizes={!dpr && sizes.length > 0 ? sizes.join(', ') : undefined}
           alt="preview in playground"
+          width={addAttrWidthHeigth ? defaultItem.imgWidth : undefined}
+          height={addAttrWidthHeigth ? defaultItem.imgHeight : undefined}
         />
       </div>
     );

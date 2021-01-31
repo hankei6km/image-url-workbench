@@ -21,7 +21,8 @@ import rehypeSanitize from 'rehype-sanitize';
 import PreviewContext, {
   PreviewDispatch,
   getTargetItemIndex,
-  breakPointValue
+  breakPointValue,
+  allMatchAspectRatio
 } from '../components/PreviewContext';
 import DebTextField from '../components/DebTextField';
 import FragmentCodePanel from '../components/FragmentCodePannel';
@@ -51,10 +52,14 @@ const FragmentImgTag = () => {
     itemKey: string;
     previewUrl: string;
     imageParams: ImgParamsValues;
+    imgWidth: number;
+    imgHeight: number;
   }>({
     itemKey: '',
     previewUrl: '',
-    imageParams: []
+    imageParams: [],
+    imgWidth: 0,
+    imgHeight: 0
   });
 
   const [altText, setAltText] = useState(
@@ -76,7 +81,9 @@ const FragmentImgTag = () => {
       setDefaultItem({
         itemKey: previewStateContext.defaultTargetKey,
         previewUrl: previewStateContext.previewSet[idx].previewUrl,
-        imageParams: previewStateContext.previewSet[idx].imageParams
+        imageParams: previewStateContext.previewSet[idx].imageParams,
+        imgWidth: previewStateContext.previewSet[idx].imgWidth,
+        imgHeight: previewStateContext.previewSet[idx].imgHeight
       });
     }
   }, [previewStateContext.previewSet, previewStateContext.defaultTargetKey]);
@@ -99,12 +106,17 @@ const FragmentImgTag = () => {
       ({ imgWidth, media }) =>
         `(min-width: ${breakPointValue(media, imgWidth)}px) ${imgWidth}px`
     );
+    const addAttrWidthHeigth = allMatchAspectRatio(
+      previewStateContext.previewSet
+    );
     const imgElement = (
       <img
         src={defaultItem.previewUrl}
         srcSet={srcSet.length > 0 ? srcSet.join(', ') : undefined}
         sizes={!dpr && sizes.length > 0 ? sizes.join(', ') : undefined}
         alt={altText}
+        width={addAttrWidthHeigth ? defaultItem.imgWidth : undefined}
+        height={addAttrWidthHeigth ? defaultItem.imgHeight : undefined}
       />
     );
     const t = newTab

@@ -19,7 +19,8 @@ import PreviewContext, {
   getTargetItemIndex,
   breakPointValue,
   PreviewItem,
-  imgWidthCss
+  imgWidthCss,
+  allMatchAspectRatio
 } from '../components/PreviewContext';
 import DebTextField from '../components/DebTextField';
 import FragmentCodePanel from '../components/FragmentCodePannel';
@@ -49,10 +50,14 @@ const FragmentPictureTag = () => {
     itemKey: string;
     previewUrl: string;
     imageParams: ImgParamsValues;
+    imgWidth: number;
+    imgHeight: number;
   }>({
     itemKey: '',
     previewUrl: '',
-    imageParams: []
+    imageParams: [],
+    imgWidth: 0,
+    imgHeight: 0
   });
 
   const [altText, setAltText] = useState(
@@ -73,7 +78,9 @@ const FragmentPictureTag = () => {
       setDefaultItem({
         itemKey: previewStateContext.defaultTargetKey,
         previewUrl: previewStateContext.previewSet[idx].previewUrl,
-        imageParams: previewStateContext.previewSet[idx].imageParams
+        imageParams: previewStateContext.previewSet[idx].imageParams,
+        imgWidth: previewStateContext.previewSet[idx].imgWidth,
+        imgHeight: previewStateContext.previewSet[idx].imgHeight
       });
     }
   }, [previewStateContext.previewSet, previewStateContext.defaultTargetKey]);
@@ -91,6 +98,9 @@ const FragmentPictureTag = () => {
         sourcesBucket[w] = [v];
       }
     });
+    const addAttrWidthHeigth = allMatchAspectRatio(
+      previewStateContext.previewSet
+    );
     const pictureElement = (
       <picture>
         {Object.keys(sourcesBucket)
@@ -117,7 +127,12 @@ const FragmentPictureTag = () => {
               />
             );
           })}
-        <img src={defaultItem.previewUrl} alt={altText} />
+        <img
+          src={defaultItem.previewUrl}
+          alt={altText}
+          width={addAttrWidthHeigth ? defaultItem.imgWidth : undefined}
+          height={addAttrWidthHeigth ? defaultItem.imgHeight : undefined}
+        />
       </picture>
     );
     const t = newTab

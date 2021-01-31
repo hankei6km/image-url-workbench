@@ -11,7 +11,8 @@ import PreviewContext, {
   PreviewItem,
   getTargetItemIndex,
   breakPointValue,
-  imgWidthCss
+  imgWidthCss,
+  allMatchAspectRatio
 } from '../components/PreviewContext';
 import FragmentCodePanel from '../components/FragmentCodePannel';
 import { ImgParamsValues } from '../utils/imgParamsUtils';
@@ -39,10 +40,14 @@ const FragmentMakeTestbedPitureTag = () => {
     itemKey: string;
     previewUrl: string;
     imageParams: ImgParamsValues;
+    imgWidth: number;
+    imgHeight: number;
   }>({
     itemKey: '',
     previewUrl: '',
-    imageParams: []
+    imageParams: [],
+    imgWidth: 0,
+    imgHeight: 0
   });
 
   const [pictureHtml, setPictureHtml] = useState('');
@@ -56,7 +61,9 @@ const FragmentMakeTestbedPitureTag = () => {
       setDefaultItem({
         itemKey: previewStateContext.defaultTargetKey,
         previewUrl: previewStateContext.previewSet[idx].previewUrl,
-        imageParams: previewStateContext.previewSet[idx].imageParams
+        imageParams: previewStateContext.previewSet[idx].imageParams,
+        imgWidth: previewStateContext.previewSet[idx].imgWidth,
+        imgHeight: previewStateContext.previewSet[idx].imgHeight
       });
     }
   }, [previewStateContext.previewSet, previewStateContext.defaultTargetKey]);
@@ -74,6 +81,9 @@ const FragmentMakeTestbedPitureTag = () => {
         sourcesBucket[w] = [v];
       }
     });
+    const addAttrWidthHeigth = allMatchAspectRatio(
+      previewStateContext.previewSet
+    );
     const pictureElement = (
       <div>
         <div>
@@ -104,7 +114,12 @@ const FragmentMakeTestbedPitureTag = () => {
                 />
               );
             })}
-          <img src={defaultItem.previewUrl} alt="preview in playground" />
+          <img
+            src={defaultItem.previewUrl}
+            alt="preview in playground"
+            width={addAttrWidthHeigth ? defaultItem.imgWidth : undefined}
+            height={addAttrWidthHeigth ? defaultItem.imgHeight : undefined}
+          />
         </picture>
       </div>
     );
