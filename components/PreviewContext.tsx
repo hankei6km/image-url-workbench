@@ -110,7 +110,7 @@ export type PreviewItem = {
 export type PreviewSetKind = '' | 'sample' | 'recv' | 'data';
 export type PreviewSetState = '' | 'pre-init' | 'init' | 'edited';
 
-type PreviewContextState = {
+export type PreviewContextState = {
   validateAssets: boolean;
   assets: string[];
   templateIdx: number;

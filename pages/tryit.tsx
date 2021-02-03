@@ -17,6 +17,7 @@ import FragmentDownload from '../components/FragmentDownload';
 import FragmentMake from '../components/FragmentMake';
 import FragmentLinks from '../components/FragmentLinks';
 import FragmentParams from '../components/FragmentParams';
+import FragmentExport from '../components/FragmentExport';
 
 const useStyles = makeStyles((theme) => ({
   groupName: {
@@ -104,6 +105,10 @@ const groupList: {
   {
     groupName: 'Links',
     group: <FragmentLinks />
+  },
+  {
+    groupName: 'Export',
+    group: <FragmentExport />
   }
 ];
 const TryItPage = () => {
