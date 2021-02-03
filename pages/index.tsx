@@ -39,6 +39,7 @@ const IndexPage = () => {
   );
   const [previewSetKind, setPreviewSetKind] = useState<PreviewSetKind>('');
   const [importJson, setImportJson] = useState('');
+  const [importImageBaseUrl, setImportImageBaseUrl] = useState('');
 
   const [templateIdx, setTemplateIdx] = useState(
     previewStateContext.templateIdx >= 0 ? previewStateContext.templateIdx : 0
@@ -86,7 +87,7 @@ const IndexPage = () => {
       } else if (importJson !== '') {
         previewDispatch({
           type: 'importJson',
-          payload: [importJson]
+          payload: [importJson, importImageBaseUrl]
         });
       }
     };
@@ -97,7 +98,8 @@ const IndexPage = () => {
     previewSetKind,
     parametersSet,
     medias,
-    importJson
+    importJson,
+    importImageBaseUrl
   ]);
 
   useEffect(() => {
@@ -185,9 +187,13 @@ const IndexPage = () => {
             <>
               <Box mt={1}>
                 <ImportPanel
-                  label="Import JSON"
-                  onSelect={({ value }) => {
-                    setImportJson(value);
+                  label={[
+                    'Import JSON',
+                    'Enter Image url to replace iamges(optional)'
+                  ]}
+                  onSelect={({ value: { json, imageBaseUrl } }) => {
+                    setImportJson(json);
+                    setImportImageBaseUrl(imageBaseUrl);
                     setSelected(true);
                   }}
                 />

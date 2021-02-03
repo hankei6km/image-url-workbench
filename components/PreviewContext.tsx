@@ -98,7 +98,17 @@ export const PreviewDispatch = React.createContext<React.Dispatch<actType>>(
 
 export type PreviewItem = {
   itemKey: string;
+  /**
+   * /// @TJS-format uri は使えないぽい
+   * パラメータがついてないときもある
+   * /// @TJS-pattern ^https://.+\?.+$
+   * @TJS-pattern ^https://.+$
+   */
   previewUrl: string;
+  /**
+   * /// @TJS-format uri は使えないぽい
+   * @TJS-pattern ^https://.+$
+   */
   baseImageUrl: string;
   imageParams: ImgParamsValues;
   imgWidth: number;
@@ -111,10 +121,22 @@ export type PreviewSetKind = '' | 'sample' | 'recv' | 'data';
 export type PreviewSetState = '' | 'pre-init' | 'init' | 'edited';
 
 export type PreviewContextState = {
-  // importJson で各キーをコピーしているので、定義を変更したら注意。
+  /**
+   * @ignore
+   */
   validateAssets: boolean;
+  /**
+   * @ignore
+   */
   assets: string[];
+  /**
+   * @ignore
+   */
   templateIdx: number;
+  /**
+   * /// @TJS-format uri は使えないぽい
+   * @TJS-pattern ^https://.+$
+   */
   imageBaseUrl: string;
   baseParameterSet: ImportTemplateParameters[];
   baseMedias: BreakPoint[];
@@ -139,7 +161,7 @@ type actTypeResetPreviewSet = {
 
 type actTypeImportJson = {
   type: 'importJson';
-  payload: [string];
+  payload: [string, string];
 };
 
 type actTypeTemplateIdx = {
@@ -352,20 +374,33 @@ export function previewContextReducer(
     case 'importJson':
       try {
         const iState: PreviewContextState = JSON.parse(action.payload[0]);
+        const importImageBaseUrl = action.payload[1];
+        if (importImageBaseUrl) {
+          iState.imageBaseUrl = importImageBaseUrl;
+          iState.previewSet.forEach((v) => {
+            v.baseImageUrl = importImageBaseUrl;
+            const previewUrl = v.previewUrl.split('?', 2);
+            v.previewUrl = `${importImageBaseUrl}?${previewUrl[1]}`;
+          });
+        }
         // TODO: import / export 用の型を作った方が良い
         // newState.validateAssets = iState.validateAssets;
         // newState.assets = iState.assets;
         // newState.templateIdx = iState.templateIdx;
-        newState.imageBaseUrl = iState.imageBaseUrl;
-        newState.baseParameterSet = iState.baseParameterSet;
-        newState.baseMedias = iState.baseMedias;
-        newState.editTargetKey = iState.editTargetKey;
-        newState.defaultTargetKey = iState.defaultTargetKey;
-        newState.card = iState.card;
-        newState.tagFragment = iState.tagFragment;
-        newState.previewSetState = iState.previewSetState;
-        newState.previewSetKind = iState.previewSetKind;
-        newState.previewSet = iState.previewSet;
+        // 上の 3 フィールドは iState には存在していない(schema で ignore している)
+        Object.keys(iState).forEach((k) => {
+          (newState as any)[k] = iState[k as keyof PreviewContextState];
+        });
+        // newState.imageBaseUrl = iState.imageBaseUrl;
+        // newState.baseParameterSet = iState.baseParameterSet;
+        // newState.baseMedias = iState.baseMedias;
+        // newState.editTargetKey = iState.editTargetKey;
+        // newState.defaultTargetKey = iState.defaultTargetKey;
+        // newState.card = iState.card;
+        // newState.tagFragment = iState.tagFragment;
+        // newState.previewSetState = iState.previewSetState;
+        // newState.previewSetKind = iState.previewSetKind;
+        // newState.previewSet = iState.previewSet;
       } catch (_err) {}
       break;
     case 'setTemplateIdx':

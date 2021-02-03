@@ -23,6 +23,9 @@ yarn-error.log*
 # codesandbox
 /.codesandbox
 
+# json schema
+/src/jsonSchemaPreviewContext.json
+
 .vercel
 /tmp
 /open_source_licenses.*

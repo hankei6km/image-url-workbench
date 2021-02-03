@@ -12,7 +12,12 @@ const FragmentExport = () => {
 
   useEffect(() => {
     const exportContext: PreviewContextState = JSON.parse(
-      JSON.stringify(previewStateContext)
+      JSON.stringify({
+        ...previewStateContext,
+        validateAssets: undefined,
+        assets: undefined,
+        templateIdx: undefined
+      })
     );
     const orgDefaultTargetKey = exportContext.defaultTargetKey;
     const orgEditTargetKey = exportContext.editTargetKey;
