@@ -111,6 +111,7 @@ export type PreviewSetKind = '' | 'sample' | 'recv' | 'data';
 export type PreviewSetState = '' | 'pre-init' | 'init' | 'edited';
 
 export type PreviewContextState = {
+  // importJson で各キーをコピーしているので、定義を変更したら注意。
   validateAssets: boolean;
   assets: string[];
   templateIdx: number;
@@ -134,6 +135,11 @@ export type PreviewContextState = {
 type actTypeResetPreviewSet = {
   type: 'resetPreviewSet';
   payload: [];
+};
+
+type actTypeImportJson = {
+  type: 'importJson';
+  payload: [string];
 };
 
 type actTypeTemplateIdx = {
@@ -218,6 +224,7 @@ type actTypeSortSet = {
 
 type actType =
   | actTypeResetPreviewSet
+  | actTypeImportJson
   | actTypeTemplateIdx
   | actTypeSetImageBaseUrl
   | actTypeImportPreviewSet
@@ -267,6 +274,9 @@ function nextPreviewSetState(
   switch (action.type) {
     case 'resetPreviewSet':
       ret = '';
+      break;
+    case 'importJson':
+      ret = 'init';
       break;
     case 'setTemplateIdx':
       ret = state.previewSetState;
@@ -338,6 +348,25 @@ export function previewContextReducer(
       newState.defaultTargetKey = '';
       newState.previewSetKind = '';
       newState.previewSet = [];
+      break;
+    case 'importJson':
+      try {
+        const iState: PreviewContextState = JSON.parse(action.payload[0]);
+        // TODO: import / export 用の型を作った方が良い
+        // newState.validateAssets = iState.validateAssets;
+        // newState.assets = iState.assets;
+        // newState.templateIdx = iState.templateIdx;
+        newState.imageBaseUrl = iState.imageBaseUrl;
+        newState.baseParameterSet = iState.baseParameterSet;
+        newState.baseMedias = iState.baseMedias;
+        newState.editTargetKey = iState.editTargetKey;
+        newState.defaultTargetKey = iState.defaultTargetKey;
+        newState.card = iState.card;
+        newState.tagFragment = iState.tagFragment;
+        newState.previewSetState = iState.previewSetState;
+        newState.previewSetKind = iState.previewSetKind;
+        newState.previewSet = iState.previewSet;
+      } catch (_err) {}
       break;
     case 'setTemplateIdx':
       newState.templateIdx = action.payload[0];
