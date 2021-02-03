@@ -66,6 +66,24 @@ export function imgHeightCss(p: PreviewItem): number {
   return Math.ceil(p.imgHeight / p.imgDispDensity);
 }
 
+export function matchAspectRatio(p1: PreviewItem, p2: PreviewItem): boolean {
+  const w1 = imgWidthCss(p1);
+  const h1 = imgHeightCss(p1);
+  const w2 = imgWidthCss(p2);
+  const h2 = imgHeightCss(p2);
+  if (
+    (w1 === w2 || w1 === w2 - 1 || w1 === w2 + 1) &&
+    (h1 === h2 || h1 === h2 - 1 || h1 === h2 + 1)
+  ) {
+    return true;
+  }
+  return false;
+}
+
+export function allMatchAspectRatio(previewSet: PreviewItem[]): boolean {
+  return previewSet.slice(1).every((p2) => matchAspectRatio(previewSet[0], p2));
+}
+
 export const getTargetItemIndex = (
   previewSet: PreviewItem[],
   targetKey: string
