@@ -14,7 +14,7 @@ type Props = {
   onSelect: ({ value }: { value: string }) => void;
 };
 
-const ImportPanel = ({
+const EnterPanel = ({
   label,
   defaultValue = '',
   disabled = false,
@@ -60,4 +60,4 @@ const ImportPanel = ({
   );
 };
 
-export default ImportPanel;
+export default EnterPanel;

@@ -12,7 +12,7 @@ import PreviewContext, {
   BreakPoint,
   PreviewSetKind
 } from '../components/PreviewContext';
-import ImportPanel from '../components/ImportPanel';
+import EnterPanel from '../components/EnterPanel';
 import SamplePanel from '../components/SamplePanel';
 import TemplateList from '../components/TemplateList';
 import {
@@ -136,7 +136,7 @@ const IndexPage = () => {
             </Collapse>
           </Box>
           <Box mt={1}>
-            <ImportPanel
+            <EnterPanel
               label="Enter image url or select sample"
               defaultValue={imageBaseUrl}
               disabled={selected}
