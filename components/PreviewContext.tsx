@@ -19,10 +19,13 @@ type Card = {
   description: string;
 };
 
+export const SrcsetDescriptorValues = ['auto', 'w', 'x'] as const;
+export type SrcsetDescriptor = typeof SrcsetDescriptorValues[number];
 type TagFragment = {
   altText: string;
   linkText: string;
   newTab: boolean;
+  srcsetDescriptor: SrcsetDescriptor;
 };
 
 export const BreakPointValues = [240, 330, 360, 410, 530, 760, 1020] as const;
@@ -221,7 +224,7 @@ type actTypeSetCard = {
 
 type actTypeSetTagFragment = {
   type: 'setTagFragment';
-  payload: [string, string, boolean];
+  payload: [string, string, boolean, SrcsetDescriptor];
 };
 
 type actTypeSetEditTarget = {
@@ -281,7 +284,8 @@ export const previewContextInitialState: PreviewContextState = {
   tagFragment: {
     altText: '',
     linkText: '',
-    newTab: false
+    newTab: false,
+    srcsetDescriptor: 'auto'
   },
   previewSetState: '',
   previewSetKind: '',
@@ -605,6 +609,7 @@ export function previewContextReducer(
       newState.tagFragment.altText = action.payload[0];
       newState.tagFragment.linkText = action.payload[1];
       newState.tagFragment.newTab = action.payload[2];
+      newState.tagFragment.srcsetDescriptor = action.payload[3];
       break;
     case 'setEditTarget':
       newState.editTargetKey = action.payload[0];

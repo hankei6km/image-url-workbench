@@ -69,7 +69,9 @@ const FragmentImgTag = () => {
     previewStateContext.tagFragment.linkText
   );
   const [newTab, setNewTab] = useState(previewStateContext.tagFragment.newTab);
-  const [srcsetDescriptor, setSrcsetDescriptor] = useState<'' | 'w' | 'x'>('');
+  const [srcsetDescriptor, setSrcsetDescriptor] = useState(
+    previewStateContext.tagFragment.srcsetDescriptor
+  );
   const [imgHtml, setImgHtml] = useState('');
 
   useEffect(() => {
@@ -152,9 +154,9 @@ const FragmentImgTag = () => {
   useEffect(() => {
     previewDispatch({
       type: 'setTagFragment',
-      payload: [altText, linkText, newTab]
+      payload: [altText, linkText, newTab, srcsetDescriptor]
     });
-  }, [previewDispatch, altText, linkText, newTab]);
+  }, [previewDispatch, altText, linkText, newTab, srcsetDescriptor]);
 
   return (
     <Box mx={1}>
@@ -187,7 +189,7 @@ const FragmentImgTag = () => {
             value={srcsetDescriptor}
             onChange={(e) => {
               if (
-                e.target.value === '' ||
+                e.target.value === 'auto' ||
                 e.target.value === 'w' ||
                 e.target.value === 'x'
               ) {
@@ -197,7 +199,7 @@ const FragmentImgTag = () => {
           >
             <Box p={1}>
               <FormControlLabel
-                value=""
+                value="auto"
                 control={<Radio color="default" />}
                 label="Auto"
               />
