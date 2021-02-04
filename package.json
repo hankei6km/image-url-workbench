@@ -2,12 +2,13 @@
   "name": "test-nextjs-typescript-material-ui",
   "version": "1.0.0",
   "scripts": {
-    "dev": "next",
-    "build": "next build",
-    "build:vercel": "yum install zip -y && sh scripts/open_source_license.sh && next build",
+    "dev": "sh scripts/json-schema-build.sh && next",
+    "json-schema:build": "sh scripts/json-schema-build.sh",
+    "build": "sh scripts/json-schema-build.sh && next build",
+    "build:vercel": "yum install zip -y && sh scripts/json-schema-build.sh && sh scripts/open_source_license.sh && next build",
     "build:license": "sh scripts/open_source_licenses.sh",
     "build:about": "sh scripts/about_license.sh",
-    "start": "next start",
+    "start": "sh scripts/json-schema-build.sh && next start",
     "type-check": "tsc"
   },
   "dependencies": {
@@ -19,6 +20,7 @@
     "@types/react-syntax-highlighter": "^13.5.0",
     "@types/shell-escape": "^0.2.0",
     "@types/unist": "^2.0.3",
+    "ajv": "^7.0.4",
     "deepmerge": "^4.2.2",
     "hast-util-sanitize": "^3.0.1",
     "imgix-url-params": "^11.10.1",
