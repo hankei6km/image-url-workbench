@@ -182,7 +182,7 @@ const FragmentMakeTestbedPitureTag = () => {
         <Box p={1}>
           <FragmentCodePanel
             naked
-            label="picture tag"
+            label="picture tag source code"
             value={pictureHtml}
             language="html"
           />

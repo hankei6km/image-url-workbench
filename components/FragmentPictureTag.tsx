@@ -1,13 +1,8 @@
 import React, { useState, useContext, useEffect } from 'react';
 import ReactDomServer from 'react-dom/server';
 import Box from '@material-ui/core/Box';
-import Accordion from '@material-ui/core/Accordion';
-import AccordionSummary from '@material-ui/core/AccordionSummary';
-import AccordionDetails from '@material-ui/core/AccordionDetails';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
-import Typography from '@material-ui/core/Typography';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import unified from 'unified';
 import rehypeParse from 'rehype-parse';
@@ -160,7 +155,7 @@ const FragmentPictureTag = () => {
   useEffect(() => {
     previewDispatch({
       type: 'setTagFragment',
-      payload: [altText, linkText, newTab]
+      payload: [altText, linkText, newTab, 'auto']
     });
   }, [previewDispatch, altText, linkText, newTab]);
 
@@ -185,61 +180,48 @@ const FragmentPictureTag = () => {
         />
       </Box>
       <Box p={1} mb={2}>
-        <Accordion elevation={0}>
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
-            aria-controls={`optional parameters panel`}
-            IconButtonProps={{ edge: 'start' }}
-          >
-            <Typography variant="body1">Optional fields</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <Box width="100%">
-              <Box px={2} mt={-1} mb={2} width="100%">
-                <DebTextField
-                  label="alt text"
-                  fullWidth
-                  value={altText}
-                  onChangeValue={({ value }) => setAltText(value)}
+        <Box px={2} mb={2} width="100%">
+          <DebTextField
+            label="alt text"
+            fullWidth
+            value={altText}
+            onChangeValue={({ value }) => setAltText(value)}
+          />
+        </Box>
+        <Box px={2} mt={3} display="flex" flexDirection="row">
+          <Box flexGrow={1} mr={1}>
+            <DebTextField
+              label="link"
+              fullWidth
+              value={linkText}
+              onChangeValue={({ value }) => setLinkText(value)}
+            />
+          </Box>
+          <Box>
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={newTab}
+                  onChange={(e) => {
+                    setNewTab(e.target.checked);
+                  }}
+                  color="primary"
+                  name="newTab"
+                  inputProps={{
+                    'aria-label': `switch open link in new tab`
+                  }}
                 />
-              </Box>
-              <Box px={2} mt={3} display="flex" flexDirection="row">
-                <Box flexGrow={1} mr={1}>
-                  <DebTextField
-                    label="link"
-                    fullWidth
-                    value={linkText}
-                    onChangeValue={({ value }) => setLinkText(value)}
-                  />
-                </Box>
-                <Box>
-                  <FormControlLabel
-                    control={
-                      <Switch
-                        checked={newTab}
-                        onChange={(e) => {
-                          setNewTab(e.target.checked);
-                        }}
-                        color="primary"
-                        name="newTab"
-                        inputProps={{
-                          'aria-label': `switch open link in new tab`
-                        }}
-                      />
-                    }
-                    label="new tab"
-                  />
-                </Box>
-              </Box>
-            </Box>
-          </AccordionDetails>
-        </Accordion>
+              }
+              label="new tab"
+            />
+          </Box>
+        </Box>
       </Box>
       <Box>
         <Box p={1}>
           <FragmentCodePanel
             naked
-            label="picture tag"
+            label="picture tag source code"
             value={pictureHtml}
             language="html"
           />

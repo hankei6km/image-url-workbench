@@ -16,7 +16,8 @@ import rehypeSanitize from 'rehype-sanitize';
 import PreviewContext, {
   getTargetItemIndex,
   breakPointValue,
-  allMatchAspectRatio
+  allMatchAspectRatio,
+  PreviewDispatch
 } from '../components/PreviewContext';
 import FragmentCodePanel from '../components/FragmentCodePannel';
 import { ImgParamsValues } from '../utils/imgParamsUtils';
@@ -43,7 +44,7 @@ const processorHtml = unified()
 
 const FragmentMakeTestbedImgTag = () => {
   const previewStateContext = useContext(PreviewContext);
-  // const previewDispatch = useContext(PreviewDispatch);
+  const previewDispatch = useContext(PreviewDispatch);
 
   const [defaultItem, setDefaultItem] = useState<{
     itemKey: string;
@@ -59,7 +60,9 @@ const FragmentMakeTestbedImgTag = () => {
     imgHeight: 0
   });
 
-  const [srcsetDescriptor, setSrcsetDescriptor] = useState<'' | 'w' | 'x'>('');
+  const [srcsetDescriptor, setSrcsetDescriptor] = useState(
+    previewStateContext.tagFragment.srcsetDescriptor
+  );
   const [imgHtml, setImgHtml] = useState('');
 
   useEffect(() => {
@@ -131,6 +134,27 @@ const FragmentMakeTestbedImgTag = () => {
     });
   }, [previewStateContext.previewSet, srcsetDescriptor, defaultItem]);
 
+  useEffect(() => {
+    setSrcsetDescriptor(previewStateContext.tagFragment.srcsetDescriptor);
+  }, [previewStateContext.tagFragment.srcsetDescriptor]);
+  useEffect(() => {
+    previewDispatch({
+      type: 'setTagFragment',
+      payload: [
+        previewStateContext.tagFragment.altText,
+        previewStateContext.tagFragment.linkText,
+        previewStateContext.tagFragment.newTab,
+        srcsetDescriptor
+      ]
+    });
+  }, [
+    previewDispatch,
+    previewStateContext.tagFragment.altText,
+    previewStateContext.tagFragment.linkText,
+    previewStateContext.tagFragment.newTab,
+    srcsetDescriptor
+  ]);
+
   return (
     <Box mx={1}>
       <Box p={1}>
@@ -180,7 +204,7 @@ const FragmentMakeTestbedImgTag = () => {
             value={srcsetDescriptor}
             onChange={(e) => {
               if (
-                e.target.value === '' ||
+                e.target.value === 'auto' ||
                 e.target.value === 'w' ||
                 e.target.value === 'x'
               ) {
@@ -190,7 +214,7 @@ const FragmentMakeTestbedImgTag = () => {
           >
             <Box p={1}>
               <FormControlLabel
-                value=""
+                value="auto"
                 control={<Radio color="default" />}
                 label="Auto"
               />
@@ -212,7 +236,7 @@ const FragmentMakeTestbedImgTag = () => {
         <Box p={1}>
           <FragmentCodePanel
             naked
-            label="img tag"
+            label="img tag source code:"
             value={imgHtml}
             language="html"
           />
