@@ -24,6 +24,7 @@ export type SrcsetDescriptor = typeof SrcsetDescriptorValues[number];
 type TagFragment = {
   altText: string;
   linkText: string;
+  asThumb: boolean;
   newTab: boolean;
   srcsetDescriptor: SrcsetDescriptor;
   disableWidthHeight: boolean;
@@ -225,7 +226,7 @@ type actTypeSetCard = {
 
 type actTypeSetTagFragment = {
   type: 'setTagFragment';
-  payload: [string, string, boolean, SrcsetDescriptor, boolean];
+  payload: [string, string, boolean,boolean, SrcsetDescriptor, boolean];
 };
 
 type actTypeSetEditTarget = {
@@ -285,6 +286,7 @@ export const previewContextInitialState: PreviewContextState = {
   tagFragment: {
     altText: '',
     linkText: '',
+    asThumb: true,
     newTab: false,
     srcsetDescriptor: 'auto',
     disableWidthHeight: false
@@ -610,9 +612,10 @@ export function previewContextReducer(
     case 'setTagFragment':
       newState.tagFragment.altText = action.payload[0];
       newState.tagFragment.linkText = action.payload[1];
-      newState.tagFragment.newTab = action.payload[2];
-      newState.tagFragment.srcsetDescriptor = action.payload[3];
-      newState.tagFragment.disableWidthHeight = action.payload[4];
+      newState.tagFragment.asThumb = action.payload[2];
+      newState.tagFragment.newTab = action.payload[3];
+      newState.tagFragment.srcsetDescriptor = action.payload[4];
+      newState.tagFragment.disableWidthHeight = action.payload[5];
       break;
     case 'setEditTarget':
       newState.editTargetKey = action.payload[0];

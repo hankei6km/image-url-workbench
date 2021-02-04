@@ -155,6 +155,7 @@ const FragmentMakeTestbedImgTag = () => {
       payload: [
         previewStateContext.tagFragment.altText,
         previewStateContext.tagFragment.linkText,
+        previewStateContext.tagFragment.asThumb,
         previewStateContext.tagFragment.newTab,
         srcsetDescriptor,
         disableWidthHeight
@@ -164,6 +165,7 @@ const FragmentMakeTestbedImgTag = () => {
     previewDispatch,
     previewStateContext.tagFragment.altText,
     previewStateContext.tagFragment.linkText,
+    previewStateContext.tagFragment.asThumb,
     previewStateContext.tagFragment.newTab,
     srcsetDescriptor,
     disableWidthHeight

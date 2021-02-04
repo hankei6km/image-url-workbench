@@ -65,6 +65,9 @@ const FragmentPictureTag = () => {
   const [linkText, setLinkText] = useState(
     previewStateContext.tagFragment.linkText
   );
+  const [asThumb, setAsThumb] = useState(
+    previewStateContext.tagFragment.asThumb
+  );
   const [newTab, setNewTab] = useState(previewStateContext.tagFragment.newTab);
   const [disableWidthHeight, setDisableWidthHeight] = useState(
     previewStateContext.tagFragment.disableWidthHeight
@@ -147,6 +150,10 @@ const FragmentPictureTag = () => {
       <a href={linkText} {...t}>
         {pictureElement}
       </a>
+    ) : asThumb ? (
+      <a href={defaultItem.previewUrl.split('?', 2)[0]} {...t}>
+        {pictureElement}
+      </a>
     ) : (
       pictureElement
     );
@@ -162,6 +169,7 @@ const FragmentPictureTag = () => {
     defaultItem,
     altText,
     linkText,
+    asThumb,
     newTab,
     disableWidthHeight
   ]);
@@ -172,9 +180,9 @@ const FragmentPictureTag = () => {
   useEffect(() => {
     previewDispatch({
       type: 'setTagFragment',
-      payload: [altText, linkText, newTab, 'auto', disableWidthHeight]
+      payload: [altText, linkText, asThumb, newTab, 'auto', disableWidthHeight]
     });
-  }, [previewDispatch, altText, linkText, newTab, disableWidthHeight]);
+  }, [previewDispatch, altText, linkText, asThumb, newTab, disableWidthHeight]);
 
   return (
     <Box mx={1}>
@@ -214,23 +222,44 @@ const FragmentPictureTag = () => {
               onChangeValue={({ value }) => setLinkText(value)}
             />
           </Box>
-          <Box>
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={newTab}
-                  onChange={(e) => {
-                    setNewTab(e.target.checked);
-                  }}
-                  color="primary"
-                  name="newTab"
-                  inputProps={{
-                    'aria-label': `switch open link in new tab`
-                  }}
-                />
-              }
-              label="new tab"
-            />
+          <Box display="flex" flexDirection="column">
+            <Box my={1}>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={asThumb}
+                    //defaultChecked={asThumb}
+                    onChange={(e) => {
+                      setAsThumb(e.target.checked);
+                    }}
+                    color="primary"
+                    name="asThumb"
+                    inputProps={{
+                      'aria-label': `switch image as thumbnail`
+                    }}
+                  />
+                }
+                label="as thumbnail"
+              />
+            </Box>
+            <Box my={1}>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={newTab}
+                    onChange={(e) => {
+                      setNewTab(e.target.checked);
+                    }}
+                    color="primary"
+                    name="newTab"
+                    inputProps={{
+                      'aria-label': `switch open link in new tab`
+                    }}
+                  />
+                }
+                label="new tab"
+              />
+            </Box>
           </Box>
         </Box>
       </Box>
