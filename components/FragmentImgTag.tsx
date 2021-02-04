@@ -1,17 +1,14 @@
 import React, { useState, useContext, useEffect } from 'react';
 import ReactDomServer from 'react-dom/server';
 import Box from '@material-ui/core/Box';
-import Accordion from '@material-ui/core/Accordion';
-import AccordionSummary from '@material-ui/core/AccordionSummary';
-import AccordionDetails from '@material-ui/core/AccordionDetails';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
+import Checkbox from '@material-ui/core/Checkbox';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
 import Switch from '@material-ui/core/Switch';
 import Typography from '@material-ui/core/Typography';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import unified from 'unified';
 import rehypeParse from 'rehype-parse';
@@ -68,8 +65,16 @@ const FragmentImgTag = () => {
   const [linkText, setLinkText] = useState(
     previewStateContext.tagFragment.linkText
   );
+  const [asThumb, setAsThumb] = useState(
+    previewStateContext.tagFragment.asThumb
+  );
   const [newTab, setNewTab] = useState(previewStateContext.tagFragment.newTab);
-  const [srcsetDescriptor, setSrcsetDescriptor] = useState<'' | 'w' | 'x'>('');
+  const [srcsetDescriptor, setSrcsetDescriptor] = useState(
+    previewStateContext.tagFragment.srcsetDescriptor
+  );
+  const [disableWidthHeight, setDisableWidthHeight] = useState(
+    previewStateContext.tagFragment.disableWidthHeight
+  );
   const [imgHtml, setImgHtml] = useState('');
 
   useEffect(() => {
@@ -106,9 +111,9 @@ const FragmentImgTag = () => {
       ({ imgWidth, media }) =>
         `(min-width: ${breakPointValue(media, imgWidth)}px) ${imgWidth}px`
     );
-    const addAttrWidthHeigth = allMatchAspectRatio(
-      previewStateContext.previewSet
-    );
+    const addAttrWidthHeigth =
+      !disableWidthHeight &&
+      allMatchAspectRatio(previewStateContext.previewSet);
     const imgElement = (
       <img
         src={defaultItem.previewUrl}
@@ -129,10 +134,13 @@ const FragmentImgTag = () => {
       <a href={linkText} {...t}>
         {imgElement}
       </a>
+    ) : asThumb ? (
+      <a href={defaultItem.previewUrl.split('?', 2)[0]} {...t}>
+        {imgElement}
+      </a>
     ) : (
       imgElement
     );
-
     const html = ReactDomServer.renderToStaticMarkup(elm);
     processorHtml.process(html, (err, file) => {
       if (err) {
@@ -146,15 +154,38 @@ const FragmentImgTag = () => {
     defaultItem,
     altText,
     linkText,
-    newTab
+    asThumb,
+    newTab,
+    disableWidthHeight
   ]);
 
   useEffect(() => {
+    setSrcsetDescriptor(previewStateContext.tagFragment.srcsetDescriptor);
+  }, [previewStateContext.tagFragment.srcsetDescriptor]);
+  useEffect(() => {
+    setDisableWidthHeight(previewStateContext.tagFragment.disableWidthHeight);
+  }, [previewStateContext.tagFragment.disableWidthHeight]);
+  useEffect(() => {
     previewDispatch({
       type: 'setTagFragment',
-      payload: [altText, linkText, newTab]
+      payload: [
+        altText,
+        linkText,
+        asThumb,
+        newTab,
+        srcsetDescriptor,
+        disableWidthHeight
+      ]
     });
-  }, [previewDispatch, altText, linkText, newTab]);
+  }, [
+    previewDispatch,
+    altText,
+    linkText,
+    asThumb,
+    newTab,
+    srcsetDescriptor,
+    disableWidthHeight
+  ]);
 
   return (
     <Box mx={1}>
@@ -176,6 +207,65 @@ const FragmentImgTag = () => {
           ]}
         />
       </Box>
+      <Box p={1} mb={2}>
+        <Box px={2} mb={2} width="100%">
+          <DebTextField
+            label="alt text"
+            fullWidth
+            value={altText}
+            onChangeValue={({ value }) => setAltText(value)}
+          />
+        </Box>
+        <Box px={2} mt={3} display="flex" flexDirection="row">
+          <Box flexGrow={1} mr={1}>
+            <DebTextField
+              label="link"
+              fullWidth
+              value={linkText}
+              onChangeValue={({ value }) => setLinkText(value)}
+            />
+          </Box>
+          <Box display="flex" flexDirection="column">
+            <Box my={1}>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={asThumb}
+                    //defaultChecked={asThumb}
+                    onChange={(e) => {
+                      setAsThumb(e.target.checked);
+                    }}
+                    color="primary"
+                    name="asThumb"
+                    inputProps={{
+                      'aria-label': `switch image as thumbnail`
+                    }}
+                  />
+                }
+                label="as thumbnail"
+              />
+            </Box>
+            <Box my={1}>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={newTab}
+                    onChange={(e) => {
+                      setNewTab(e.target.checked);
+                    }}
+                    color="primary"
+                    name="newTab"
+                    inputProps={{
+                      'aria-label': `switch open link in new tab`
+                    }}
+                  />
+                }
+                label="new tab"
+              />
+            </Box>
+          </Box>
+        </Box>
+      </Box>
       <Box mx={2} p={1}>
         <FormControl component="fieldset">
           <FormLabel component="legend">
@@ -187,7 +277,7 @@ const FragmentImgTag = () => {
             value={srcsetDescriptor}
             onChange={(e) => {
               if (
-                e.target.value === '' ||
+                e.target.value === 'auto' ||
                 e.target.value === 'w' ||
                 e.target.value === 'x'
               ) {
@@ -195,9 +285,9 @@ const FragmentImgTag = () => {
               }
             }}
           >
-            <Box p={1}>
+            <Box>
               <FormControlLabel
-                value=""
+                value="auto"
                 control={<Radio color="default" />}
                 label="Auto"
               />
@@ -215,62 +305,32 @@ const FragmentImgTag = () => {
           </RadioGroup>
         </FormControl>
       </Box>
-      <Box p={1} mb={2}>
-        <Accordion elevation={0}>
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
-            aria-controls={`optional parameters panel`}
-            IconButtonProps={{ edge: 'start' }}
-          >
-            <Typography variant="body1">Optional fields</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <Box width="100%">
-              <Box px={2} mb={2} width="100%">
-                <DebTextField
-                  label="alt text"
-                  fullWidth
-                  value={altText}
-                  onChangeValue={({ value }) => setAltText(value)}
-                />
-              </Box>
-              <Box px={2} mt={3} display="flex" flexDirection="row">
-                <Box flexGrow={1} mr={1}>
-                  <DebTextField
-                    label="link"
-                    fullWidth
-                    value={linkText}
-                    onChangeValue={({ value }) => setLinkText(value)}
-                  />
-                </Box>
-                <Box>
-                  <FormControlLabel
-                    control={
-                      <Switch
-                        checked={newTab}
-                        onChange={(e) => {
-                          setNewTab(e.target.checked);
-                        }}
-                        color="primary"
-                        name="newTab"
-                        inputProps={{
-                          'aria-label': `switch open link in new tab`
-                        }}
-                      />
-                    }
-                    label="new tab"
-                  />
-                </Box>
-              </Box>
-            </Box>
-          </AccordionDetails>
-        </Accordion>
+      <Box mx={2} p={1}>
+        <FormControl component="fieldset">
+          <FormLabel component="legend">
+            <Typography color="textSecondary">
+              width / height attributes
+            </Typography>
+          </FormLabel>
+          <FormControlLabel
+            control={
+              <Checkbox
+                color="primary"
+                checked={disableWidthHeight}
+                // defaultChecked={defaultDisableWidthHeight}
+                onChange={(e) => setDisableWidthHeight(e.target.checked)}
+                name="disableWidthHeight"
+              />
+            }
+            label="Disable"
+          />
+        </FormControl>
       </Box>
       <Box>
         <Box p={1}>
           <FragmentCodePanel
             naked
-            label="img tag"
+            label="img tag source code"
             value={imgHtml}
             language="html"
           />

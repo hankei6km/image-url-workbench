@@ -4,6 +4,7 @@ import Box from '@material-ui/core/Box';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
+import Checkbox from '@material-ui/core/Checkbox';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
 import Typography from '@material-ui/core/Typography';
@@ -16,7 +17,8 @@ import rehypeSanitize from 'rehype-sanitize';
 import PreviewContext, {
   getTargetItemIndex,
   breakPointValue,
-  allMatchAspectRatio
+  allMatchAspectRatio,
+  PreviewDispatch
 } from '../components/PreviewContext';
 import FragmentCodePanel from '../components/FragmentCodePannel';
 import { ImgParamsValues } from '../utils/imgParamsUtils';
@@ -43,7 +45,7 @@ const processorHtml = unified()
 
 const FragmentMakeTestbedImgTag = () => {
   const previewStateContext = useContext(PreviewContext);
-  // const previewDispatch = useContext(PreviewDispatch);
+  const previewDispatch = useContext(PreviewDispatch);
 
   const [defaultItem, setDefaultItem] = useState<{
     itemKey: string;
@@ -59,7 +61,12 @@ const FragmentMakeTestbedImgTag = () => {
     imgHeight: 0
   });
 
-  const [srcsetDescriptor, setSrcsetDescriptor] = useState<'' | 'w' | 'x'>('');
+  const [srcsetDescriptor, setSrcsetDescriptor] = useState(
+    previewStateContext.tagFragment.srcsetDescriptor
+  );
+  const [disableWidthHeight, setDisableWidthHeight] = useState(
+    previewStateContext.tagFragment.disableWidthHeight
+  );
   const [imgHtml, setImgHtml] = useState('');
 
   useEffect(() => {
@@ -98,9 +105,9 @@ const FragmentMakeTestbedImgTag = () => {
       ({ imgWidth, media }) =>
         `(min-width: ${breakPointValue(media, imgWidth)}px) ${imgWidth}px`
     );
-    const addAttrWidthHeigth = allMatchAspectRatio(
-      previewStateContext.previewSet
-    );
+    const addAttrWidthHeigth =
+      !disableWidthHeight &&
+      allMatchAspectRatio(previewStateContext.previewSet);
     const imgElement = (
       <div>
         <div>
@@ -129,7 +136,40 @@ const FragmentMakeTestbedImgTag = () => {
 </form>` + String(file)
       );
     });
-  }, [previewStateContext.previewSet, srcsetDescriptor, defaultItem]);
+  }, [
+    previewStateContext.previewSet,
+    srcsetDescriptor,
+    defaultItem,
+    disableWidthHeight
+  ]);
+
+  useEffect(() => {
+    setSrcsetDescriptor(previewStateContext.tagFragment.srcsetDescriptor);
+  }, [previewStateContext.tagFragment.srcsetDescriptor]);
+  useEffect(() => {
+    setDisableWidthHeight(previewStateContext.tagFragment.disableWidthHeight);
+  }, [previewStateContext.tagFragment.disableWidthHeight]);
+  useEffect(() => {
+    previewDispatch({
+      type: 'setTagFragment',
+      payload: [
+        previewStateContext.tagFragment.altText,
+        previewStateContext.tagFragment.linkText,
+        previewStateContext.tagFragment.asThumb,
+        previewStateContext.tagFragment.newTab,
+        srcsetDescriptor,
+        disableWidthHeight
+      ]
+    });
+  }, [
+    previewDispatch,
+    previewStateContext.tagFragment.altText,
+    previewStateContext.tagFragment.linkText,
+    previewStateContext.tagFragment.asThumb,
+    previewStateContext.tagFragment.newTab,
+    srcsetDescriptor,
+    disableWidthHeight
+  ]);
 
   return (
     <Box mx={1}>
@@ -180,7 +220,7 @@ const FragmentMakeTestbedImgTag = () => {
             value={srcsetDescriptor}
             onChange={(e) => {
               if (
-                e.target.value === '' ||
+                e.target.value === 'auto' ||
                 e.target.value === 'w' ||
                 e.target.value === 'x'
               ) {
@@ -190,7 +230,7 @@ const FragmentMakeTestbedImgTag = () => {
           >
             <Box p={1}>
               <FormControlLabel
-                value=""
+                value="auto"
                 control={<Radio color="default" />}
                 label="Auto"
               />
@@ -208,11 +248,31 @@ const FragmentMakeTestbedImgTag = () => {
           </RadioGroup>
         </FormControl>
       </Box>
+      <Box mx={2} p={1}>
+        <FormControl component="fieldset">
+          <FormLabel component="legend">
+            <Typography color="textSecondary">
+              width / height attributes
+            </Typography>
+          </FormLabel>
+          <FormControlLabel
+            control={
+              <Checkbox
+                color="primary"
+                checked={disableWidthHeight}
+                // defaultChecked={defaultDisableWidthHeight}
+                onChange={(e) => setDisableWidthHeight(e.target.checked)}
+              />
+            }
+            label="Disable"
+          />
+        </FormControl>
+      </Box>
       <Box>
         <Box p={1}>
           <FragmentCodePanel
             naked
-            label="img tag"
+            label="img tag source code:"
             value={imgHtml}
             language="html"
           />

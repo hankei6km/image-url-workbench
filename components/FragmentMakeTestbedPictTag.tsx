@@ -1,6 +1,11 @@
 import React, { useState, useContext, useEffect } from 'react';
 import ReactDomServer from 'react-dom/server';
 import Box from '@material-ui/core/Box';
+import Checkbox from '@material-ui/core/Checkbox';
+import FormControl from '@material-ui/core/FormControl';
+import FormLabel from '@material-ui/core/FormLabel';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Typography from '@material-ui/core/Typography';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import unified from 'unified';
 import rehypeParse from 'rehype-parse';
@@ -9,6 +14,7 @@ import format from 'rehype-format';
 import rehypeSanitize from 'rehype-sanitize';
 import PreviewContext, {
   PreviewItem,
+  PreviewDispatch,
   getTargetItemIndex,
   breakPointValue,
   imgWidthCss,
@@ -35,6 +41,7 @@ const processorHtml = unified()
 
 const FragmentMakeTestbedPitureTag = () => {
   const previewStateContext = useContext(PreviewContext);
+  const previewDispatch = useContext(PreviewDispatch);
 
   const [defaultItem, setDefaultItem] = useState<{
     itemKey: string;
@@ -50,6 +57,9 @@ const FragmentMakeTestbedPitureTag = () => {
     imgHeight: 0
   });
 
+  const [disableWidthHeight, setDisableWidthHeight] = useState(
+    previewStateContext.tagFragment.disableWidthHeight
+  );
   const [pictureHtml, setPictureHtml] = useState('');
 
   useEffect(() => {
@@ -81,9 +91,9 @@ const FragmentMakeTestbedPitureTag = () => {
         sourcesBucket[w] = [v];
       }
     });
-    const addAttrWidthHeigth = allMatchAspectRatio(
-      previewStateContext.previewSet
-    );
+    const addAttrWidthHeigth =
+      !disableWidthHeight &&
+      allMatchAspectRatio(previewStateContext.previewSet);
     const pictureElement = (
       <div>
         <div>
@@ -135,7 +145,32 @@ const FragmentMakeTestbedPitureTag = () => {
 </form>` + String(file)
       );
     });
-  }, [previewStateContext.previewSet, defaultItem]);
+  }, [previewStateContext.previewSet, defaultItem, disableWidthHeight]);
+
+  useEffect(() => {
+    setDisableWidthHeight(previewStateContext.tagFragment.disableWidthHeight);
+  }, [previewStateContext.tagFragment.disableWidthHeight]);
+  useEffect(() => {
+    previewDispatch({
+      type: 'setTagFragment',
+      payload: [
+        previewStateContext.tagFragment.altText,
+        previewStateContext.tagFragment.linkText,
+        previewStateContext.tagFragment.asThumb,
+        previewStateContext.tagFragment.newTab,
+        previewStateContext.tagFragment.srcsetDescriptor,
+        disableWidthHeight
+      ]
+    });
+  }, [
+    previewDispatch,
+    previewStateContext.tagFragment.altText,
+    previewStateContext.tagFragment.linkText,
+    previewStateContext.tagFragment.asThumb,
+    previewStateContext.tagFragment.newTab,
+    previewStateContext.tagFragment.srcsetDescriptor,
+    disableWidthHeight
+  ]);
 
   return (
     <Box mx={1}>
@@ -178,11 +213,31 @@ const FragmentMakeTestbedPitureTag = () => {
           ]}
         />
       </Box>
+      <Box mx={2} p={1}>
+        <FormControl component="fieldset">
+          <FormLabel component="legend">
+            <Typography color="textSecondary">
+              width / height attributes
+            </Typography>
+          </FormLabel>
+          <FormControlLabel
+            control={
+              <Checkbox
+                color="primary"
+                checked={disableWidthHeight}
+                // defaultChecked={defaultDisableWidthHeight}
+                onChange={(e) => setDisableWidthHeight(e.target.checked)}
+              />
+            }
+            label="Disable"
+          />
+        </FormControl>
+      </Box>
       <Box>
         <Box p={1}>
           <FragmentCodePanel
             naked
-            label="picture tag"
+            label="picture tag source code"
             value={pictureHtml}
             language="html"
           />

@@ -1,13 +1,12 @@
 import React, { useState, useContext, useEffect } from 'react';
 import ReactDomServer from 'react-dom/server';
 import Box from '@material-ui/core/Box';
-import Accordion from '@material-ui/core/Accordion';
-import AccordionSummary from '@material-ui/core/AccordionSummary';
-import AccordionDetails from '@material-ui/core/AccordionDetails';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
 import Switch from '@material-ui/core/Switch';
+import FormControl from '@material-ui/core/FormControl';
+import FormLabel from '@material-ui/core/FormLabel';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Typography from '@material-ui/core/Typography';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import unified from 'unified';
 import rehypeParse from 'rehype-parse';
@@ -66,7 +65,13 @@ const FragmentPictureTag = () => {
   const [linkText, setLinkText] = useState(
     previewStateContext.tagFragment.linkText
   );
+  const [asThumb, setAsThumb] = useState(
+    previewStateContext.tagFragment.asThumb
+  );
   const [newTab, setNewTab] = useState(previewStateContext.tagFragment.newTab);
+  const [disableWidthHeight, setDisableWidthHeight] = useState(
+    previewStateContext.tagFragment.disableWidthHeight
+  );
   const [pictureHtml, setPictureHtml] = useState('');
 
   useEffect(() => {
@@ -98,9 +103,9 @@ const FragmentPictureTag = () => {
         sourcesBucket[w] = [v];
       }
     });
-    const addAttrWidthHeigth = allMatchAspectRatio(
-      previewStateContext.previewSet
-    );
+    const addAttrWidthHeigth =
+      !disableWidthHeight &&
+      allMatchAspectRatio(previewStateContext.previewSet);
     const pictureElement = (
       <picture>
         {Object.keys(sourcesBucket)
@@ -145,6 +150,10 @@ const FragmentPictureTag = () => {
       <a href={linkText} {...t}>
         {pictureElement}
       </a>
+    ) : asThumb ? (
+      <a href={defaultItem.previewUrl.split('?', 2)[0]} {...t}>
+        {pictureElement}
+      </a>
     ) : (
       pictureElement
     );
@@ -155,14 +164,25 @@ const FragmentPictureTag = () => {
       }
       setPictureHtml(String(file));
     });
-  }, [previewStateContext.previewSet, defaultItem, altText, linkText, newTab]);
+  }, [
+    previewStateContext.previewSet,
+    defaultItem,
+    altText,
+    linkText,
+    asThumb,
+    newTab,
+    disableWidthHeight
+  ]);
 
+  useEffect(() => {
+    setDisableWidthHeight(previewStateContext.tagFragment.disableWidthHeight);
+  }, [previewStateContext.tagFragment.disableWidthHeight]);
   useEffect(() => {
     previewDispatch({
       type: 'setTagFragment',
-      payload: [altText, linkText, newTab]
+      payload: [altText, linkText, asThumb, newTab, 'auto', disableWidthHeight]
     });
-  }, [previewDispatch, altText, linkText, newTab]);
+  }, [previewDispatch, altText, linkText, asThumb, newTab, disableWidthHeight]);
 
   return (
     <Box mx={1}>
@@ -185,61 +205,89 @@ const FragmentPictureTag = () => {
         />
       </Box>
       <Box p={1} mb={2}>
-        <Accordion elevation={0}>
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
-            aria-controls={`optional parameters panel`}
-            IconButtonProps={{ edge: 'start' }}
-          >
-            <Typography variant="body1">Optional fields</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <Box width="100%">
-              <Box px={2} mt={-1} mb={2} width="100%">
-                <DebTextField
-                  label="alt text"
-                  fullWidth
-                  value={altText}
-                  onChangeValue={({ value }) => setAltText(value)}
-                />
-              </Box>
-              <Box px={2} mt={3} display="flex" flexDirection="row">
-                <Box flexGrow={1} mr={1}>
-                  <DebTextField
-                    label="link"
-                    fullWidth
-                    value={linkText}
-                    onChangeValue={({ value }) => setLinkText(value)}
+        <Box px={2} mb={2} width="100%">
+          <DebTextField
+            label="alt text"
+            fullWidth
+            value={altText}
+            onChangeValue={({ value }) => setAltText(value)}
+          />
+        </Box>
+        <Box px={2} mt={3} display="flex" flexDirection="row">
+          <Box flexGrow={1} mr={1}>
+            <DebTextField
+              label="link"
+              fullWidth
+              value={linkText}
+              onChangeValue={({ value }) => setLinkText(value)}
+            />
+          </Box>
+          <Box display="flex" flexDirection="column">
+            <Box my={1}>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={asThumb}
+                    //defaultChecked={asThumb}
+                    onChange={(e) => {
+                      setAsThumb(e.target.checked);
+                    }}
+                    color="primary"
+                    name="asThumb"
+                    inputProps={{
+                      'aria-label': `switch image as thumbnail`
+                    }}
                   />
-                </Box>
-                <Box>
-                  <FormControlLabel
-                    control={
-                      <Switch
-                        checked={newTab}
-                        onChange={(e) => {
-                          setNewTab(e.target.checked);
-                        }}
-                        color="primary"
-                        name="newTab"
-                        inputProps={{
-                          'aria-label': `switch open link in new tab`
-                        }}
-                      />
-                    }
-                    label="new tab"
-                  />
-                </Box>
-              </Box>
+                }
+                label="as thumbnail"
+              />
             </Box>
-          </AccordionDetails>
-        </Accordion>
+            <Box my={1}>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={newTab}
+                    onChange={(e) => {
+                      setNewTab(e.target.checked);
+                    }}
+                    color="primary"
+                    name="newTab"
+                    inputProps={{
+                      'aria-label': `switch open link in new tab`
+                    }}
+                  />
+                }
+                label="new tab"
+              />
+            </Box>
+          </Box>
+        </Box>
+      </Box>
+      <Box mx={2} p={1}>
+        <FormControl component="fieldset">
+          <FormLabel component="legend">
+            <Typography color="textSecondary">
+              width / height attributes
+            </Typography>
+          </FormLabel>
+          <FormControlLabel
+            control={
+              <Checkbox
+                color="primary"
+                checked={disableWidthHeight}
+                // defaultChecked={defaultDisableWidthHeight}
+                onChange={(e) => setDisableWidthHeight(e.target.checked)}
+              />
+            }
+            label="Disable"
+          />
+        </FormControl>
       </Box>
       <Box>
         <Box p={1}>
           <FragmentCodePanel
             naked
-            label="picture tag"
+            label="picture tag source code"
             value={pictureHtml}
             language="html"
           />
