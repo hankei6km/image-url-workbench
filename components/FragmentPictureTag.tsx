@@ -1,8 +1,12 @@
 import React, { useState, useContext, useEffect } from 'react';
 import ReactDomServer from 'react-dom/server';
 import Box from '@material-ui/core/Box';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
 import Switch from '@material-ui/core/Switch';
+import FormControl from '@material-ui/core/FormControl';
+import FormLabel from '@material-ui/core/FormLabel';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Typography from '@material-ui/core/Typography';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import unified from 'unified';
 import rehypeParse from 'rehype-parse';
@@ -62,6 +66,9 @@ const FragmentPictureTag = () => {
     previewStateContext.tagFragment.linkText
   );
   const [newTab, setNewTab] = useState(previewStateContext.tagFragment.newTab);
+  const [disableWidthHeight, setDisableWidthHeight] = useState(
+    previewStateContext.tagFragment.disableWidthHeight
+  );
   const [pictureHtml, setPictureHtml] = useState('');
 
   useEffect(() => {
@@ -93,9 +100,9 @@ const FragmentPictureTag = () => {
         sourcesBucket[w] = [v];
       }
     });
-    const addAttrWidthHeigth = allMatchAspectRatio(
-      previewStateContext.previewSet
-    );
+    const addAttrWidthHeigth =
+      !disableWidthHeight &&
+      allMatchAspectRatio(previewStateContext.previewSet);
     const pictureElement = (
       <picture>
         {Object.keys(sourcesBucket)
@@ -150,14 +157,24 @@ const FragmentPictureTag = () => {
       }
       setPictureHtml(String(file));
     });
-  }, [previewStateContext.previewSet, defaultItem, altText, linkText, newTab]);
+  }, [
+    previewStateContext.previewSet,
+    defaultItem,
+    altText,
+    linkText,
+    newTab,
+    disableWidthHeight
+  ]);
 
+  useEffect(() => {
+    setDisableWidthHeight(previewStateContext.tagFragment.disableWidthHeight);
+  }, [previewStateContext.tagFragment.disableWidthHeight]);
   useEffect(() => {
     previewDispatch({
       type: 'setTagFragment',
-      payload: [altText, linkText, newTab, 'auto']
+      payload: [altText, linkText, newTab, 'auto', disableWidthHeight]
     });
-  }, [previewDispatch, altText, linkText, newTab]);
+  }, [previewDispatch, altText, linkText, newTab, disableWidthHeight]);
 
   return (
     <Box mx={1}>
@@ -216,6 +233,26 @@ const FragmentPictureTag = () => {
             />
           </Box>
         </Box>
+      </Box>
+      <Box mx={2} p={1}>
+        <FormControl component="fieldset">
+          <FormLabel component="legend">
+            <Typography color="textSecondary">
+              width / height attributes
+            </Typography>
+          </FormLabel>
+          <FormControlLabel
+            control={
+              <Checkbox
+                color="primary"
+                checked={disableWidthHeight}
+                // defaultChecked={defaultDisableWidthHeight}
+                onChange={(e) => setDisableWidthHeight(e.target.checked)}
+              />
+            }
+            label="Disable"
+          />
+        </FormControl>
       </Box>
       <Box>
         <Box p={1}>

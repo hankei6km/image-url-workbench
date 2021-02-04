@@ -4,6 +4,7 @@ import Box from '@material-ui/core/Box';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
+import Checkbox from '@material-ui/core/Checkbox';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
 import Typography from '@material-ui/core/Typography';
@@ -63,6 +64,9 @@ const FragmentMakeTestbedImgTag = () => {
   const [srcsetDescriptor, setSrcsetDescriptor] = useState(
     previewStateContext.tagFragment.srcsetDescriptor
   );
+  const [disableWidthHeight, setDisableWidthHeight] = useState(
+    previewStateContext.tagFragment.disableWidthHeight
+  );
   const [imgHtml, setImgHtml] = useState('');
 
   useEffect(() => {
@@ -101,9 +105,9 @@ const FragmentMakeTestbedImgTag = () => {
       ({ imgWidth, media }) =>
         `(min-width: ${breakPointValue(media, imgWidth)}px) ${imgWidth}px`
     );
-    const addAttrWidthHeigth = allMatchAspectRatio(
-      previewStateContext.previewSet
-    );
+    const addAttrWidthHeigth =
+      !disableWidthHeight &&
+      allMatchAspectRatio(previewStateContext.previewSet);
     const imgElement = (
       <div>
         <div>
@@ -132,11 +136,19 @@ const FragmentMakeTestbedImgTag = () => {
 </form>` + String(file)
       );
     });
-  }, [previewStateContext.previewSet, srcsetDescriptor, defaultItem]);
+  }, [
+    previewStateContext.previewSet,
+    srcsetDescriptor,
+    defaultItem,
+    disableWidthHeight
+  ]);
 
   useEffect(() => {
     setSrcsetDescriptor(previewStateContext.tagFragment.srcsetDescriptor);
   }, [previewStateContext.tagFragment.srcsetDescriptor]);
+  useEffect(() => {
+    setDisableWidthHeight(previewStateContext.tagFragment.disableWidthHeight);
+  }, [previewStateContext.tagFragment.disableWidthHeight]);
   useEffect(() => {
     previewDispatch({
       type: 'setTagFragment',
@@ -144,7 +156,8 @@ const FragmentMakeTestbedImgTag = () => {
         previewStateContext.tagFragment.altText,
         previewStateContext.tagFragment.linkText,
         previewStateContext.tagFragment.newTab,
-        srcsetDescriptor
+        srcsetDescriptor,
+        disableWidthHeight
       ]
     });
   }, [
@@ -152,7 +165,8 @@ const FragmentMakeTestbedImgTag = () => {
     previewStateContext.tagFragment.altText,
     previewStateContext.tagFragment.linkText,
     previewStateContext.tagFragment.newTab,
-    srcsetDescriptor
+    srcsetDescriptor,
+    disableWidthHeight
   ]);
 
   return (
@@ -230,6 +244,26 @@ const FragmentMakeTestbedImgTag = () => {
               />
             </Box>
           </RadioGroup>
+        </FormControl>
+      </Box>
+      <Box mx={2} p={1}>
+        <FormControl component="fieldset">
+          <FormLabel component="legend">
+            <Typography color="textSecondary">
+              width / height attributes
+            </Typography>
+          </FormLabel>
+          <FormControlLabel
+            control={
+              <Checkbox
+                color="primary"
+                checked={disableWidthHeight}
+                // defaultChecked={defaultDisableWidthHeight}
+                onChange={(e) => setDisableWidthHeight(e.target.checked)}
+              />
+            }
+            label="Disable"
+          />
         </FormControl>
       </Box>
       <Box>
