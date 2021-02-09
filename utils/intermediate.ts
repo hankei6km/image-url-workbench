@@ -62,7 +62,7 @@ export type SourceNode = {
   width?: number; // srcset 全体のcssサイズ(必ずしも全体サイズが一致しているとはかぎらない )
   height?: number;
   breakPoint: BreakPoint;
-  // media?: string;
+  suggestMedia?: string; // auto の場合、画像の幅より狭いサイズでの media  が設定される.
   sizes?: string[];
 };
 

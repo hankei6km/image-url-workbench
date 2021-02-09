@@ -12,7 +12,11 @@ import PreviewContext, {
   imgWidthCss,
   allMatchAspectRatio
 } from '../components/PreviewContext';
-import { BreakPoint, PictureNode } from '../utils/intermediate';
+import {
+  BreakPoint,
+  PictureNode,
+  breakPointValue
+} from '../utils/intermediate';
 import DebTextField from '../components/DebTextField';
 import FragmentCodePanel from '../components/FragmentCodePannel';
 import { ImgParamsValues, imgUrlParamsToString } from '../utils/imgParamsUtils';
@@ -99,6 +103,10 @@ const FragmentPictureInter = () => {
             kind: 'suorce',
             width: imgWidth,
             breakPoint: sourcesBucket[imgWidth][0].media,
+            suggestMedia: `(min-width: ${breakPointValue(
+              sourcesBucket[imgWidth][0].media,
+              imgWidthCss(sourcesBucket[imgWidth][0])
+            )}px)`,
             srcset: {
               kind: 'srcSet',
               descriptor: 'x',
