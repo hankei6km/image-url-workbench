@@ -16,10 +16,10 @@ import PreviewContext, {
   PreviewItem,
   PreviewDispatch,
   getTargetItemIndex,
-  breakPointValue,
   imgWidthCss,
   allMatchAspectRatio
 } from '../components/PreviewContext';
+import { breakPointValue } from '../utils/intermediate';
 import FragmentCodePanel from '../components/FragmentCodePannel';
 import { ImgParamsValues } from '../utils/imgParamsUtils';
 import merge from 'deepmerge';

@@ -5,7 +5,8 @@
 # --noExtraProps : 定義されてないフィールドが使われたらエラーにするため。
 # --required     : 定義されているフィールドが使われていなかったらエラーにするため
 npx typescript-json-schema --noExtraProps --required \
-    --include components/PreviewContex.tsx \
-    --include=utils/imgParamsUtils.ts \
-    --include=src/template.ts \
+    --include components/PreviewContext.tsx \
+    --include utils/imgParamsUtils.ts \
+    --include utils/intermediate.ts \
+    --include src/template.ts \
          -- ./tsconfig.json PreviewContextState > src/jsonSchemaPreviewContext.json

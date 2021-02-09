@@ -16,10 +16,10 @@ import format from 'rehype-format';
 import rehypeSanitize from 'rehype-sanitize';
 import PreviewContext, {
   getTargetItemIndex,
-  breakPointValue,
   allMatchAspectRatio,
   PreviewDispatch
 } from '../components/PreviewContext';
+import { breakPointValue } from '../utils/intermediate';
 import FragmentCodePanel from '../components/FragmentCodePannel';
 import { ImgParamsValues } from '../utils/imgParamsUtils';
 import merge from 'deepmerge';

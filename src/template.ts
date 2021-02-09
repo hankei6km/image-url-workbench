@@ -1,4 +1,4 @@
-import { BreakPoint } from '../components/PreviewContext';
+import { BreakPoint } from '../utils/intermediate';
 
 // 'basic': auto 等の外観には影響はないが、ファイルサイズ等に影響のあるような項目の指定。インポート時に使う
 // 'size': 画像のサイズ変更を行う。workbench 上の各項目に上書きで適用

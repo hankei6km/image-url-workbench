@@ -12,7 +12,7 @@ import {
   ImportTemplateKind,
   ImportTemplate
 } from '../src/template';
-import { BreakPoint } from './PreviewContext';
+import { BreakPoint } from '../utils/intermediate';
 
 const useStyles = makeStyles(() => ({
   root: {

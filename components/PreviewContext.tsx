@@ -10,6 +10,7 @@ import {
   ImportTemplateParametersSet,
   ImportTemplateParameters
 } from '../src/template';
+import { SrcSetDescriptor, BreakPoint } from '../utils/intermediate';
 
 export type CardType = 'summary' | 'summary_large_image';
 
@@ -19,47 +20,14 @@ type Card = {
   description: string;
 };
 
-export const SrcsetDescriptorValues = ['auto', 'w', 'x'] as const;
-export type SrcsetDescriptor = typeof SrcsetDescriptorValues[number];
 type TagFragment = {
   altText: string;
   linkText: string;
   asThumb: boolean;
   newTab: boolean;
-  srcsetDescriptor: SrcsetDescriptor;
+  srcsetDescriptor: SrcSetDescriptor;
   disableWidthHeight: boolean;
 };
-
-export const BreakPointValues = [240, 330, 360, 410, 530, 760, 1020] as const;
-export const BreakPointAutoAndValues = [
-  'auto',
-  'fit',
-  ...BreakPointValues
-] as const;
-export type BreakPoint = typeof BreakPointAutoAndValues[number];
-
-export function breakPointValue(
-  media: BreakPoint,
-  imgWidth: number
-): BreakPoint {
-  if (media === 'auto' || media === 'fit') {
-    const idx = BreakPointValues.findIndex(
-      (v) => typeof v === 'number' && v >= imgWidth
-    );
-    if (idx >= 0) {
-      if (media === 'auto') {
-        if (idx === 0) {
-          return BreakPointValues[0];
-        } else {
-          return BreakPointValues[idx - 1];
-        }
-      }
-      return BreakPointValues[idx];
-    }
-    return BreakPointValues[BreakPointValues.length - 1];
-  }
-  return media;
-}
 
 export function imgWidthCss(p: PreviewItem): number {
   // srcset のグルーピングに使うこともあるので繰り上げて揃えている.
@@ -76,10 +44,9 @@ export function matchAspectRatio(p1: PreviewItem, p2: PreviewItem): boolean {
   const h1 = imgHeightCss(p1);
   const w2 = imgWidthCss(p2);
   const h2 = imgHeightCss(p2);
-  if (
-    (w1 === w2 || w1 === w2 - 1 || w1 === w2 + 1) &&
-    (h1 === h2 || h1 === h2 - 1 || h1 === h2 + 1)
-  ) {
+  const a1 = w1 / h1;
+  const a2 = w2 / h2;
+  if (a1 === a2 || a1 === a2 - 0.01 || a1 === a2 + 0.01) {
     return true;
   }
   return false;
@@ -226,7 +193,7 @@ type actTypeSetCard = {
 
 type actTypeSetTagFragment = {
   type: 'setTagFragment';
-  payload: [string, string, boolean,boolean, SrcsetDescriptor, boolean];
+  payload: [string, string, boolean, boolean, SrcSetDescriptor, boolean];
 };
 
 type actTypeSetEditTarget = {

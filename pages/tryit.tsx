@@ -17,6 +17,7 @@ import FragmentDownload from '../components/FragmentDownload';
 import FragmentMake from '../components/FragmentMake';
 import FragmentLinks from '../components/FragmentLinks';
 import FragmentParams from '../components/FragmentParams';
+import FragmentPictureInter from '../components/FragmentPictureInter';
 import FragmentExport from '../components/FragmentExport';
 
 const useStyles = makeStyles((theme) => ({
@@ -105,6 +106,10 @@ const groupList: {
   {
     groupName: 'Links',
     group: <FragmentLinks />
+  },
+  {
+    groupName: 'Intermediate <picture> tag',
+    group: <FragmentPictureInter />
   },
   {
     groupName: 'Export',
