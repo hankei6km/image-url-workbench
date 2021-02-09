@@ -18,9 +18,9 @@ import rehypeSanitize from 'rehype-sanitize';
 import PreviewContext, {
   PreviewDispatch,
   getTargetItemIndex,
-  breakPointValue,
   allMatchAspectRatio
 } from '../components/PreviewContext';
+import { breakPointValue } from '../utils/intermediate';
 import DebTextField from '../components/DebTextField';
 import FragmentCodePanel from '../components/FragmentCodePannel';
 import { ImgParamsValues } from '../utils/imgParamsUtils';

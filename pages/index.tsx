@@ -11,9 +11,9 @@ import Tab from '@material-ui/core/Tab';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import PreviewContext, {
   PreviewDispatch,
-  BreakPoint,
   PreviewSetKind
 } from '../components/PreviewContext';
+import { BreakPoint } from '../utils/intermediate';
 import EnterPanel from '../components/EnterPanel';
 import SamplePanel from '../components/SamplePanel';
 import ImportPanel from '../components/ImportPanel';

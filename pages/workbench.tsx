@@ -24,10 +24,12 @@ import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import PreviewContext, {
   PreviewDispatch,
   PreviewItem,
-  BreakPoint,
-  BreakPointAutoAndValues,
   isPreviewSetReady
 } from '../components/PreviewContext';
+import  {
+  BreakPoint,
+  BreakPointAutoAndValues,
+} from '../utils/intermediate';
 import TemplatePanel from '../components/TemplatePanel';
 import ImgPreview from '../components/ImgPreview';
 import {
