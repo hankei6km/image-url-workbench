@@ -76,10 +76,9 @@ export function matchAspectRatio(p1: PreviewItem, p2: PreviewItem): boolean {
   const h1 = imgHeightCss(p1);
   const w2 = imgWidthCss(p2);
   const h2 = imgHeightCss(p2);
-  if (
-    (w1 === w2 || w1 === w2 - 1 || w1 === w2 + 1) &&
-    (h1 === h2 || h1 === h2 - 1 || h1 === h2 + 1)
-  ) {
+  const a1 = w1 / h1;
+  const a2 = w2 / h2;
+  if (a1 === a2 || a1 === a2 - 0.01 || a1 === a2 + 0.01) {
     return true;
   }
   return false;
