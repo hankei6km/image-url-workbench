@@ -42,7 +42,7 @@ type Props = {
   activeClassName?: string;
   as?: string | {};
   className?: string;
-  href: string | (string & UrlObject);
+  href: string | UrlObject;
   innerRef?: any; // 降参。(node:any)=>void でもダメなの?
   naked?: boolean;
   variant?:
@@ -87,7 +87,11 @@ function Link(props: LinkProps & MuiLinkProps & Props) {
   } = props;
 
   const router = useRouter();
-  const pathname = typeof href === 'string' ? href : href.pathname;
+  const pathname: string = href
+    ? (href as any).pathname
+      ? (href as any).pathname
+      : href
+    : '';
   const className = clsx(classNameProps, {
     [activeClassName]: router.pathname === pathname && activeClassName
   });
