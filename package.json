@@ -24,7 +24,7 @@
     "deepmerge": "^4.2.2",
     "hast-util-sanitize": "^3.0.1",
     "imgix-url-params": "^11.10.1",
-    "next": "latest",
+    "next": "^11.0.0",
     "notistack": "^1.0.2",
     "qrcode": "^1.4.4",
     "react": "^16.12.0",
