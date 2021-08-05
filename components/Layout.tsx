@@ -274,6 +274,17 @@ const Layout = ({ children, title = 'This is the default title' }: Props) => {
         <title>{`${title} - ${process.env.APP_NAME}`}</title>
         <meta charSet="utf-8" />
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+        <meta name="og:title" content={`${title} - ${process.env.APP_NAME}`} />
+        {process.env.APP_DESCRIPTION && (
+          <meta name="description" content={process.env.APP_DESCRIPTION} />
+        )}
+        {process.env.APP_DESCRIPTION && (
+          <meta name="og:description" content={process.env.APP_DESCRIPTION} />
+        )}
+        {process.env.APP_IMAGE_URL && (
+          <meta property="og:image" content={process.env.APP_IMAGE_URL} />
+        )}
+        <meta name="twitter:card" content="summary_large_image" />
       </Head>
       <Paper
         square
