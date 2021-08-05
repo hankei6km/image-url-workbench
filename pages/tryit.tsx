@@ -108,11 +108,11 @@ const groupList: {
     group: <FragmentLinks />
   },
   {
-    groupName: 'Intermediate <picture> tag',
+    groupName: '[EXPERIMENTAL] Intermediate <picture> tag',
     group: <FragmentPictureInter />
   },
   {
-    groupName: 'Export',
+    groupName: '[EXPERIMENTAL] Export',
     group: <FragmentExport />
   }
 ];
