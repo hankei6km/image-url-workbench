@@ -1,6 +1,6 @@
 {
   "name": "image-url-workbench",
-  "version": "0.1.0",
+  "version": "0.1.0a",
   "scripts": {
     "dev": "sh scripts/json-schema-build.sh && next",
     "json-schema:build": "sh scripts/json-schema-build.sh",
