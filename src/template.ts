@@ -44,6 +44,17 @@ export const BuiltinImportTemplate: ImportTemplateList = [
   },
   {
     kind: ['basic', 'effective'],
+    label: 'compress + enhance',
+    shortDescription: 'auto=compress,enhance',
+    parameters: [
+      {
+        auto: 'compress,enhance'
+      }
+    ],
+    medias: []
+  },
+  {
+    kind: ['basic', 'effective'],
     label: 'jpeg',
     shortDescription: '画像フォーマット jpeg',
     parameters: [
