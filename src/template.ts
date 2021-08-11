@@ -315,7 +315,6 @@ export const BuiltinImportTemplate: ImportTemplateList = [
         dpr: '1'
       },
       {
-        txt: 'default'
       }
     ],
     medias: []
@@ -407,7 +406,6 @@ export const BuiltinImportTemplate: ImportTemplateList = [
         w: '330'
       },
       {
-        txt: 'default'
       }
     ],
     medias: []
@@ -567,7 +565,6 @@ export const BuiltinImportTemplate: ImportTemplateList = [
         w: '330'
       },
       {
-        txt: 'default',
         w: '500'
       }
     ],
