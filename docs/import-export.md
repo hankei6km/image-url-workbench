@@ -6,6 +6,5 @@
 
 ただし、現状では仕様が固まっていないのでインポートできなくなる可能性が高いです。
 
-<a href="https://images.microcms-assets.io/assets/bc4007b30bdf402f96161596bd7cbcca/c741613e522249b494b833b74cd76406/docs-import.png"><img src="https://images.microcms-assets.io/assets/bc4007b30bdf402f96161596bd7cbcca/c741613e522249b494b833b74cd76406/docs-import.png?auto=compress&#x26;w64=NTAw" alt="インポート時のスクリーンショット" width="500" height="297"></a>
-
+[![インポート時のスクリーンショット](https://images.microcms-assets.io/assets/bc4007b30bdf402f96161596bd7cbcca/c741613e522249b494b833b74cd76406/docs-import.png?auto=compress&w64=NTAw)](https://images.microcms-assets.io/assets/bc4007b30bdf402f96161596bd7cbcca/c741613e522249b494b833b74cd76406/docs-import.png?auto=compress)
 
