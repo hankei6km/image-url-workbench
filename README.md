@@ -18,7 +18,7 @@
 
 ### imgix の顔検出でレスポンシブ対応
 
-[![ImageURL Workbench: imgix の顔検出でレスポンシブ対応](https://images.microcms-assets.io/assets/bc4007b30bdf402f96161596bd7cbcca/412ca999d3794941ad3f23bed60e834e/youtube-thumb-base.jpg?auto=compress&mark64=aHR0cDovL2ltZy55b3V0dWJlLmNvbS92aS9wNkMwcVpIbmR6OC8wLmpwZw&mark-pad64=MA&txt64=4pa277iP&txt-align64=Y2VudGVyLG1pZGRsZQ&txt-shad64=NQ&txt-size64=NjA)](http://www.youtube.com/watch?v=p6C0qZHndz8)
+[![ImageURL Workbench: imgix の顔検出でレスポンシブ対応](https://images.microcms-assets.io/assets/bc4007b30bdf402f96161596bd7cbcca/89d1dc2babc143429999bbdf3f63dfbf/youtube-thumb.png?auto=compress&mark64=aHR0cDovL2ltZy55b3V0dWJlLmNvbS92aS9wNkMwcVpIbmR6OC8wLmpwZw&mark-pad64=MA&txt64=4pa277iP&txt-align64=Y2VudGVyLG1pZGRsZQ&txt-shad64=NQ&txt-size64=NjA)](http://www.youtube.com/watch?v=p6C0qZHndz8)
 
 ### imgix の Redering API で Twitter カード生成 
 
